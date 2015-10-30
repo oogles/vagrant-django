@@ -1,0 +1,4 @@
+# Vagrant
+.vagrant/
+provision/config/.gitconfig
+provision/config/env.sh
