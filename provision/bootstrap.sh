@@ -87,6 +87,14 @@ if [ "$REDISTRIBUTABLE" -ne 1 ]; then
     fi
 fi
 
+# Add custom scripts
+if [ ! -d bin ] ; then
+    su - vagrant -c "mkdir ~/bin"
+fi
+
+/vagrant/provision/bin/shell+.sh
+/vagrant/provision/bin/runserver+.sh
+
 # Add public key to authorized_keys
 if [ "$PUBLIC_KEY" ]; then
 	if ! grep -Fxq "$PUBLIC_KEY" .ssh/authorized_keys ; then
