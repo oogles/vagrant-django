@@ -1,3 +1,6 @@
 # Vagrant
 .vagrant/
 provision/config/.gitconfig
+
+# Docs
+docs/_build/
