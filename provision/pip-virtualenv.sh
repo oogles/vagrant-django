@@ -4,7 +4,7 @@ echo " "
 echo " --- pip/virtualenv ---"
 
 PROJECT_NAME="$1"
-REDISTRIBUTABLE="$2"
+BUILD_MODE="$2"
 
 # Download get-pip.py if it doesn't already exist, install pip
 if ! command -v pip; then
@@ -41,11 +41,10 @@ EOF
 fi
 
 # Install Python dependencies from requirements.txt (if any) if this environment
-# is beign provisioned for a full project. If it is for a redistributable app,
-# it will not have a requirements.txt file, but install some common development
-# aids.
+# is beign provisioned for a full project. If it is for a single app, it will
+# not have a requirements.txt file, but install some common development aids.
 echo " "
-if [ "$REDISTRIBUTABLE" -ne 1 ]; then
+if [ "$BUILD_MODE" == "project" ]; then
     echo " --- Python dependencies ---"
     if [ -f /vagrant/requirements.txt ]; then
         su - vagrant -c "$ACTIVATE_STR && pip install -r /vagrant/requirements.txt"

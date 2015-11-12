@@ -41,7 +41,7 @@ fi
 # is provided, rather than using string.punctuation, so as to exclude single quotes,
 # double quotes and backticks. This is done to avoid SyntaxErrors, both in this script and in
 # the env.py file when it is written.
-SECRET_KEY=`python -c 'import random; import string; print "".join([random.SystemRandom().choice(string.letters + string.digits + "!#$%&\()*+,-./:;<=>?@[\\]^_{|}~") for i in range(100)])'`
+SECRET_KEY=`python -c 'import random; import string; print "".join([random.SystemRandom().choice(string.letters + string.digits + "!#$%&\()*+,-./:;<=>?@[\\]^_{|}~") for i in range(128)])'`
 
 cat <<EOF > "$ENV_FILE"
 # Format these environment-specific settings as a dictionary, in order to:
@@ -62,9 +62,6 @@ cat <<EOF > "$ENV_FILE"
 # The idea is to provide an easy reference to, and use of, environment-specific
 # settings, without violating 12factor (http://12factor.net/) too heavily (by 
 # having code that is not committed to source control)
-#
-# Note that DEBUG should default to False in the primary settings file, and
-# should only be defined here for development machines.
 
 environ = {
     'DEBUG': $DEBUG,
