@@ -82,7 +82,12 @@ DEBUG
 
 **Optional**
 
-Set to ``1`` to set ``DEBUG=True`` in the ``env.py`` settings file. If not given, ``DEBUG=False`` will be used.
+This flag controls whether or not the Vagrant guest environment is a development or production environment. A value of ``1`` indicates a development environment, otherwise (including when it is not specified at all) it indicates a production environment.
+
+The flag affects:
+
+* :ref:`feat-dependencies`: If ``1``, a ``dev_requirements.txt`` file will be used, if present, to install development-only Python dependencies.
+* :ref:`feat-env-py`: If ``1``, ``DEBUG=True`` is set, otherwise ``DEBUG=False`` is.
 
 .. note:: This setting affects ``env.py``. See :ref:`feat-env-py` for the virtues of using these values over values hardcoded in ``settings.py``.
 

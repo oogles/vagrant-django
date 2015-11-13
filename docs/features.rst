@@ -38,19 +38,15 @@ Virtualenv
 
 A virtualenv with a name equal to the :ref:`project name <conf-var-project-name>` is created in the guest machine, at ``/home/vagrant/.virtualenvs/<project name>``. This virtualenv is automatically activated when the ``vagrant`` user SSHs into the machine.
 
-If using the "project" build mode, the provisioner will look for a ``requirements.txt`` file defined in the project root directory (``/vagrant/`` in the guest machine). If found, these requirements will be installed into the virtualenv.
 
-If using the "app" build mode, some basic :ref:`development aids <feat-dev-aids>` are installed instead of looking for a ``requirements.txt`` file.
+.. _feat-dependencies:
 
+Dependency installation
+=======================
 
-.. _feat-dev-aids:
+If using the "project" build mode, the provisioner will look for a ``requirements.txt`` file defined in the project root directory (``/vagrant/`` in the guest machine). If found, these requirements will be installed into the virtualenv. This is designed to allow installation of Python packages required in a production environment. It is not suitable for "app" builds, as apps should specify their dependencies in other ways, so they can be identified and installed along with the app.
 
-Development aids
-----------------
-
-* Django: For obvious reasons.
-* `django-extensions <https://github.com/django-extensions/django-extensions>`_: Provides many useful development and debugging commands.
-* `sphinx <http://sphinx-doc.org/>`_ and sphinx-autobuild: For documentation generation.
+For both "project" and "app" build modes, and where :ref:`conf-var-debug` is ``1``, the provisioner will also look for a ``dev_requirements.txt`` file, also in the project root directory. If found, these requirements will also be installed into the virtualenv. This is designed to enable specification of Python packages required during development, that are *not* required for the project/application to run in production. An example might include `sphinx <http://sphinx-doc.org/>`_, for documentation generation.
 
 
 .. _feat-postgres:
