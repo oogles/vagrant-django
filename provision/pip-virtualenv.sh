@@ -5,6 +5,7 @@ echo " --- pip/virtualenv ---"
 
 PROJECT_NAME="$1"
 BUILD_MODE="$2"
+DEBUG="$3"
 
 # Download get-pip.py if it doesn't already exist, install pip
 if ! command -v pip; then
@@ -22,12 +23,12 @@ echo "Creating virtualenv for $PROJECT_NAME..."
 ACTIVATE_STR="source ~/.virtualenvs/$PROJECT_NAME/bin/activate"
 
 # Create .virtualenvs directory if it doesn't exist
-if [ ! -d .virtualenvs ]; then
+if [[ ! -d .virtualenvs ]]; then
     su - vagrant -c "mkdir ~/.virtualenvs"
 fi
 
 # Create a virtualenv for the project
-if [ ! -d ".virtualenvs/$PROJECT_NAME" ]; then
+if [[ ! -d ".virtualenvs/$PROJECT_NAME" ]]; then
 	su - vagrant -c "virtualenv ~/.virtualenvs/$PROJECT_NAME"
 fi
 
@@ -43,15 +44,22 @@ fi
 # Install Python dependencies from requirements.txt (if any) if this environment
 # is beign provisioned for a full project. If it is for a single app, it will
 # not have a requirements.txt file, but install some common development aids.
-echo " "
-if [ "$BUILD_MODE" == "project" ]; then
+if [[ "$BUILD_MODE" == "project" ]]; then
+    echo " "
     echo " --- Python dependencies ---"
     if [ -f /vagrant/requirements.txt ]; then
         su - vagrant -c "$ACTIVATE_STR && pip install -r /vagrant/requirements.txt"
     else
         echo "None found"
     fi
-else
-    echo " --- Development aids ---"
-    su - vagrant -c "$ACTIVATE_STR && pip install Django django-extensions Werkzeug sphinx sphinx-autobuild"
+fi
+
+if [[ "$DEBUG" -eq 1 ]]; then
+    echo " "
+    echo " ---  Python dev dependencies ---"
+    if [ -f /vagrant/dev_requirements.txt ]; then
+        su - vagrant -c "$ACTIVATE_STR && pip install -r /vagrant/dev_requirements.txt"
+    else
+        echo "None found"
+    fi
 fi

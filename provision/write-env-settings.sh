@@ -6,13 +6,13 @@
 echo " "
 echo " --- Write env.py file ---"
 
-PROJECT_NAME=$1
+PROJECT_NAME="$1"
 
 # Check that there is a project subdirectory to write the file into (this will
 # put it in the same directory as settings.py for a standard Django project
 # layout).
 PROJECT_SUBDIR="/vagrant/${PROJECT_NAME//-/_}"
-if [ ! -d "$PROJECT_SUBDIR" ]; then
+if [[ ! -d "$PROJECT_SUBDIR" ]]; then
     echo "--------------------------------------------------"
     echo "WARNING: No $PROJECT_SUBDIR directory to write env.py to."
     echo "No env.py file written."
@@ -22,15 +22,15 @@ fi
 
 # Check that the file does not alredy exist
 ENV_FILE="$PROJECT_SUBDIR/env.py"
-if [ -f "$ENV_FILE" ]; then
+if [[ -f "$ENV_FILE" ]]; then
     echo "File already exists."
     exit 0;
 fi
 
 # Get additional variables
-DB_PASS=$2
+DB_PASS="$2"
 
-if [ $3 -eq 1 ]; then
+if [[ "$3" -eq 1 ]]; then
 	DEBUG='True'
 else
 	DEBUG='False'

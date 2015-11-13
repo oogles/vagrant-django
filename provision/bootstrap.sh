@@ -8,7 +8,7 @@
 PROJECT_NAME="$1"
 BUILD_MODE="$2"
 
-if [ ! "$PROJECT_NAME" ]; then
+if [[ ! "$PROJECT_NAME" ]]; then
 	echo "--------------------------------------------------"
 	echo "ERROR: No project name provided."
 	echo "--------------------------------------------------"
@@ -36,7 +36,7 @@ fi
 # DEBUG:           Optional. Set to 1 to set 'DEBUG': True in the environment-specific
 #                  settings file for the project.
 # TIMEZONE:        Optional. The server timezone. Defaults to Australia/Sydney.
-if [ -f /vagrant/provision/config/env.sh ]; then
+if [[ -f /vagrant/provision/config/env.sh ]]; then
 	source /vagrant/provision/config/env.sh
 else
 	echo "--------------------------------------------------"
@@ -45,11 +45,17 @@ else
 	exit 1
 fi
 
-if [ ! "$DB_PASS" ]; then
+if [[ ! "$DB_PASS" ]]; then
 	echo "--------------------------------------------------"
 	echo "ERROR: No DB_PASS variable defined in provision/config/env.sh."
 	echo "--------------------------------------------------"
 	exit 1
+fi
+
+if [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
+    DEBUG=1
+else
+    DEBUG=2
 fi
 
 echo " "
@@ -59,7 +65,7 @@ echo "START PROVISION FOR \"$PROJECT_NAME\""
 echo " "
 
 echo " --- Adding SSH public key ---"
-if [ "$PUBLIC_KEY" ]; then
+if [[ "$PUBLIC_KEY" ]]; then
 	if ! grep -Fxq "$PUBLIC_KEY" .ssh/authorized_keys ; then
 		echo "$PUBLIC_KEY" >> .ssh/authorized_keys
     else
@@ -71,7 +77,7 @@ fi
 
 echo " "
 echo " --- Setting timezone ---"
-if [ ! "$TIMEZONE" ]; then
+if [[ ! "$TIMEZONE" ]]; then
 	TIMEZONE='Australia/Sydney'
 fi
 echo "$TIMEZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
@@ -88,20 +94,20 @@ apt-get update
 
 # Install all the things
 /vagrant/provision/git.sh
-/vagrant/provision/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE"
+/vagrant/provision/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
 /vagrant/provision/postgres.sh "$PROJECT_NAME" "$DB_PASS"
 
-if [ "$BUILD_MODE" == "project" ]; then
+if [[ "$BUILD_MODE" == "project" ]]; then
     /vagrant/provision/write-env-settings.sh "$PROJECT_NAME" "$DB_PASS" "$DEBUG"
 fi
 
-if [ -f "/vagrant/manage.py" ]; then
+if [[ -f "/vagrant/manage.py" ]]; then
     echo " "
     echo " --- Run migrations ---"
     su - vagrant -c "source ~/.virtualenvs/$PROJECT_NAME/bin/activate && /vagrant/manage.py migrate"
     
     # Add custom scripts
-    if [ ! -d bin ] ; then
+    if [[ ! -d bin ]] ; then
         su - vagrant -c "mkdir ~/bin"
     fi
 else

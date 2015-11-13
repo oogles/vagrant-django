@@ -2,14 +2,14 @@
 
 # Adapted from https://github.com/jackdb/pg-app-dev-vm
 
-PROJECT_NAME=$1
+PROJECT_NAME="$1"
 
 # Edit the following to change the name of the database user that will be created:
-APP_DB_USER=$PROJECT_NAME
-APP_DB_PASS=$2
+APP_DB_USER="$PROJECT_NAME"
+APP_DB_PASS="$2"
 
 # Edit the following to change the name of the database that is created (defaults to the user name)
-APP_DB_NAME=$APP_DB_USER
+APP_DB_NAME="$APP_DB_USER"
 
 # Edit the following to change the version of PostgreSQL that is installed
 PG_VERSION=9.4
