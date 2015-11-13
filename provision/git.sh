@@ -1,9 +1,11 @@
+#!/usr/bin/env bash
+
 echo " "
 echo " --- git ---"
 
 apt-get install -y git
 
-if [ -f /vagrant/provision/config/.gitconfig ]; then
+if [[ -f /vagrant/provision/config/.gitconfig ]]; then
 	su - vagrant -c "cp /vagrant/provision/config/.gitconfig ~/.gitconfig"
 else
 	echo " "

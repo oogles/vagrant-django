@@ -8,6 +8,12 @@ Vagrant.configure(2) do |config|\
 
   config.vm.provision "shell" do |s|
     s.path = "provision/bootstrap.sh"
+    
+    # For a full Django project
+    s.args = ["test_project", "project"]
+    
+    # For a single app
+    #s.args = ["test_project", "app"]
   end
 
   # Create a forwarded port mapping which allows access to a specific port
