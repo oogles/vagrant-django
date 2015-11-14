@@ -94,6 +94,7 @@ apt-get update
 
 # Install all the things
 /vagrant/provision/git.sh
+/vagrant/provision/ag.sh
 /vagrant/provision/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
 /vagrant/provision/postgres.sh "$PROJECT_NAME" "$DB_PASS"
 

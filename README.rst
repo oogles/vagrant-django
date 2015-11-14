@@ -18,6 +18,7 @@ A quick overview:
 
 * Custom SSH public key
 * Git
+* Ag (silver searcher), for code search
 * Virtualenv, with Python dependencies installed
 * PostgreSQL, with default database and user
 * Migrations run against new database

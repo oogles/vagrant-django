@@ -45,7 +45,9 @@ This means that the name given must be valid for each of those uses.
 env.sh
 ======
 
-The primary configuration file is ``provision/config/env.sh``. This file is required. It is simply a shell script that gets executed by the provisioning scripts to load the variables it contains. Each of the variables is discussed below. An example file is included.
+Location: ``provision/config/env.sh``
+
+The primary configuration file is ``env.sh``. It is simply a shell script that gets executed by the provisioning scripts to load the variables it contains. Each of the variables is discussed below. An example file is included.
 
 .. note::
     
@@ -69,7 +71,7 @@ The password to use for the default database user.
 PUBLIC_KEY
 ----------
 
-**Optional**
+*Optional*
 
 If given, the public key will be installed into ``/home/vagrant/.ssh/authorized_keys`` so it may be used to SSH into the Vagrant guest machine.
 
@@ -80,7 +82,7 @@ If given, the public key will be installed into ``/home/vagrant/.ssh/authorized_
 DEBUG
 -----
 
-**Optional**
+*Optional*
 
 This flag controls whether or not the Vagrant guest environment is a development or production environment. A value of ``1`` indicates a development environment, otherwise (including when it is not specified at all) it indicates a production environment.
 
@@ -96,7 +98,7 @@ The flag affects:
 TIMEZONE
 --------
 
-**Optional**
+*Optional*
 
 The timezone that the Vagrant guest machine should be set to. Defaults to "Australia/Sydney".
 
@@ -106,7 +108,11 @@ The timezone that the Vagrant guest machine should be set to. Defaults to "Austr
 .gitconfig
 ==========
 
-Another, optional configuration file is ``provision/config/.gitconfig``. It is copied verbatim into ``/home/vagrant/.gitconfig``. It should be a standard user-specific ``.gitconfig`` file, used to configure git behaviour for the ``vagrant`` user. See `the docs on .gitconfig files <https://git-scm.com/docs/git-config#_configuration_file>`_ for details.
+Location: ``provision/config/.gitconfig``
+
+A ``.gitconfig`` file, if present, will be copied verbatim into ``/home/vagrant/.gitconfig``. It should be a standard user-specific ``.gitconfig`` file, used to configure :ref:`git <feat-git>` behaviour for the ``vagrant`` user.
+
+See `the docs on .gitconfig files <https://git-scm.com/docs/git-config#_configuration_file>`_.
 
 An example ``.gitconfig``, simply specifying the commit credentials of the user, might be:
 
@@ -119,3 +125,24 @@ An example ``.gitconfig``, simply specifying the commit credentials of the user,
 .. note::
     
     The ``.gitconfig`` file is user-specific, and thus should not be committed to source control.
+
+
+.. _conf-agignore:
+
+.agignore
+=========
+
+Location: ``provision/config/.agignore``
+
+An ``.agignore`` file, if present, will be copied verbatim into ``/home/vagrant/.agignore``. This file can be used to add additional automatic "ignores" to the :ref:`silver searcher <feat-ag>` ``ag`` command.
+
+See `the docs on .agignore files <https://github.com/ggreer/the_silver_searcher/wiki/Advanced-Usage#agignore>`_.
+
+An example ``.agignore`` file is included, containing some excludes of standard files that would typically be irrelevant to a code search:
+
+::
+    
+    Vagrantfile
+    README*
+    docs/
+    */migrations/

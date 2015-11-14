@@ -31,6 +31,16 @@ Git
 `Git <https://git-scm.com/>`_ is installed in the guest machine, and a ``.gitconfig`` file :ref:`can be specified <conf-gitconfig>` to enable configuration of the git environment for the ``vagrant`` user.
 
 
+.. _feat-ag:
+
+Ag (silver searcher)
+====================
+
+The `"silver searcher" <https://github.com/ggreer/the_silver_searcher>`_ commandline utility, ``ag``, is installed in the guest machine. ``ag`` provides fast code search that is `better than ack <http://geoff.greer.fm/2011/12/27/the-silver-searcher-better-than-ack/>`_.
+
+An ``.agignore`` file :ref:`can be specified <conf-agignore>` to add some additional automatic "ignores" for the command. This can be used, for example, to exclude documentation from the search. A sample ``.agignore`` file is included.
+
+
 .. _feat-virtualenv:
 
 Virtualenv
