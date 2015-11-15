@@ -51,7 +51,9 @@ The primary configuration file is ``env.sh``. It is simply a shell script that g
 
 .. note::
     
-    The settings contained in ``env.py`` are sensitive and/or environment-specific, and thus should not be committed to source control.
+    The settings contained in ``env.sh`` are sensitive and/or environment-specific, and thus should not be committed to source control.
+
+.. note:: Several of these settings affect ``env.py``. See :ref:`feat-env-py` for the virtues of using these values over values hardcoded in ``settings.py``.
 
 .. _conf-var-db-pass:
 
@@ -63,8 +65,6 @@ DB_PASS
 The password to use for the default database user.
 
 .. warning:: Do NOT use the password in the example ``env.sh`` file.
-
-.. note:: This setting affects ``env.py``. See :ref:`feat-env-py` for the virtues of using these values over values hardcoded in ``settings.py``.
 
 .. _conf-var-public-key:
 
@@ -91,16 +91,16 @@ The flag affects:
 * :ref:`feat-dependencies`: If ``1``, a ``dev_requirements.txt`` file will be used, if present, to install development-only Python dependencies.
 * :ref:`feat-env-py`: If ``1``, ``DEBUG=True`` is set, otherwise ``DEBUG=False`` is.
 
-.. note:: This setting affects ``env.py``. See :ref:`feat-env-py` for the virtues of using these values over values hardcoded in ``settings.py``.
+.. _conf-var-time-zone:
 
-.. _conf-var-timezone:
-
-TIMEZONE
---------
+TIME_ZONE
+---------
 
 *Optional*
 
-The timezone that the Vagrant guest machine should be set to. Defaults to "Australia/Sydney".
+The time zone that the Vagrant guest machine should be set to. Defaults to "Australia/Sydney".
+
+This value is also written to ``env.py`` so it may be imported into ``settings.py`` and used for Django's ``TIME_ZONE`` setting.
 
 
 .. _conf-gitconfig:

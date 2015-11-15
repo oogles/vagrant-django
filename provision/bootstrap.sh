@@ -35,7 +35,7 @@ fi
 # PUBLIC_KEY:      Optional. A custom public key to install in .ssh/authorized_keys.
 # DEBUG:           Optional. Set to 1 to set 'DEBUG': True in the environment-specific
 #                  settings file for the project.
-# TIMEZONE:        Optional. The server timezone. Defaults to Australia/Sydney.
+# TIME_ZONE:       Optional. The server time zone. Defaults to Australia/Sydney.
 if [[ -f /vagrant/provision/config/env.sh ]]; then
 	source /vagrant/provision/config/env.sh
 else
@@ -76,11 +76,11 @@ else
 fi
 
 echo " "
-echo " --- Setting timezone ---"
-if [[ ! "$TIMEZONE" ]]; then
-	TIMEZONE='Australia/Sydney'
+echo " --- Setting time zone ---"
+if [[ ! "$TIME_ZONE" ]]; then
+	TIME_ZONE='Australia/Sydney'
 fi
-echo "$TIMEZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 echo " "
 echo " --- Add/update apt repos ---"
@@ -99,7 +99,7 @@ apt-get update
 /vagrant/provision/postgres.sh "$PROJECT_NAME" "$DB_PASS"
 
 if [[ "$BUILD_MODE" == "project" ]]; then
-    /vagrant/provision/write-env-settings.sh "$PROJECT_NAME" "$DB_PASS" "$DEBUG"
+    /vagrant/provision/write-env-settings.sh "$PROJECT_NAME" "$DEBUG" "$DB_PASS" "$TIME_ZONE"
 fi
 
 if [[ -f "/vagrant/manage.py" ]]; then

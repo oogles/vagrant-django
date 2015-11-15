@@ -15,12 +15,12 @@ A user-defined SSH public key can be provided as the :ref:`conf-var-public-key` 
 This is useful in situations where ``vagrant ssh`` is not supported out of the box, and you already have an alternate SSH client with an existing private/public key pair in operation. E.g. Using PuTTY for SSH under Windows.
 
 
-.. _feat-timezone:
+.. _feat-time-zone:
 
 Time zone
 =========
 
-The time zone of the guest machine can be set using the :ref:`conf-var-timezone` setting in the ``env.sh`` file.
+The time zone of the guest machine can be set using the :ref:`conf-var-time-zone` setting in the ``env.sh`` file.
 
 
 .. _feat-git:
@@ -111,8 +111,9 @@ The ``environ`` dictionary is used rather than simply providing a set of module-
 The ``environ`` dictionary will always contain each of the following key/values:
 
 * DEBUG: Will be True if :ref:`conf-var-debug` is set to ``1``, False otherwise (including when it is not defined at all).
-* DB_USER: Same as the :ref:`project name <conf-var-project-name>`.
+* DB_USER: Set to the value of the :ref:`project name <conf-var-project-name>`.
 * DB_PASSWORD: Set to the value of :ref:`conf-var-db-pass`.
+* TIME_ZONE: Set to the value of :ref:`conf-var-time-zone`.
 * SECRET_KEY: Automatically generated when the ``env.py`` file is first written. More secure than the default provided by Django's ``startproject``, this version containing 128 characters from an expanded alphabet, chosen pseudorandomly using Python's ``random.SystemRandom().choice``.
 
 .. note::
