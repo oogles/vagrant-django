@@ -1,6 +1,6 @@
-SCRIPT_PATH="bin/runserver+"
+SCRIPT_PATH="/home/vagrant/bin/runserver+"
 
-if [ -f "$SCRIPT_PATH" ]; then
+if [[ -f "$SCRIPT_PATH" ]]; then
 	exit
 fi
 
