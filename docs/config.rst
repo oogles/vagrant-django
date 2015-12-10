@@ -45,11 +45,15 @@ This means that the name given must be valid for each of those uses.
 env.sh
 ======
 
-The primary configuration file is ``provision/config/env.sh``. This file is required. It is simply a shell script that gets executed by the provisioning scripts to load the variables it contains. Each of the variables is discussed below. An example file is included.
+Location: ``provision/config/env.sh``
+
+The primary configuration file is ``env.sh``. It is simply a shell script that gets executed by the provisioning scripts to load the variables it contains. Each of the variables is discussed below. An example file is included.
 
 .. note::
     
-    The settings contained in ``env.py`` are sensitive and/or environment-specific, and thus should not be committed to source control.
+    The settings contained in ``env.sh`` are sensitive and/or environment-specific, and thus should not be committed to source control.
+
+.. note:: Several of these settings affect ``env.py``. See :ref:`feat-env-py` for the virtues of using these values over values hardcoded in ``settings.py``.
 
 .. _conf-var-db-pass:
 
@@ -62,14 +66,12 @@ The password to use for the default database user.
 
 .. warning:: Do NOT use the password in the example ``env.sh`` file.
 
-.. note:: This setting affects ``env.py``. See :ref:`feat-env-py` for the virtues of using these values over values hardcoded in ``settings.py``.
-
 .. _conf-var-public-key:
 
 PUBLIC_KEY
 ----------
 
-**Optional**
+*Optional*
 
 If given, the public key will be installed into ``/home/vagrant/.ssh/authorized_keys`` so it may be used to SSH into the Vagrant guest machine.
 
@@ -80,25 +82,25 @@ If given, the public key will be installed into ``/home/vagrant/.ssh/authorized_
 DEBUG
 -----
 
-**Optional**
+*Optional*
 
 This flag controls whether or not the Vagrant guest environment is a development or production environment. A value of ``1`` indicates a development environment, otherwise (including when it is not specified at all) it indicates a production environment.
 
 The flag affects:
 
-* :ref:`feat-dependencies`: If ``1``, a ``dev_requirements.txt`` file will be used, if present, to install development-only Python dependencies.
+* :ref:`feat-py-dependencies`: If ``1``, a ``dev_requirements.txt`` file will be used, if present, to install development-only Python dependencies.
 * :ref:`feat-env-py`: If ``1``, ``DEBUG=True`` is set, otherwise ``DEBUG=False`` is.
 
-.. note:: This setting affects ``env.py``. See :ref:`feat-env-py` for the virtues of using these values over values hardcoded in ``settings.py``.
+.. _conf-var-time-zone:
 
-.. _conf-var-timezone:
+TIME_ZONE
+---------
 
-TIMEZONE
---------
+*Optional*
 
-**Optional**
+The time zone that the Vagrant guest machine should be set to. Defaults to "Australia/Sydney".
 
-The timezone that the Vagrant guest machine should be set to. Defaults to "Australia/Sydney".
+This value is also written to ``env.py`` so it may be imported into ``settings.py`` and used for Django's ``TIME_ZONE`` setting.
 
 
 .. _conf-gitconfig:
@@ -106,7 +108,11 @@ The timezone that the Vagrant guest machine should be set to. Defaults to "Austr
 .gitconfig
 ==========
 
-Another, optional configuration file is ``provision/config/.gitconfig``. It is copied verbatim into ``/home/vagrant/.gitconfig``. It should be a standard user-specific ``.gitconfig`` file, used to configure git behaviour for the ``vagrant`` user. See `the docs on .gitconfig files <https://git-scm.com/docs/git-config#_configuration_file>`_ for details.
+Location: ``provision/config/.gitconfig``
+
+A ``.gitconfig`` file, if present, will be copied verbatim into ``/home/vagrant/.gitconfig``. It should be a standard user-specific ``.gitconfig`` file, used to configure :ref:`git <feat-git>` behaviour for the ``vagrant`` user.
+
+See `the docs on .gitconfig files <https://git-scm.com/docs/git-config#_configuration_file>`_.
 
 An example ``.gitconfig``, simply specifying the commit credentials of the user, might be:
 
@@ -119,3 +125,24 @@ An example ``.gitconfig``, simply specifying the commit credentials of the user,
 .. note::
     
     The ``.gitconfig`` file is user-specific, and thus should not be committed to source control.
+
+
+.. _conf-agignore:
+
+.agignore
+=========
+
+Location: ``provision/config/.agignore``
+
+An ``.agignore`` file, if present, will be copied verbatim into ``/home/vagrant/.agignore``. This file can be used to add additional automatic "ignores" to the :ref:`silver searcher <feat-ag>` ``ag`` command.
+
+See `the docs on .agignore files <https://github.com/ggreer/the_silver_searcher/wiki/Advanced-Usage#agignore>`_.
+
+An example ``.agignore`` file is included, containing some excludes of standard files that would typically be irrelevant to a code search:
+
+::
+    
+    Vagrantfile
+    README*
+    docs/
+    */migrations/

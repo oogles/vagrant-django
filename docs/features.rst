@@ -15,12 +15,12 @@ A user-defined SSH public key can be provided as the :ref:`conf-var-public-key` 
 This is useful in situations where ``vagrant ssh`` is not supported out of the box, and you already have an alternate SSH client with an existing private/public key pair in operation. E.g. Using PuTTY for SSH under Windows.
 
 
-.. _feat-timezone:
+.. _feat-time-zone:
 
 Time zone
 =========
 
-The time zone of the guest machine can be set using the :ref:`conf-var-timezone` setting in the ``env.sh`` file.
+The time zone of the guest machine can be set using the :ref:`conf-var-time-zone` setting in the ``env.sh`` file.
 
 
 .. _feat-git:
@@ -31,22 +31,14 @@ Git
 `Git <https://git-scm.com/>`_ is installed in the guest machine, and a ``.gitconfig`` file :ref:`can be specified <conf-gitconfig>` to enable configuration of the git environment for the ``vagrant`` user.
 
 
-.. _feat-virtualenv:
+.. _feat-ag:
 
-Virtualenv
-==========
+Ag (silver searcher)
+====================
 
-A virtualenv with a name equal to the :ref:`project name <conf-var-project-name>` is created in the guest machine, at ``/home/vagrant/.virtualenvs/<project name>``. This virtualenv is automatically activated when the ``vagrant`` user SSHs into the machine.
+The `"silver searcher" <https://github.com/ggreer/the_silver_searcher>`_ commandline utility, ``ag``, is installed in the guest machine. ``ag`` provides fast code search that is `better than ack <http://geoff.greer.fm/2011/12/27/the-silver-searcher-better-than-ack/>`_.
 
-
-.. _feat-dependencies:
-
-Dependency installation
-=======================
-
-If using the "project" build mode, the provisioner will look for a ``requirements.txt`` file defined in the project root directory (``/vagrant/`` in the guest machine). If found, these requirements will be installed into the virtualenv. This is designed to allow installation of Python packages required in a production environment. It is not suitable for "app" builds, as apps should specify their dependencies in other ways, so they can be identified and installed along with the app.
-
-For both "project" and "app" build modes, and where :ref:`conf-var-debug` is ``1``, the provisioner will also look for a ``dev_requirements.txt`` file, also in the project root directory. If found, these requirements will also be installed into the virtualenv. This is designed to enable specification of Python packages required during development, that are *not* required for the project/application to run in production. An example might include `sphinx <http://sphinx-doc.org/>`_, for documentation generation.
+An ``.agignore`` file :ref:`can be specified <conf-agignore>` to add some additional automatic "ignores" for the command. This can be used, for example, to exclude documentation from the search. A sample ``.agignore`` file is included.
 
 
 .. _feat-postgres:
@@ -59,6 +51,45 @@ PostgreSQL is installed in the guest machine.
 In addition, a database user is created with a username equal to the :ref:`project name <conf-var-project-name>` and a password equal to :ref:`conf-var-db-pass`. A database is also created, also with a name equal to the :ref:`project name <conf-var-project-name>`, with the aforementioned user as the owner.
 
 The Postgres installation is configured to listen on the default port (5432).
+
+
+.. _feat-virtualenv:
+
+Virtualenv
+==========
+
+A virtualenv with a name equal to the :ref:`project name <conf-var-project-name>` is created in the guest machine, at ``/home/vagrant/.virtualenvs/<project name>``. This virtualenv is automatically activated when the ``vagrant`` user SSHs into the machine.
+
+.. _feat-py-dependencies:
+
+Python dependency installation
+------------------------------
+
+If using the "project" build mode, the provisioner will look for a ``requirements.txt`` file defined in the project root directory (``/vagrant/`` in the guest machine). If found, these requirements will be installed into the virtualenv. This is designed to allow installation of Python packages required in a production environment. It is not suitable for "app" builds, as apps should specify their dependencies in other ways, so they can be identified and installed along with the app.
+
+For both "project" and "app" build modes, and where :ref:`conf-var-debug` is ``1``, the provisioner will also look for a ``dev_requirements.txt`` file, also in the project root directory. If found, these requirements will also be installed into the virtualenv. This is designed to enable specification of Python packages required during development, that are *not* required for the project/application to run in production. An example might include `sphinx <http://sphinx-doc.org/>`_, for documentation generation.
+
+
+.. _feat-node:
+
+Node.js/npm
+===========
+
+*Only available when* :ref:`conf-var-debug` *is* ``1``
+
+`Node.js <https://nodejs.org/en/>`_ and `npm <https://www.npmjs.com/>`_ are installed in the guest machine for development environments. They are included to provide development support (e.g. linting, concatenating, minifying, compiling css, etc).
+
+A ``node_modules`` directory is created at ``/home/vagrant/node_modules/`` and a symlink to this directory is created in the project root directory (``/vagrant/node_modules``). Keeping the ``node_modules`` directory out of the synced folder helps avoid potential issues with Windows host machines - path names generated by installing certain npm packages can exceed the maximum Windows allows.
+
+.. note::
+    In order to create the ``node_modules`` symlink when running a Windows host and using VirtualBox shared folders, ``vagrant up`` must be run with Administrator privileges to allow the creation of symlinks in the synced folder. See :ref:`assumptions-dependencies-windows` for details.
+
+.. _feat-node-dependencies:
+
+Node.js dependency installation
+-------------------------------
+
+The provisioner will look for a ``package.json`` file defined in the project root directory (``/vagrant/`` in the guest machine). If found, ``npm install`` will be run in the same directory, installing any ``dependencies`` or ``devDependencies`` defined by ``package.json``.
 
 
 .. _feat-migrations:
@@ -101,8 +132,9 @@ The ``environ`` dictionary is used rather than simply providing a set of module-
 The ``environ`` dictionary will always contain each of the following key/values:
 
 * DEBUG: Will be True if :ref:`conf-var-debug` is set to ``1``, False otherwise (including when it is not defined at all).
-* DB_USER: Same as the :ref:`project name <conf-var-project-name>`.
+* DB_USER: Set to the value of the :ref:`project name <conf-var-project-name>`.
 * DB_PASSWORD: Set to the value of :ref:`conf-var-db-pass`.
+* TIME_ZONE: Set to the value of :ref:`conf-var-time-zone`.
 * SECRET_KEY: Automatically generated when the ``env.py`` file is first written. More secure than the default provided by Django's ``startproject``, this version containing 128 characters from an expanded alphabet, chosen pseudorandomly using Python's ``random.SystemRandom().choice``.
 
 .. note::
@@ -122,5 +154,5 @@ The following shell commands are made available for convenience:
 
   * Calls ``manage.py clean_pyc`` prior to calling ``runserver_plus``.
   * Automatically restarts the runserver, after a 3 second delay, if it exits. This avoids the need to babysit the runserver - if an error occurs that causes it to exit, it will automatically restart. It will keep trying to get going until the error is fixed, without you needing to interact with it. Note that ``clean_pyc`` is not called between automatic restarts.
- 
+  
   Assumes installation of `django-extensions <https://github.com/django-extensions/django-extensions>`_, which defines the ``runserver_plus`` and ``clean_pyc`` commands.

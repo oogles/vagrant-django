@@ -28,13 +28,15 @@ if [[ -f "$ENV_FILE" ]]; then
 fi
 
 # Get additional variables
-DB_PASS="$2"
-
-if [[ "$3" -eq 1 ]]; then
+if [[ "$2" -eq 1 ]]; then
 	DEBUG='True'
 else
 	DEBUG='False'
 fi
+
+DB_PASS="$3"
+TIME_ZONE="$4"
+
 
 # Generate SECRET_KEY using a Python script to choose 100 random characters from
 # a set of letters, numbers and punctuation. Note: an explicit list of punctuation
@@ -67,7 +69,8 @@ environ = {
     'DEBUG': $DEBUG,
     'SECRET_KEY': '$SECRET_KEY',
     'DB_USER': '$PROJECT_NAME',
-    'DB_PASSWORD': '$DB_PASS'
+    'DB_PASSWORD': '$DB_PASS',
+    'TIME_ZONE': '$TIME_ZONE'
 }
 EOF
 

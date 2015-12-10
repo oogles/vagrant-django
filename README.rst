@@ -18,7 +18,9 @@ A quick overview:
 
 * Custom SSH public key
 * Git
-* Virtualenv, with Python dependencies installed
+* Ag (silver searcher), for code search
+* Virtualenv, plus installation of Python dependencies
+* Node.js and npm, plus installation of Node.js dependencies
 * PostgreSQL, with default database and user
 * Migrations run against new database
 * An environment-specific Python settings file
@@ -34,6 +36,8 @@ How to use
 #.  Add further customisation files to ``provision/config/`` if necessary. See the `configuration documentation <https://vagrant-django.readthedocs.org/en/latest/config.html>`_ for details on what further customisation options are available.
 #.  Add ``provision/config/env.sh`` (and any other necessary config files, such as `.gitconfig <https://vagrant-django.readthedocs.org/en/latest/config.html#conf-gitconfig>`_) to your ``.gitignore`` file, or equivalent. Environment-specific configurations should not be committed to source control.
 #. ``vagrant up``
+
+**IMPORTANT NOTE:** When running a Windows host and using VirtualBox shared folders, ``vagrant up`` must be run with Administrator privileges to allow the creation of symlinks in the synced folder. See `the documentation <https://vagrant-django.readthedocs.org/en/latest/overview.html#assumptions-dependencies-windows>`_ for details.
 
 
 Assumptions and dependencies

@@ -18,7 +18,7 @@ The provisioning scripts support building the Vagrant guest machine in two sligh
 
 The documentation of the :doc:`available features <features>` indicates which mode each feature applies to - most apply to both. At a glance, the differences are:
 
-* Full project builds install from a ``requirements.txt`` file, if one can be found. See :ref:`feat-dependencies` for details.
+* Full project builds install Python dependencies from a ``requirements.txt`` file, if one can be found. See :ref:`feat-py-dependencies` for details.
 * The :ref:`feat-env-py` settings file is written for full project builds only.
 
 Which mode is used is specified by the :ref:`conf-vagrantfile`.
@@ -31,7 +31,8 @@ Assumptions and dependencies
 
 The provisioning scripts assume:
 
-* The code is shared at ``/vagrant/`` in the Vagrant guest machine.
+* The guest machine is Ubuntu.
+* The code is synced to ``/vagrant/`` in the Vagrant guest machine.
 * If a ``manage.py`` file exists, it will be at ``/vagrant/``. For full projects, this effectively means that the Django project root directory should *be* ``/vagrant/``.
 * Full Django projects will have a post-1.4 project structure, having a directory with a name equal to the specified :ref:`project name <conf-var-project-name>` under the project root directory (i.e. in the guest machine: ``/vagrant/<project name>/``).
 
@@ -40,7 +41,18 @@ Several features are only enabled if a ``manage.py`` file is detected:
 * Running migrations.
 * The :ref:`shortcut commands <feat-commands>`, as they are shortcuts to ``manage.py`` commands.
 
-The shortcut commands also depend on the `django-extensions <https://github.com/django-extensions/django-extensions>`_ app. It will need to be installed for them to work. This means including it in either your ``requirements.txt`` or ``dev_requirements.txt`` file (see :ref:`feat-dependencies`).
+The shortcut commands also depend on the `django-extensions <https://github.com/django-extensions/django-extensions>`_ app. It will need to be installed for them to work. This means including it in either your ``requirements.txt`` or ``dev_requirements.txt`` file (see :ref:`feat-py-dependencies`).
+
+.. _assumptions-dependencies-windows:
+
+Windows hosts
+-------------
+
+If using `Virtualbox <https://www.virtualbox.org/>`_ as a provider for Vagrant under Windows, the synced folders will be handled by Virtualbox's shared folders feature by default. When creating symlinks in this mode, which the provisioning scripts do when installing Node.js (see :ref:`feat-node`), requires Administrator privileges. Specifically, ``vagrant up`` needs to be run from a command prompt with Administrator privileges.
+
+This can be done by right-clicking the command prompt shortcut and choosing "Run as administrator", then running ``vagrant up`` from that command prompt.
+
+Alternatively, the Windows ``.cmd`` script `found here <https://gist.github.com/oogles/a6de0462cfa755013a90>`_ can be used to automatically launch a command prompt with Administrator privileges requested from UAC, opened to a given development directory, ready for ``vagrant`` commands to be issued. See the script's comments for details on usage.
 
 
 How to use
@@ -52,3 +64,6 @@ How to use
 #.  Add further customisation files to ``provision/config/`` if necessary. See :doc:`config` for details on what further customisation options are available.
 #.  Add ``provision/config/env.sh`` (and any other necessary config files, such as :ref:`conf-gitconfig`) to your ``.gitignore`` file, or equivalent. Environment-specific configurations should not be committed to source control.
 #. ``vagrant up``
+
+.. note::
+    When running a Windows host and using VirtualBox shared folders, ``vagrant up`` must be run with Administrator privileges to allow the creation of symlinks in the synced folder. See :ref:`assumptions-dependencies-windows` for details.
