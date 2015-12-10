@@ -88,7 +88,7 @@ This flag controls whether or not the Vagrant guest environment is a development
 
 The flag affects:
 
-* :ref:`feat-dependencies`: If ``1``, a ``dev_requirements.txt`` file will be used, if present, to install development-only Python dependencies.
+* :ref:`feat-py-dependencies`: If ``1``, a ``dev_requirements.txt`` file will be used, if present, to install development-only Python dependencies.
 * :ref:`feat-env-py`: If ``1``, ``DEBUG=True`` is set, otherwise ``DEBUG=False`` is.
 
 .. _conf-var-time-zone:

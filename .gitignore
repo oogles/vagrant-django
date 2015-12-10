@@ -4,3 +4,6 @@ provision/config/.gitconfig
 
 # Docs
 docs/_build/
+
+# Node modules symlink
+node_modules
