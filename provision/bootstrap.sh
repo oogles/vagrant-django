@@ -3,7 +3,7 @@
 # vagrant-django
 # Vagrant provisioning for Django projects.
 # https://github.com/oogles/vagrant-django
-# v0.2
+# v0.2.1
 
 PROJECT_NAME="$1"
 BUILD_MODE="$2"
@@ -89,8 +89,10 @@ echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteract
 # Install all the things
 /vagrant/provision/git.sh
 /vagrant/provision/ag.sh
-/vagrant/provision/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
 /vagrant/provision/postgres.sh "$PROJECT_NAME" "$DB_PASS"
+
+# Must run after postgres is installed if installing psycopg2
+/vagrant/provision/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
 
 if [[ "$DEBUG" -eq 1 ]]; then
     /vagrant/provision/node-npm.sh "$PROJECT_NAME" "$BUILD_MODE"
