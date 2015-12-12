@@ -99,6 +99,9 @@ Running migrations
 
 If a ``manage.py`` file is found in the project root directory, the management command ``manage.py migrate`` will be run after the virtualenv is built and activated, Postgres is installed and the database created.
 
+.. note::
+    In order for ``manage.py migrate`` to execute, Django must have been installed via ``requirements.txt`` or ``dev_requirements.txt`` and the ``DATABASES`` setting in ``settings.py`` must be correctly configured.
+
 
 .. _feat-env-py:
 
