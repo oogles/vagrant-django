@@ -27,5 +27,5 @@ fi
 if [[ -f /vagrant/package.json ]]; then
     echo " "
     echo " --- Node.js dependencies ---"
-	cd /vagrant/ && npm install
+	su - vagrant -c "cd /vagrant/ && npm install"
 fi
