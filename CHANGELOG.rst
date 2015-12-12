@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+0.2.1
+=====
+
+* Fixed #1: Installing psycopg2 via ``requirements.txt`` or ``dev_requirements.txt`` before Postgres was installed caused the ``pip install -r`` to fail.
+
 0.2
 ===
 

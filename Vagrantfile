@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.configure(2) do |config|\
+Vagrant.configure(2) do |config|
   # Reference: https://docs.vagrantup.com.
 
   config.vm.box = "ubuntu/trusty32"
