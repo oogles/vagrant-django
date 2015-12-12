@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+0.2.2
+=====
+
+* Fixed #2: root ownership of node_modules/.bin.
+
 0.2.1
 =====
 

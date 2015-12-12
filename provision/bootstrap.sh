@@ -3,7 +3,7 @@
 # vagrant-django
 # Vagrant provisioning for Django projects.
 # https://github.com/oogles/vagrant-django
-# v0.2.1
+# v0.2.2
 
 PROJECT_NAME="$1"
 BUILD_MODE="$2"
