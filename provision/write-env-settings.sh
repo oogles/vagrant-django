@@ -37,7 +37,6 @@ fi
 DB_PASS="$3"
 TIME_ZONE="$4"
 
-
 # Generate SECRET_KEY using a Python script to choose 100 random characters from
 # a set of letters, numbers and punctuation. Note: an explicit list of punctuation
 # is provided, rather than using string.punctuation, so as to exclude single quotes,
@@ -73,5 +72,10 @@ environ = {
     'TIME_ZONE': '$TIME_ZONE'
 }
 EOF
+
+# Make the file only accessible to the owner.
+# Won't work in VirtualBox shared folders, but will in a proper Linux production
+# environment.
+chmod 600 "$ENV_FILE"
 
 echo "File written to $ENV_FILE."

@@ -10,10 +10,10 @@ Vagrant.configure(2) do |config|
     s.path = "provision/bootstrap.sh"
     
     # For a full Django project
-    s.args = ["test_project", "project"]
+    s.args = ["project_name", "project"]
     
     # For a single app
-    #s.args = ["test_project", "app"]
+    #s.args = ["project_name", "app"]
   end
 
   # Create a forwarded port mapping which allows access to a specific port

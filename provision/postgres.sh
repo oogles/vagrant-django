@@ -53,7 +53,7 @@ echo "host    all             all             all                     md5" >> "$
 # Explicitly set default client_encoding
 echo "client_encoding = utf8" >> "$PG_CONF"
 
-# Restart so that all new config is loaded:
+# Restart so that all new config is loaded
 service postgresql restart
 
 echo " "
@@ -68,6 +68,10 @@ CREATE DATABASE $APP_DB_NAME WITH OWNER=$APP_DB_USER
                                   LC_CTYPE='en_US.utf8'
                                   ENCODING='UTF8'
                                   TEMPLATE=template0;
+
+-- Give the database user permission to create databases, so it can be used
+-- to create test databases
+ALTER USER $APP_DB_USER CREATEDB;
 EOF
 
 print_db_usage
