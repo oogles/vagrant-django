@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+0.2.3
+=====
+
+* Fixed #3: No permission to create test databases.
+* Made env.py file accessible only to the owner (vagrant), at least in certain situations.
+
 0.2.2
 =====
 
