@@ -90,8 +90,10 @@ echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteract
 /vagrant/provision/git.sh
 /vagrant/provision/ag.sh
 /vagrant/provision/postgres.sh "$PROJECT_NAME" "$DB_PASS"
+/vagrant/provision/image-libs.sh
 
-# Must run after postgres is installed if installing psycopg2
+# Must run after postgres is installed if installing psycopg2, and after image
+# libraries
 /vagrant/provision/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
 
 /vagrant/provision/node-npm.sh "$PROJECT_NAME" "$DEBUG"

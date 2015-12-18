@@ -6,6 +6,7 @@ Change Log
 ===
 
 * Updated Node.js/npm to install when ``DEBUG`` is set or not. Will use ``npm install --production`` when not set.
+* Added provisioning for several of the image libraries Pillow requires for some of its features.
 
 0.2.3
 =====
