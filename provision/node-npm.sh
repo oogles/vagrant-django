@@ -4,6 +4,7 @@ echo " "
 echo " --- Node.js/npm ---"
 
 PROJECT_NAME="$1"
+DEBUG="$2"
 
 # Install node and update npm
 apt-get install -y nodejs
@@ -27,5 +28,9 @@ fi
 if [[ -f /vagrant/package.json ]]; then
     echo " "
     echo " --- Node.js dependencies ---"
-	su - vagrant -c "cd /vagrant/ && npm install"
+    if [[ "$DEBUG" -eq 1 ]]; then
+        su - vagrant -c "cd /vagrant/ && npm install"
+    else
+        su - vagrant -c "cd /vagrant/ && npm install --production"
+    fi
 fi

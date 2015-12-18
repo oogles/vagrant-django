@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+0.3
+===
+
+* Updated Node.js/npm to install when ``DEBUG`` is set or not. Will use ``npm install --production`` when not set.
+
 0.2.3
 =====
 
