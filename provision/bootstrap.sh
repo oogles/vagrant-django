@@ -96,7 +96,7 @@ echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteract
 # libraries
 /vagrant/provision/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
 
-/vagrant/provision/node-npm.sh "$PROJECT_NAME" "$DEBUG"
+/vagrant/provision/node-npm.sh "$DEBUG"
 
 if [[ "$BUILD_MODE" == "project" ]]; then
     /vagrant/provision/write-env-settings.sh "$PROJECT_NAME" "$DEBUG" "$DB_PASS" "$TIME_ZONE"

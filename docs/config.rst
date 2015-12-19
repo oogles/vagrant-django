@@ -37,7 +37,7 @@ The name of the project is used by the provisioning scripts for the following:
 * The name of the virtualenv created.
 * The location of the ``env.py`` Python settings file: ``<project root>/<project name>/env.py``. It is assumed this is the directory containing ``settings.py``.
 
-This means that the name given must be valid for each of those uses.
+This means that the name given must be valid for each of those uses. E.g. names incorporating hyphens should use underscores instead (use ``project_name`` instead of ``project-name``).
 
 
 .. _conf-env-sh:

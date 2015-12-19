@@ -11,7 +11,7 @@ PROJECT_NAME="$1"
 # Check that there is a project subdirectory to write the file into (this will
 # put it in the same directory as settings.py for a standard Django project
 # layout).
-PROJECT_SUBDIR="/vagrant/${PROJECT_NAME//-/_}"
+PROJECT_SUBDIR="/vagrant/$PROJECT_NAME"
 if [[ ! -d "$PROJECT_SUBDIR" ]]; then
     echo "--------------------------------------------------"
     echo "WARNING: No $PROJECT_SUBDIR directory to write env.py to."

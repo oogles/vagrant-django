@@ -3,7 +3,6 @@
 echo " "
 echo " --- Node.js/npm ---"
 
-PROJECT_NAME="$1"
 DEBUG="$2"
 
 # Install node and update npm
