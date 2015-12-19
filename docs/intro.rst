@@ -1,6 +1,6 @@
-========
-Overview
-========
+============
+Introduction
+============
 
 Included are shell provisioning scripts and sample configuration files allowing the construction of a Vagrant guest machine designed to support either full Django projects (both development and production environments) and the development of single Django apps for packaging and distrubution.
 

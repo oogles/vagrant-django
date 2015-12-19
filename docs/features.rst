@@ -53,6 +53,26 @@ In addition, a database user is created with a username equal to the :ref:`proje
 The Postgres installation is configured to listen on the default port (5432).
 
 
+.. _feat-image-libs:
+
+Image libraries
+===============
+
+Various system-level image libraries used by `Pillow <https://python-pillow.github.io/>`_ are installed in the guest machine.
+
+To install Pillow itself, it should be included in ``requirements.txt`` along with other Python dependencies. But considering many of its features `require external libraries <http://pillow.readthedocs.org/en/3.0.x/installation.html#external-libraries>`_, and the high likelihood that a Django project will require Pillow, those libraries are installed in readiness.
+
+The exact packages installed are taken from the Pillow `"depends" script for Ubuntu <https://github.com/python-pillow/Pillow/blob/master/depends/ubuntu_14.04.sh>`_, though not all are used.
+
+Installed packages:
+
+* libtiff5-dev
+* libjpeg8-dev
+* zlib1g-dev
+* libfreetype6-dev
+* liblcms2-dev
+
+
 .. _feat-virtualenv:
 
 Virtualenv

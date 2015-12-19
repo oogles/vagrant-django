@@ -8,6 +8,6 @@ The building blocks for a `Vagrant <https://www.vagrantup.com/>`_ environment fo
     :caption: Contents
     :maxdepth: 2
     
-    overview
+    intro
     config
     features
