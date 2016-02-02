@@ -6,8 +6,8 @@ echo " --- Node.js/npm ---"
 DEBUG="$2"
 
 # Install node and update npm
-apt-get install -y nodejs
-npm install npm -g
+apt-get -qq install nodejs
+npm install npm -g --quiet
 
 # Get node_modules out of the shared folder.
 # This avoids multiple issues when using a Windows host.
@@ -28,8 +28,8 @@ if [[ -f /vagrant/package.json ]]; then
     echo " "
     echo " --- Node.js dependencies ---"
     if [[ "$DEBUG" -eq 1 ]]; then
-        su - vagrant -c "cd /vagrant/ && npm install"
+        su - vagrant -c "cd /vagrant/ && npm install --quiet"
     else
-        su - vagrant -c "cd /vagrant/ && npm install --production"
+        su - vagrant -c "cd /vagrant/ && npm install --production --quiet"
     fi
 fi

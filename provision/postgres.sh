@@ -35,8 +35,8 @@ if command -v psql; then
     exit
 fi
 
-apt-get -y install libpq-dev python-dev
-apt-get -y install "postgresql-$PG_VERSION" "postgresql-contrib-$PG_VERSION"
+apt-get -qq install libpq-dev python-dev
+apt-get -qq install "postgresql-$PG_VERSION" "postgresql-contrib-$PG_VERSION"
 
 echo " "
 echo "Configuring..."

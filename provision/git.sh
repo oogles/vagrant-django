@@ -3,7 +3,7 @@
 echo " "
 echo " --- git ---"
 
-apt-get install -y git
+apt-get -qq install git
 
 if [[ -f /vagrant/provision/config/.gitconfig ]]; then
 	su - vagrant -c "cp /vagrant/provision/config/.gitconfig ~/.gitconfig"

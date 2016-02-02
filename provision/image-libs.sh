@@ -12,4 +12,4 @@ echo " --- Image libraries ---"
 # https://github.com/python-pillow/Pillow/blob/master/depends/ubuntu_14.04.sh
 # (not all are installed)
 
-apt-get -y install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev
+apt-get -qq install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev

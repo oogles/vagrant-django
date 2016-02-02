@@ -15,7 +15,7 @@ if ! command -v pip; then
 fi
 
 # Install virtualenv
-pip install virtualenv
+pip install -q virtualenv
 
 echo " "
 echo "Creating virtualenv for $PROJECT_NAME..."
@@ -48,7 +48,7 @@ if [[ "$BUILD_MODE" == "project" ]]; then
     echo " "
     echo " --- Python dependencies ---"
     if [ -f /vagrant/requirements.txt ]; then
-        su - vagrant -c "$ACTIVATE_STR && pip install -r /vagrant/requirements.txt"
+        su - vagrant -c "$ACTIVATE_STR && pip install -q -r /vagrant/requirements.txt"
     else
         echo "None found"
     fi
@@ -58,7 +58,7 @@ if [[ "$DEBUG" -eq 1 ]]; then
     echo " "
     echo " ---  Python dev dependencies ---"
     if [ -f /vagrant/dev_requirements.txt ]; then
-        su - vagrant -c "$ACTIVATE_STR && pip install -r /vagrant/dev_requirements.txt"
+        su - vagrant -c "$ACTIVATE_STR && pip install -q -r /vagrant/dev_requirements.txt"
     else
         echo "None found"
     fi
