@@ -37,3 +37,4 @@ fi
 echo " "
 echo "Updating..."
 apt-get -qq update
+echo "Done"
