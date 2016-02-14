@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 echo " "
-echo " --- Image libraries ---"
+echo " --- Install stuff ---"
+
+# Install git and ag
+apt-get -qq install git silversearcher-ag
 
 # Install various image processing libraries, namely for Pillow.
 # Pillow itself is not installed - if necessary, it should be listed in requirements.txt.
@@ -13,3 +16,5 @@ echo " --- Image libraries ---"
 # (not all are installed)
 
 apt-get -qq install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev
+
+echo "Done"

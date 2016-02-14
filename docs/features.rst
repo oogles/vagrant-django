@@ -12,7 +12,7 @@ Custom SSH public key
 
 A user-defined SSH public key can be provided as the :ref:`conf-var-public-key` variable in the ``env.sh`` file. This will be installed into ``/home/vagrant/.ssh/authorized_keys``, allowing it to be used to SSH into the guest machine as the ``vagrant`` user.
 
-This is useful in situations where ``vagrant ssh`` is not supported out of the box, and you already have an alternate SSH client with an existing private/public key pair in operation. E.g. Using PuTTY for SSH under Windows.
+This is useful in situations where ``vagrant ssh`` is not supported out of the box, and you already have an alternate SSH client with an existing private/public key pair in operation. E.g. Using PuTTY under Windows.
 
 
 .. _feat-time-zone:
@@ -28,7 +28,10 @@ The time zone of the guest machine can be set using the :ref:`conf-var-time-zone
 Git
 ===
 
-`Git <https://git-scm.com/>`_ is installed in the guest machine, and a ``.gitconfig`` file :ref:`can be specified <conf-gitconfig>` to enable configuration of the git environment for the ``vagrant`` user.
+`Git <https://git-scm.com/>`_ is installed in the guest machine.
+
+.. note::
+    A ``.gitconfig`` file can be placed in ``provision/conf/`` to enable configuration of the git environment for the ``vagrant`` user.
 
 
 .. _feat-ag:
@@ -38,19 +41,8 @@ Ag (silver searcher)
 
 The `"silver searcher" <https://github.com/ggreer/the_silver_searcher>`_ commandline utility, ``ag``, is installed in the guest machine. ``ag`` provides fast code search that is `better than ack <http://geoff.greer.fm/2011/12/27/the-silver-searcher-better-than-ack/>`_.
 
-An ``.agignore`` file :ref:`can be specified <conf-agignore>` to add some additional automatic "ignores" for the command. This can be used, for example, to exclude documentation from the search. A sample ``.agignore`` file is included.
-
-
-.. _feat-postgres:
-
-PostgreSQL
-==========
-
-PostgreSQL is installed in the guest machine.
-
-In addition, a database user is created with a username equal to the :ref:`project name <conf-var-project-name>` and a password equal to :ref:`conf-var-db-pass`. A database is also created, also with a name equal to the :ref:`project name <conf-var-project-name>`, with the aforementioned user as the owner.
-
-The Postgres installation is configured to listen on the default port (5432).
+.. note::
+    An ``.agignore`` file can be placed in ``provision/conf/`` to add some additional automatic "ignores" for the command. This can be used, for example, to exclude documentation from the search. A sample ``.agignore`` file is included.
 
 
 .. _feat-image-libs:
@@ -71,6 +63,18 @@ Installed packages:
 * zlib1g-dev
 * libfreetype6-dev
 * liblcms2-dev
+
+
+.. _feat-postgres:
+
+PostgreSQL
+==========
+
+PostgreSQL is installed in the guest machine.
+
+In addition, a database user is created with a username equal to the :ref:`project name <conf-var-project-name>` and a password equal to :ref:`conf-var-db-pass`. A database is also created, also with a name equal to the :ref:`project name <conf-var-project-name>`, with the aforementioned user as the owner.
+
+The Postgres installation is configured to listen on the default port (5432).
 
 
 .. _feat-virtualenv:
@@ -179,3 +183,14 @@ The following shell commands are made available for convenience:
   * Automatically restarts the runserver, after a 3 second delay, if it exits. This avoids the need to babysit the runserver - if an error occurs that causes it to exit, it will automatically restart. It will keep trying to get going until the error is fixed, without you needing to interact with it. Note that ``clean_pyc`` is not called between automatic restarts.
   
   Assumes installation of `django-extensions <https://github.com/django-extensions/django-extensions>`_, which defines the ``runserver_plus`` and ``clean_pyc`` commands.
+
+
+.. _feat-project-provisioning:
+
+Project-specific provisioning
+=============================
+
+In addition to the above generic provisioning, any special steps required by your individual project can be included using the ``provision/project.sh`` file. If found, this shell script file will be executed during the provisioning process. This file can be used to install additional system libraries, create/edit configuration files, etc.
+
+.. note::
+    Project-specific provisioning is performed prior to the installation of Python and Node.js dependencies, so additional system libraries required by these dependencies can be installed.

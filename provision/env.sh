@@ -1,3 +1,5 @@
+# Environment-specific settings used by the provisioning process
+
 ## EXAMPLE FILE ONLY ##
 
 # Required

@@ -7,7 +7,7 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty32"
 
   config.vm.provision "shell" do |s|
-    s.path = "provision/bootstrap.sh"
+    s.path = "provision/scripts/bootstrap.sh"
     
     # For a full Django project
     s.args = ["project_name", "project"]

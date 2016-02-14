@@ -5,6 +5,9 @@ Change Log
 0.3
 ===
 
+* Updated ``provision/`` directory structure.
+* Added support for project-specific provisioning.
+* Updated copy of specific configuration files in ``provision/config/`` to copy of all configuration files in ``provision/conf/``.
 * Updated Node.js/npm to install when ``DEBUG`` is set or not. Will use ``npm install --production`` when not set.
 * Added provisioning for several of the image libraries Pillow requires for some of its features.
 

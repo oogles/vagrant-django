@@ -25,7 +25,7 @@ print_db_usage () {
 }
 
 echo " "
-echo " --- PostgreSQL ---"
+echo " --- Install/configure PostgreSQL ---"
 
 export DEBIAN_FRONTEND=noninteractive
 

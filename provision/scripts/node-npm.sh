@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo " "
-echo " --- Node.js/npm ---"
+echo " --- Install node.js/npm ---"
 
 DEBUG="$2"
 
@@ -26,7 +26,7 @@ fi
 # Install project dependencies
 if [[ -f /vagrant/package.json ]]; then
     echo " "
-    echo " --- Node.js dependencies ---"
+    echo " --- Install node.js dependencies ---"
     if [[ "$DEBUG" -eq 1 ]]; then
         su - vagrant -c "cd /vagrant/ && npm install --quiet"
     else

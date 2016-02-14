@@ -59,10 +59,11 @@ How to use
 ==========
 
 #.  Copy the ``provision/`` directory into your project.
-#.  Copy the included ``Vagrantfile`` or add ``provision/bootstrap.sh`` as a shell provisioner in your existing ``Vagrantfile``, specifying the project name and build mode. The included ``Vagrantfile`` is pretty basic, but it can be used as a foundation. See :ref:`conf-vagrantfile` for details.
-#.  Modify the example ``env.sh`` file in ``provision/config/``. See :ref:`conf-env-sh` for details.
-#.  Add further customisation files to ``provision/config/`` if necessary. See :doc:`config` for details on what further customisation options are available.
-#.  Add ``provision/config/env.sh`` (and any other necessary config files, such as :ref:`conf-gitconfig`) to your ``.gitignore`` file, or equivalent. Environment-specific configurations should not be committed to source control.
+#.  Copy the included ``Vagrantfile`` or add ``provision/scripts/bootstrap.sh`` as a shell provisioner in your existing ``Vagrantfile``, specifying the project name and build mode. The included ``Vagrantfile`` is pretty basic, but it can be used as a foundation. See :ref:`conf-vagrantfile` for details.
+#.  Modify the example ``provision/env.sh`` file. See :ref:`conf-env-sh` for details.
+#.  Add any project-specific provisioning steps to a ``provision/project.sh`` file. See :ref:`feat-project-provisioning` for details.
+#.  Add any further configuration files to ``provision/conf/``. See :ref:`conf-user-config` for details on how these files are applied.
+#.  Add ``provision/env.sh`` (and any other necessary config files) to your ``.gitignore`` file, or equivalent. Environment-specific configurations should not be committed to source control.
 #. ``vagrant up``
 
 .. note::
