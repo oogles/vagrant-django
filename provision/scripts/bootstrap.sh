@@ -52,10 +52,12 @@ if [[ ! "$DB_PASS" ]]; then
     exit 1
 fi
 
-if [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
+if [[ "$BUILD_MODE" == "app" ]]; then
+    DEBUG=1
+elif [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
     DEBUG=1
 else
-    DEBUG=2
+    DEBUG=0
 fi
 
 echo " "
