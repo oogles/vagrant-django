@@ -20,6 +20,7 @@ The documentation of the :doc:`available features <features>` indicates which mo
 
 * Full project builds install Python dependencies from a ``requirements.txt`` file, if one can be found. See :ref:`feat-py-dependencies` for details.
 * The :ref:`feat-env-py` settings file is written for full project builds only.
+* App builds always set the :ref:`DEBUG <conf-var-debug>` flag to ``1``.
 
 Which mode is used is specified by the :ref:`conf-vagrantfile`.
 

@@ -86,9 +86,12 @@ DEBUG
 
 This flag controls whether or not the Vagrant guest environment is a development or production environment. A value of ``1`` indicates a development environment, otherwise (including when it is not specified at all) it indicates a production environment.
 
+When the :ref:`build mode <build-modes>` is "app", there is no real notion of a production environment, so the ``DEBUG`` flag is always ``1``.
+
 The flag affects:
 
 * :ref:`feat-py-dependencies`: If ``1``, a ``dev_requirements.txt`` file will be used, if present, to install development-only Python dependencies.
+* :ref:`feat-node-dependencies`: If ``1``, any ``devDependencies`` listed in the ``package.json`` file will be installed along with the listed ``dependencies``.
 * :ref:`feat-env-py`: If ``1``, ``DEBUG=True`` is set, otherwise ``DEBUG=False`` is.
 
 .. _conf-var-time-zone:
