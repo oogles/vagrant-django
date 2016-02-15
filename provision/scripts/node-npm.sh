@@ -24,12 +24,10 @@ if [[ ! -L /vagrant/node_modules ]]; then
 fi
 
 # Install project dependencies
-if [[ -f /vagrant/package.json ]]; then
-    echo " "
-    echo " --- Install node.js dependencies ---"
-    if [[ "$DEBUG" -eq 1 ]]; then
-        su - vagrant -c "cd /vagrant/ && npm install --quiet"
-    else
-        su - vagrant -c "cd /vagrant/ && npm install --production --quiet"
-    fi
+echo " "
+echo " --- Install node.js dependencies ---"
+if [[ "$DEBUG" -eq 1 ]]; then
+    su - vagrant -c "cd /vagrant/ && npm install --quiet"
+else
+    su - vagrant -c "cd /vagrant/ && npm install --production --quiet"
 fi

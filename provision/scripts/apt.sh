@@ -18,19 +18,21 @@ else
 fi
 
 
-echo " "
-echo "Adding node.js repo..."
-
-# Using NodeSource repo for node.js 5. For more details and other versions,
-# see NodeSource's full install scripts at:
-# https://github.com/nodesource/distributions/tree/master/deb
-
-NODE_SOURCE_LIST="/etc/apt/sources.list.d/nodesource.list"
-if [[ ! -f "$NODE_SOURCE_LIST" ]]; then
-    curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
-    echo "deb https://deb.nodesource.com/node_5.x ${DISTRO} main" > "$NODE_SOURCE_LIST"
-else
-	echo "Already added."
+if [[ -f /vagrant/package.json ]]; then
+    echo " "
+    echo "Adding node.js repo..."
+    
+    # Using NodeSource repo for node.js 5. For more details and other versions,
+    # see NodeSource's full install scripts at:
+    # https://github.com/nodesource/distributions/tree/master/deb
+    
+    NODE_SOURCE_LIST="/etc/apt/sources.list.d/nodesource.list"
+    if [[ ! -f "$NODE_SOURCE_LIST" ]]; then
+        curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+        echo "deb https://deb.nodesource.com/node_5.x ${DISTRO} main" > "$NODE_SOURCE_LIST"
+    else
+        echo "Already added."
+    fi
 fi
 
 

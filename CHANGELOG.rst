@@ -9,6 +9,7 @@ Change Log
 * Added support for project-specific provisioning.
 * Updated copy of specific configuration files in ``provision/config/`` to copy of all configuration files in ``provision/conf/``.
 * Updated Node.js/npm to install when ``DEBUG`` is set or not. Will use ``npm install --production`` when not set.
+* Updated Node.js/npm to install only if a package.json file is present.
 * Added provisioning for several of the image libraries Pillow requires for some of its features.
 * Updated "app" build mode to always set ``DEBUG``.
 

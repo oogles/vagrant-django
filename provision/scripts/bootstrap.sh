@@ -106,8 +106,11 @@ fi
 # libraries if installing Pillow.
 /vagrant/provision/scripts/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
 
-# Install and configure nodejs/npm and install node dependencies.
-/vagrant/provision/scripts/node-npm.sh "$DEBUG"
+# Install and configure nodejs/npm and install node dependencies, if the project
+# makes use of them
+if [[ -f /vagrant/package.json ]]; then
+    /vagrant/provision/scripts/node-npm.sh "$DEBUG"
+fi
 
 # Copy necessary config files
 if [[ -d /vagrant/provision/conf ]]; then
