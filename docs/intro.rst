@@ -1,6 +1,6 @@
-========
-Overview
-========
+============
+Introduction
+============
 
 Included are shell provisioning scripts and sample configuration files allowing the construction of a Vagrant guest machine designed to support either full Django projects (both development and production environments) and the development of single Django apps for packaging and distrubution.
 
@@ -20,6 +20,7 @@ The documentation of the :doc:`available features <features>` indicates which mo
 
 * Full project builds install Python dependencies from a ``requirements.txt`` file, if one can be found. See :ref:`feat-py-dependencies` for details.
 * The :ref:`feat-env-py` settings file is written for full project builds only.
+* App builds always set the :ref:`DEBUG <conf-var-debug>` flag to ``1``.
 
 Which mode is used is specified by the :ref:`conf-vagrantfile`.
 
@@ -59,10 +60,11 @@ How to use
 ==========
 
 #.  Copy the ``provision/`` directory into your project.
-#.  Copy the included ``Vagrantfile`` or add ``provision/bootstrap.sh`` as a shell provisioner in your existing ``Vagrantfile``, specifying the project name and build mode. The included ``Vagrantfile`` is pretty basic, but it can be used as a foundation. See :ref:`conf-vagrantfile` for details.
-#.  Modify the example ``env.sh`` file in ``provision/config/``. See :ref:`conf-env-sh` for details.
-#.  Add further customisation files to ``provision/config/`` if necessary. See :doc:`config` for details on what further customisation options are available.
-#.  Add ``provision/config/env.sh`` (and any other necessary config files, such as :ref:`conf-gitconfig`) to your ``.gitignore`` file, or equivalent. Environment-specific configurations should not be committed to source control.
+#.  Copy the included ``Vagrantfile`` or add ``provision/scripts/bootstrap.sh`` as a shell provisioner in your existing ``Vagrantfile``, specifying the project name and build mode. The included ``Vagrantfile`` is pretty basic, but it can be used as a foundation. See :ref:`conf-vagrantfile` for details.
+#.  Modify the example ``provision/env.sh`` file. See :ref:`conf-env-sh` for details.
+#.  Add any project-specific provisioning steps to a ``provision/project.sh`` file. See :ref:`feat-project-provisioning` for details.
+#.  Add any further configuration files to ``provision/conf/``. See :ref:`conf-user-config` for details on how these files are applied.
+#.  Add ``provision/env.sh`` (and any other necessary config files) to your ``.gitignore`` file, or equivalent. Environment-specific configurations should not be committed to source control.
 #. ``vagrant up``
 
 .. note::

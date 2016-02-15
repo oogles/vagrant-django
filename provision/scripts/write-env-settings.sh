@@ -11,7 +11,7 @@ PROJECT_NAME="$1"
 # Check that there is a project subdirectory to write the file into (this will
 # put it in the same directory as settings.py for a standard Django project
 # layout).
-PROJECT_SUBDIR="/vagrant/${PROJECT_NAME//-/_}"
+PROJECT_SUBDIR="/vagrant/$PROJECT_NAME"
 if [[ ! -d "$PROJECT_SUBDIR" ]]; then
     echo "--------------------------------------------------"
     echo "WARNING: No $PROJECT_SUBDIR directory to write env.py to."
@@ -57,11 +57,11 @@ cat <<EOF > "$ENV_FILE"
 #   obtained settings values.
 #
 # While this is Python, the convention should be to use simple name/value pairs
-# in the dictionary below, without the use of code statements (conditionals, 
+# in the dictionary below, without the use of code statements (conditionals,
 # loops, etc). Such statements should be left to the other settings files,
 # though they could be based on some setting/s below.
 # The idea is to provide an easy reference to, and use of, environment-specific
-# settings, without violating 12factor (http://12factor.net/) too heavily (by 
+# settings, without violating 12factor (http://12factor.net/) too heavily (by
 # having code that is not committed to source control)
 
 environ = {

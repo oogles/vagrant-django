@@ -3,7 +3,7 @@
 # vagrant-django
 # Vagrant provisioning for Django projects.
 # https://github.com/oogles/vagrant-django
-# v0.2.3
+# v0.3
 
 PROJECT_NAME="$1"
 BUILD_MODE="$2"
@@ -36,26 +36,28 @@ fi
 # DEBUG:           Optional. Set to 1 to set 'DEBUG': True in the environment-specific
 #                  settings file for the project.
 # TIME_ZONE:       Optional. The server time zone. Defaults to Australia/Sydney.
-if [[ -f /vagrant/provision/config/env.sh ]]; then
-    source /vagrant/provision/config/env.sh
+if [[ -f /vagrant/provision/env.sh ]]; then
+    source /vagrant/provision/env.sh
 else
     echo "--------------------------------------------------"
-    echo "ERROR: Missing required environment-specific config file provision/config/env.sh."
+    echo "ERROR: Missing required environment-specific config file provision/env.sh."
     echo "--------------------------------------------------"
     exit 1
 fi
 
 if [[ ! "$DB_PASS" ]]; then
     echo "--------------------------------------------------"
-    echo "ERROR: No DB_PASS variable defined in provision/config/env.sh."
+    echo "ERROR: No DB_PASS variable defined in provision/env.sh."
     echo "--------------------------------------------------"
     exit 1
 fi
 
-if [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
+if [[ "$BUILD_MODE" == "app" ]]; then
+    DEBUG=1
+elif [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
     DEBUG=1
 else
-    DEBUG=2
+    DEBUG=0
 fi
 
 echo " "
@@ -68,7 +70,7 @@ echo " --- Adding SSH public key ---"
 if [[ "$PUBLIC_KEY" ]]; then
     if ! grep -Fxq "$PUBLIC_KEY" .ssh/authorized_keys ; then
         echo "$PUBLIC_KEY" >> .ssh/authorized_keys
-        echo "Done."
+        echo "Done"
     else
         echo "Public key already present in authorized_keys."
     fi
@@ -84,30 +86,47 @@ fi
 echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 # Add/update apt repos
-/vagrant/provision/apt.sh
+/vagrant/provision/scripts/apt.sh
 
-# Install all the things
-/vagrant/provision/git.sh
-/vagrant/provision/ag.sh
-/vagrant/provision/postgres.sh "$PROJECT_NAME" "$DB_PASS"
+# Some basic installs
+/vagrant/provision/scripts/install.sh
 
-# Must run after postgres is installed if installing psycopg2
-/vagrant/provision/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
+# Install and configure database
+/vagrant/provision/scripts/database.sh "$PROJECT_NAME" "$DB_PASS"
 
-if [[ "$DEBUG" -eq 1 ]]; then
-    /vagrant/provision/node-npm.sh "$PROJECT_NAME" "$BUILD_MODE"
-fi
-
-if [[ "$BUILD_MODE" == "project" ]]; then
-    /vagrant/provision/write-env-settings.sh "$PROJECT_NAME" "$DEBUG" "$DB_PASS" "$TIME_ZONE"
-fi
-
-if [[ -f "/vagrant/manage.py" ]]; then
+# If a project-specific provisioning file is present, run it
+if [[ -f /vagrant/provision/project.sh ]]; then
     echo " "
-    echo " --- Run migrations ---"
+    echo " --- Running project-specific configuration ---"
+	/vagrant/provision/project.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
+fi
+
+# Install and configure virtualenv and install python dependencies.
+# Must run after postgres is installed if installing psycopg2, and after image
+# libraries if installing Pillow.
+/vagrant/provision/scripts/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
+
+# Install and configure nodejs/npm and install node dependencies, if the project
+# makes use of them
+if [[ -f /vagrant/package.json ]]; then
+    /vagrant/provision/scripts/node-npm.sh "$DEBUG"
+fi
+
+# Copy necessary config files
+if [[ -d /vagrant/provision/conf ]]; then
+    /vagrant/provision/scripts/copy-conf.sh
+fi
+
+# Write environment settings file
+if [[ "$BUILD_MODE" == "project" ]]; then
+    /vagrant/provision/scripts/write-env-settings.sh "$PROJECT_NAME" "$DEBUG" "$DB_PASS" "$TIME_ZONE"
+fi
+
+echo " "
+echo " --- Running migrations ---"
+if [[ -f "/vagrant/manage.py" ]]; then
     su - vagrant -c "source ~/.virtualenvs/$PROJECT_NAME/bin/activate && /vagrant/manage.py migrate"
 else
-    echo " "
     echo "--------------------------------------------------"
     echo "WARNING: No manage.py file detected."
     echo "No migrations have been run."
@@ -119,8 +138,8 @@ if [[ ! -d bin ]] ; then
     su - vagrant -c "mkdir ~/bin"
 fi
 
-/vagrant/provision/bin/shell+.sh
-/vagrant/provision/bin/runserver+.sh
+/vagrant/provision/scripts/bin/shell+.sh
+/vagrant/provision/scripts/bin/runserver+.sh
 
 echo " "
 echo "END PROVISION"

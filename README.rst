@@ -19,9 +19,10 @@ A quick overview:
 * Custom SSH public key
 * Git
 * Ag (silver searcher), for code search
+* PostgreSQL, with default database and user
+* Image libraries used by Pillow
 * Virtualenv, plus installation of Python dependencies
 * Node.js and npm, plus installation of Node.js dependencies
-* PostgreSQL, with default database and user
 * Migrations run against new database
 * An environment-specific Python settings file
 * Shortcut shell commands

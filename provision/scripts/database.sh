@@ -25,7 +25,7 @@ print_db_usage () {
 }
 
 echo " "
-echo " --- PostgreSQL ---"
+echo " --- Install/configure PostgreSQL ---"
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -35,8 +35,8 @@ if command -v psql; then
     exit
 fi
 
-apt-get -y install libpq-dev python-dev
-apt-get -y install "postgresql-$PG_VERSION" "postgresql-contrib-$PG_VERSION"
+apt-get -qq install libpq-dev python-dev
+apt-get -qq install "postgresql-$PG_VERSION" "postgresql-contrib-$PG_VERSION"
 
 echo " "
 echo "Configuring..."

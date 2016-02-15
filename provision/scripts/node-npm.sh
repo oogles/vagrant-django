@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 echo " "
-echo " --- Node.js/npm ---"
+echo " --- Install node.js/npm ---"
 
-PROJECT_NAME="$1"
+DEBUG="$2"
 
 # Install node and update npm
-apt-get install -y nodejs
-npm install npm -g
+apt-get -qq install nodejs
+npm install npm -g --quiet
 
 # Get node_modules out of the shared folder.
 # This avoids multiple issues when using a Windows host.
@@ -24,8 +24,10 @@ if [[ ! -L /vagrant/node_modules ]]; then
 fi
 
 # Install project dependencies
-if [[ -f /vagrant/package.json ]]; then
-    echo " "
-    echo " --- Node.js dependencies ---"
-	su - vagrant -c "cd /vagrant/ && npm install"
+echo " "
+echo " --- Install node.js dependencies ---"
+if [[ "$DEBUG" -eq 1 ]]; then
+    su - vagrant -c "cd /vagrant/ && npm install --quiet"
+else
+    su - vagrant -c "cd /vagrant/ && npm install --production --quiet"
 fi
