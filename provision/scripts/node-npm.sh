@@ -3,7 +3,7 @@
 echo " "
 echo " --- Install node.js/npm ---"
 
-DEBUG="$2"
+DEBUG="$1"
 
 # Install node and update npm
 apt-get -qq install nodejs
