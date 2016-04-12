@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+0.3.1
+=====
+
+* Fixed bug referencing ``DEBUG`` in ``provision/scripts/node-npm.sh``.
+
 0.3
 ===
 
