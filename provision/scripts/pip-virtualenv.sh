@@ -17,11 +17,13 @@ fi
 # Install virtualenv
 pip install -q virtualenv
 
+VIRTUALENVS_DIR="/home/vagrant/.virtualenvs"
 ACTIVATE_STR="source ~/.virtualenvs/$PROJECT_NAME/bin/activate"
 
 # Create .virtualenvs directory if it doesn't exist
-if [[ ! -d .virtualenvs ]]; then
-    su - vagrant -c "mkdir ~/.virtualenvs"
+if [[ ! -d "$VIRTUALENVS_DIR" ]]; then
+    mkdir "$VIRTUALENVS_DIR"
+    chown vagrant:vagrant "$VIRTUALENVS_DIR"
 fi
 
 # Create a virtualenv for the project
