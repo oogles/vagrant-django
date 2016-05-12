@@ -14,14 +14,21 @@ npm install npm -g --quiet
 # NOTE: The name of the linked directory seems to want to be "node_modules".
 # Anything else causes issues.
 NODE_MODULES_PATH="/home/vagrant/node_modules"
+NODE_LINK_PATH="/vagrant/node_modules"
 
 if [[ ! -d "$NODE_MODULES_PATH" ]]; then
-    su - vagrant -c "mkdir -p $NODE_MODULES_PATH"
+    mkdir "$NODE_MODULES_PATH"
+    chown vagrant:vagrant "$NODE_MODULES_PATH"
 fi
 
-if [[ ! -L /vagrant/node_modules ]]; then
-    su - vagrant -c "ln -s $NODE_MODULES_PATH /vagrant/node_modules"
+# Create a symlink to the relocated node_modules directory.
+# Remove the link first if it already exists, just to ensure there will be no
+# issues with symlinks hanging around from previous builds of the VM.
+if [[ -L "$NODE_LINK_PATH" ]]; then
+    rm "$NODE_LINK_PATH"
 fi
+
+ln -s "$NODE_MODULES_PATH" "$NODE_LINK_PATH"
 
 # Install project dependencies
 echo " "
