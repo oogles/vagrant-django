@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+0.3.2
+=====
+
+* Fixed bug creating the ``node_modules`` symlink in some Windows environments.
+
 0.3.1
 =====
 
