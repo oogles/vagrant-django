@@ -94,6 +94,9 @@ echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteract
 # Some basic installs
 /vagrant/provision/scripts/install.sh
 
+# Install and configure supervisor
+/vagrant/provision/scripts/supervisor.sh
+
 # Install and configure database
 /vagrant/provision/scripts/database.sh "$PROJECT_NAME" "$DB_PASS"
 
@@ -115,6 +118,12 @@ if [[ -f /vagrant/package.json ]]; then
     /vagrant/provision/scripts/node-npm.sh "$DEBUG"
 fi
 
+# Update supervisor to be aware of any programs configs added/updated as
+# part of the above provisioning
+echo " "
+echo " --- Update supervisor ---"
+supervisorctl reread
+supervisorctl update
 
 # Write environment settings file
 if [[ "$BUILD_MODE" == "project" ]]; then

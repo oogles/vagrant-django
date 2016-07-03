@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+0.4
+=====
+
+* Added provisioning for supervisor.
+
 0.3.2
 =====
 
