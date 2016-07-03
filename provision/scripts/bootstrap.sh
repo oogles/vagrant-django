@@ -66,7 +66,7 @@ echo " "
 echo "START PROVISION FOR \"$PROJECT_NAME\""
 echo " "
 
-echo " --- Adding SSH public key ---"
+echo " --- Add SSH public key ---"
 if [[ "$PUBLIC_KEY" ]]; then
     if ! grep -Fxq "$PUBLIC_KEY" .ssh/authorized_keys ; then
         echo "$PUBLIC_KEY" >> .ssh/authorized_keys
@@ -79,11 +79,14 @@ else
 fi
 
 echo " "
-echo " --- Setting time zone ---"
+echo " --- Set time zone ---"
 if [[ ! "$TIME_ZONE" ]]; then
     TIME_ZONE='Australia/Sydney'
 fi
 echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+
+# Setup vagrant user home directory
+/vagrant/provision/scripts/setup-home.sh "$PROJECT_NAME"
 
 # Add/update apt repos
 /vagrant/provision/scripts/apt.sh
@@ -97,7 +100,7 @@ echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteract
 # If a project-specific provisioning file is present, run it
 if [[ -f /vagrant/provision/project.sh ]]; then
     echo " "
-    echo " --- Running project-specific configuration ---"
+    echo " --- Run project-specific configuration ---"
 	/vagrant/provision/project.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
 fi
 
@@ -112,10 +115,6 @@ if [[ -f /vagrant/package.json ]]; then
     /vagrant/provision/scripts/node-npm.sh "$DEBUG"
 fi
 
-# Copy necessary config files
-if [[ -d /vagrant/provision/conf ]]; then
-    /vagrant/provision/scripts/copy-conf.sh
-fi
 
 # Write environment settings file
 if [[ "$BUILD_MODE" == "project" ]]; then
@@ -123,7 +122,7 @@ if [[ "$BUILD_MODE" == "project" ]]; then
 fi
 
 echo " "
-echo " --- Running migrations ---"
+echo " --- Run migrations ---"
 if [[ -f "/vagrant/manage.py" ]]; then
     su - vagrant -c "source ~/.virtualenvs/$PROJECT_NAME/bin/activate && /vagrant/manage.py migrate"
 else
@@ -132,14 +131,6 @@ else
     echo "No migrations have been run."
     echo "--------------------------------------------------"
 fi
-
-# Add custom scripts
-if [[ ! -d bin ]] ; then
-    su - vagrant -c "mkdir ~/bin"
-fi
-
-/vagrant/provision/scripts/bin/shell+.sh
-/vagrant/provision/scripts/bin/runserver+.sh
 
 echo " "
 echo "END PROVISION"
