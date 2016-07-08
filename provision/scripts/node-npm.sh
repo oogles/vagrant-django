@@ -13,7 +13,7 @@ npm install npm -g --quiet
 # This avoids multiple issues when using a Windows host.
 # NOTE: The name of the linked directory seems to want to be "node_modules".
 # Anything else causes issues.
-NODE_MODULES_PATH="/home/vagrant/node_modules"
+NODE_MODULES_PATH="/home/vagrant/proj/node_modules"
 NODE_LINK_PATH="/vagrant/node_modules"
 
 if [[ ! -d "$NODE_MODULES_PATH" ]]; then

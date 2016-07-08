@@ -1,21 +1,25 @@
 #!/usr/bin/env bash
 
-PROJECT_NAME="$1"
+DEBUG="$1"
 
 echo " "
 echo " --- Setup vagrant user home directory ---"
 
-echo "Creating /home/vagrant/$PROJECT_NAME/..."
-# Create directories to store nginx and gunicorn logs, collected static files,
-# and uploaded media files
-if [[ ! -d "/home/vagrant/$PROJECT_NAME/" ]] ; then
-    su vagrant <<EOF
-mkdir -p "/home/vagrant/$PROJECT_NAME/logs/nginx/"
-mkdir -p "/home/vagrant/$PROJECT_NAME/logs/gunicorn/"
-mkdir -p "/home/vagrant/$PROJECT_NAME/static/"
-mkdir -p "/home/vagrant/$PROJECT_NAME/media/"
-EOF
-
+echo "Creating /home/vagrant/proj/..."
+# Create directories to store various project related files
+if [[ ! -d "/home/vagrant/proj/" ]]; then
+    mkdir /home/vagrant/proj/
+    
+    mkdir /home/vagrant/proj/media/
+    
+    if [[ "$DEBUG" -eq 0 ]]; then
+        mkdir /home/vagrant/proj/static/
+        mkdir -p /home/vagrant/proj/logs/nginx/
+        mkdir -p /home/vagrant/proj/logs/gunicorn/
+    fi
+    
+    chown -R vagrant:vagrant /home/vagrant/proj/
+    
     echo "Done"
 else
     echo "Already exists"
@@ -41,7 +45,7 @@ fi
 
 echo " "
 echo "Adding custom scripts..."
-if [[ ! -d /home/vagrant/bin/ ]] ; then
+if [[ ! -d /home/vagrant/bin/ ]]; then
     su - vagrant -c "mkdir ~/bin"
 fi
 

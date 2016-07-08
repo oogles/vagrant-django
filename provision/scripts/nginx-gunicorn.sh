@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PROJECT_NAME="$1"
-VENV_ACTIVATE_STR="source ~/.virtualenvs/$PROJECT_NAME/bin/activate"
+VENV_ACTIVATE_STR="source ~/proj/virtualenv/bin/activate"
 
 echo " "
 echo " --- Install nginx ---"

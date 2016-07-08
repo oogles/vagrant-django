@@ -86,7 +86,7 @@ fi
 echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 # Setup vagrant user home directory
-/vagrant/provision/scripts/setup-home.sh "$PROJECT_NAME"
+/vagrant/provision/scripts/setup-home.sh "$DEBUG"
 
 # Add/update apt repos
 /vagrant/provision/scripts/apt.sh
@@ -113,7 +113,7 @@ fi
 /vagrant/provision/scripts/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
 
 # Install nginx and gunicorn for production environments
-if [[ "$DEBUG" -ne 1 ]]; then
+if [[ "$DEBUG" -eq 0 ]]; then
     /vagrant/provision/scripts/nginx-gunicorn.sh "$PROJECT_NAME"
 fi
 
@@ -138,7 +138,7 @@ fi
 echo " "
 echo " --- Run migrations ---"
 if [[ -f "/vagrant/manage.py" ]]; then
-    su - vagrant -c "source ~/.virtualenvs/$PROJECT_NAME/bin/activate && /vagrant/manage.py migrate"
+    su - vagrant -c "source ~/proj/virtualenv/bin/activate && /vagrant/manage.py migrate"
 else
     echo "--------------------------------------------------"
     echo "WARNING: No manage.py file detected."

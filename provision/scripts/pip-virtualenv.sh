@@ -17,21 +17,14 @@ fi
 # Install virtualenv
 pip install -q virtualenv
 
-VIRTUALENVS_DIR="/home/vagrant/.virtualenvs"
-ACTIVATE_STR="source ~/.virtualenvs/$PROJECT_NAME/bin/activate"
-
-# Create .virtualenvs directory if it doesn't exist
-if [[ ! -d "$VIRTUALENVS_DIR" ]]; then
-    mkdir "$VIRTUALENVS_DIR"
-    chown vagrant:vagrant "$VIRTUALENVS_DIR"
-fi
-
 # Create a virtualenv for the project
-if [[ ! -d ".virtualenvs/$PROJECT_NAME" ]]; then
+if [[ ! -d "/home/vagrant/proj/virtualenv/" ]]; then
     echo " "
-    echo "Creating virtualenv for $PROJECT_NAME..."
-	su - vagrant -c "virtualenv ~/.virtualenvs/$PROJECT_NAME"
+    echo "Creating virtualenv..."
+	su - vagrant -c "virtualenv ~/proj/virtualenv"
 fi
+
+ACTIVATE_STR="source ~/proj/virtualenv/bin/activate"
 
 # Configure virtualenv to activate automatically when SSHing in
 if ! grep -Fxq "$ACTIVATE_STR" .profile ; then
