@@ -3,7 +3,7 @@
 # vagrant-django
 # Vagrant provisioning for Django projects.
 # https://github.com/oogles/vagrant-django
-# v0.3.2
+# v0.4.0a
 
 PROJECT_NAME="$1"
 BUILD_MODE="$2"
@@ -111,6 +111,11 @@ fi
 # Must run after postgres is installed if installing psycopg2, and after image
 # libraries if installing Pillow.
 /vagrant/provision/scripts/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
+
+# Install nginx and gunicorn for production environments
+if [[ "$DEBUG" -ne 1 ]]; then
+    /vagrant/provision/scripts/nginx-gunicorn.sh "$PROJECT_NAME"
+fi
 
 # Install and configure nodejs/npm and install node dependencies, if the project
 # makes use of them

@@ -6,10 +6,14 @@ echo " "
 echo " --- Setup vagrant user home directory ---"
 
 echo "Creating /home/vagrant/$PROJECT_NAME/..."
+# Create directories to store nginx and gunicorn logs, collected static files,
+# and uploaded media files
 if [[ ! -d "/home/vagrant/$PROJECT_NAME/" ]] ; then
     su vagrant <<EOF
 mkdir -p "/home/vagrant/$PROJECT_NAME/logs/nginx/"
 mkdir -p "/home/vagrant/$PROJECT_NAME/logs/gunicorn/"
+mkdir -p "/home/vagrant/$PROJECT_NAME/static/"
+mkdir -p "/home/vagrant/$PROJECT_NAME/media/"
 EOF
 
     echo "Done"
