@@ -78,6 +78,11 @@ else
     echo "No PUBLIC_KEY env setting defined. Custom public key not added."
 fi
 
+# Enable a firewall in production environments
+if [[ "$DEBUG" -eq 0 ]]; then
+    /vagrant/provision/scripts/firewall.sh
+fi
+
 echo " "
 echo " --- Set time zone ---"
 if [[ ! "$TIME_ZONE" ]]; then
