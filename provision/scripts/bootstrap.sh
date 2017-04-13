@@ -51,14 +51,14 @@ echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteract
 # Set up app directory
 run_script "$PROVISION_DIR/scripts/app-dir.sh"
 
-## Add/update apt repos
-#/vagrant/provision/scripts/apt.sh
-#
-## Enable a firewall in production environments
-#if [[ "$DEBUG" -eq 0 ]]; then
-#    /vagrant/provision/scripts/firewall.sh
-#fi
-#
+# Add/update apt repos
+run_script "$PROVISION_DIR/scripts/apt.sh"
+
+# Enable a firewall in production environments
+if [[ "$DEBUG" -eq 0 ]]; then
+    run_script "$PROVISION_DIR/scripts/firewall.sh"
+fi
+
 ## Some basic installs
 #/vagrant/provision/scripts/install.sh
 #

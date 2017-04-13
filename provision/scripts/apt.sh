@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Source global provisioning settings
+source /tmp/vagrant_provision_settings.sh
+
 DISTRO=$(lsb_release -c -s)
 
 echo " "
@@ -18,14 +21,14 @@ else
 fi
 
 
-if [[ -f /vagrant/package.json ]]; then
+if [[ -f "$SRC_DIR/package.json" ]]; then
     echo " "
     echo "Adding node.js repo..."
-    
+
     # Using NodeSource repo for node.js 5. For more details and other versions,
     # see NodeSource's full install scripts at:
     # https://github.com/nodesource/distributions/tree/master/deb
-    
+
     NODE_SOURCE_LIST="/etc/apt/sources.list.d/nodesource.list"
     if [[ ! -f "$NODE_SOURCE_LIST" ]]; then
         curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
