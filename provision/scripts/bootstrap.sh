@@ -86,12 +86,12 @@ run_script "$PROVISION_DIR/scripts/pip-virtualenv.sh"
 #if [[ "$DEBUG" -eq 0 ]]; then
 #    /vagrant/provision/scripts/nginx-gunicorn.sh "$PROJECT_NAME"
 #fi
-#
-## Install and configure nodejs/npm and install node dependencies, if the project
-## makes use of them
-#if [[ -f /vagrant/package.json ]]; then
-#    /vagrant/provision/scripts/node-npm.sh "$DEBUG"
-#fi
+
+# Install and configure nodejs/npm and install node dependencies, if the project
+# makes use of them
+if [[ -f "$SRC_DIR/package.json" ]]; then
+    run_script "$PROVISION_DIR/scripts/node-npm.sh"
+fi
 
 # Update supervisor to be aware of any programs configs added/updated as
 # part of the above provisioning
