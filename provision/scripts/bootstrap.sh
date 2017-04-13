@@ -8,12 +8,22 @@
 # Ensure all provisioning scripts are executable
 chmod 774 -R /opt/app/src/provision/scripts/
 
-# Define common settings, passing the arguments that were passed to this script.
-# If there are any validation errors, exit here.
-/opt/app/src/provision/scripts/settings.sh "$1" "$2"
-if [[ $? != 0 ]]; then
-    exit 1
-fi
+# Define a function for executing provisioning scripts. The first argument
+# should be the path to the script file to execute. Remaining arguments will be
+# passed through to the script. The primary reason for encapsulating these calls
+# in a function is to exit this outer script if one of the executed scripts
+# returns a non-zero exit code.
+function run_script() {
+    eval "$1" "${@:2}"
+    if [[ $? != 0 ]]; then
+        echo " "
+        echo "=================================================="
+        exit 1
+    fi
+}
+
+# Define common settings, passing the arguments that were passed to this script
+run_script /opt/app/src/provision/scripts/settings.sh "$1" "$2"
 
 # Source the defined settings
 source /tmp/vagrant_provision_settings.sh
@@ -26,36 +36,20 @@ echo "START PROVISION FOR \"$PROJECT_NAME\""
 echo " "
 
 # Setup the "webmaster" user and home directory
-eval "$PROVISION_DIR/scripts/user.sh"
+run_script "$PROVISION_DIR/scripts/user.sh"
 
 # Configure SSH
-eval "$PROVISION_DIR/scripts/ssh.sh" "$PUBLIC_KEY"
+run_script "$PROVISION_DIR/scripts/ssh.sh" "$PUBLIC_KEY"
 
 echo " "
-echo " --- Setup app directory structure (at $APP_DIR) ---"
-
-# Create the directory structure to store various project related files -
-# required by the rest of the provisioning. Use -p to only create the directories
-# if they don't already exist, and to create any necessary parent directories.
-mkdir -p "$APP_DIR/media/"
-
-if [[ "$DEBUG" -eq 0 ]]; then
-    mkdir -p "$APP_DIR/static/"
-    mkdir -p "$APP_DIR/logs/nginx/"
-    mkdir -p "$APP_DIR/logs/gunicorn/"
+echo " --- Set time zone ---"
+if [[ ! "$TIME_ZONE" ]]; then
+    TIME_ZONE='Australia/Sydney'
 fi
+echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
-# Set ownership of everything in the app directory
-chown www-data:www-data -R "$APP_DIR"
-
-echo "Done"
-
-#echo " "
-#echo " --- Set time zone ---"
-#if [[ ! "$TIME_ZONE" ]]; then
-#    TIME_ZONE='Australia/Sydney'
-#fi
-#echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+# Set up app directory
+run_script "$PROVISION_DIR/scripts/app-dir.sh"
 
 ## Add/update apt repos
 #/vagrant/provision/scripts/apt.sh
