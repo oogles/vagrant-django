@@ -3,15 +3,16 @@
 # Create settings file for environment-specific settings, with some known
 # values and useful defaults
 
+# Source global provisioning settings
+source /tmp/vagrant_provision_settings.sh
+
 echo " "
 echo " --- Write env.py file ---"
-
-PROJECT_NAME="$1"
 
 # Check that there is a project subdirectory to write the file into (this will
 # put it in the same directory as settings.py for a standard Django project
 # layout).
-PROJECT_SUBDIR="/vagrant/$PROJECT_NAME"
+PROJECT_SUBDIR="$SRC_DIR/$PROJECT_NAME"
 if [[ ! -d "$PROJECT_SUBDIR" ]]; then
     echo "--------------------------------------------------"
     echo "WARNING: No $PROJECT_SUBDIR directory to write env.py to."
@@ -20,7 +21,7 @@ if [[ ! -d "$PROJECT_SUBDIR" ]]; then
     exit 0;
 fi
 
-# Check that the file does not alredy exist
+# Check that the file does not already exist
 ENV_FILE="$PROJECT_SUBDIR/env.py"
 if [[ -f "$ENV_FILE" ]]; then
     echo "File already exists."
@@ -28,14 +29,14 @@ if [[ -f "$ENV_FILE" ]]; then
 fi
 
 # Get additional variables
-if [[ "$2" -eq 1 ]]; then
+if [[ "$DEBUG" -eq 1 ]]; then
 	DEBUG='True'
 else
 	DEBUG='False'
 fi
 
-DB_PASS="$3"
-TIME_ZONE="$4"
+DB_PASS="$1"
+TIME_ZONE="$2"
 
 # Generate SECRET_KEY using a Python script to choose 100 random characters from
 # a set of letters, numbers and punctuation. Note: an explicit list of punctuation

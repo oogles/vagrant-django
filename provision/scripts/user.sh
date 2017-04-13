@@ -3,6 +3,7 @@
 # Source global provisioning settings
 source /tmp/vagrant_provision_settings.sh
 
+echo " "
 echo " --- Setup user ---"
 
 echo "Creating \"webmaster\" user..."
@@ -41,7 +42,7 @@ echo " "
 echo " Copying files to home directory..."
 
 if [[ ! -d "$PROVISION_DIR/conf/user/" ]]; then
-    echo "No files to copy"
+    echo "Nothing to copy"
 else
     # Copy all contents of conf/user/ to the webmaster user's home directory.
     # Use rsync to change ownership at the same time (as chown -R in the

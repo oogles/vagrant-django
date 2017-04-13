@@ -33,7 +33,9 @@ echo " "
 echo "=================================================="
 echo " "
 echo "START PROVISION FOR \"$PROJECT_NAME\""
-echo " "
+
+# Add/update apt repos - get software current before doing anything
+run_script "$PROVISION_DIR/scripts/apt.sh"
 
 # Setup the "webmaster" user and home directory
 run_script "$PROVISION_DIR/scripts/user.sh"
@@ -46,35 +48,35 @@ echo " --- Set time zone ---"
 if [[ ! "$TIME_ZONE" ]]; then
     TIME_ZONE='Australia/Sydney'
 fi
-echo "$TIME_ZONE" | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+echo "$TIME_ZONE" | tee /etc/timezone
+dpkg-reconfigure --frontend noninteractive tzdata
 
 # Set up app directory
 run_script "$PROVISION_DIR/scripts/app-dir.sh"
-
-# Add/update apt repos
-run_script "$PROVISION_DIR/scripts/apt.sh"
 
 # Enable a firewall in production environments
 if [[ "$DEBUG" -eq 0 ]]; then
     run_script "$PROVISION_DIR/scripts/firewall.sh"
 fi
 
-## Some basic installs
-#/vagrant/provision/scripts/install.sh
-#
-## Install and configure supervisor
-#/vagrant/provision/scripts/supervisor.sh
-#
-## Install and configure database
-#/vagrant/provision/scripts/database.sh "$PROJECT_NAME" "$DB_PASS"
-#
-## If a project-specific provisioning file is present, run it
-#if [[ -f /vagrant/provision/project.sh ]]; then
-#    echo " "
-#    echo " --- Run project-specific configuration ---"
-#	/vagrant/provision/project.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
-#fi
-#
+# Some basic installs
+run_script "$PROVISION_DIR/scripts/install.sh"
+
+# Install and configure supervisor
+#run_script "$PROVISION_DIR/scripts/supervisor.sh"
+
+# Install and configure database
+run_script "$PROVISION_DIR/scripts/database.sh" "$DB_PASS"
+
+# If a project-specific provisioning file is present, ensure it is executable
+# and run it
+if [[ -f "$PROVISION_DIR/project.sh" ]]; then
+    echo " "
+    echo " --- Run project-specific configuration ---"
+    chmod 774 "$PROVISION_DIR/project.sh"
+    run_script "$PROVISION_DIR/project.sh"
+fi
+
 ## Install and configure virtualenv and install python dependencies.
 ## Must run after postgres is installed if installing psycopg2, and after image
 ## libraries if installing Pillow.
@@ -90,19 +92,19 @@ fi
 #if [[ -f /vagrant/package.json ]]; then
 #    /vagrant/provision/scripts/node-npm.sh "$DEBUG"
 #fi
-#
-## Update supervisor to be aware of any programs configs added/updated as
-## part of the above provisioning
+
+# Update supervisor to be aware of any programs configs added/updated as
+# part of the above provisioning
 #echo " "
 #echo " --- Update supervisor ---"
 #supervisorctl reread
 #supervisorctl update
-#
-## Write environment settings file
-#if [[ "$BUILD_MODE" == "project" ]]; then
-#    /vagrant/provision/scripts/write-env-settings.sh "$PROJECT_NAME" "$DEBUG" "$DB_PASS" "$TIME_ZONE"
-#fi
-#
+
+# Write environment settings file
+if [[ "$BUILD_MODE" == "project" ]]; then
+    run_script "$PROVISION_DIR/scripts/write-env-settings.sh" "$DB_PASS" "$TIME_ZONE"
+fi
+
 #echo " "
 #echo " --- Run migrations ---"
 #if [[ -f "/vagrant/manage.py" ]]; then
