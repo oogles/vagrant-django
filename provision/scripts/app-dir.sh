@@ -20,4 +20,7 @@ fi
 # Set ownership of everything in the app directory
 chown www-data:www-data -R "$APP_DIR"
 
+# Allow group writes to the app directory (the webmaster user is in the www-data group)
+chmod g+w "$APP_DIR"
+
 echo "Done"

@@ -77,11 +77,11 @@ if [[ -f "$PROVISION_DIR/project.sh" ]]; then
     run_script "$PROVISION_DIR/project.sh"
 fi
 
-## Install and configure virtualenv and install python dependencies.
-## Must run after postgres is installed if installing psycopg2, and after image
-## libraries if installing Pillow.
-#/vagrant/provision/scripts/pip-virtualenv.sh "$PROJECT_NAME" "$BUILD_MODE" "$DEBUG"
-#
+# Install and configure virtualenv and install python dependencies.
+# Must run after postgres is installed if installing psycopg2, and after image
+# libraries if installing Pillow.
+run_script "$PROVISION_DIR/scripts/pip-virtualenv.sh"
+
 ## Install nginx and gunicorn for production environments
 #if [[ "$DEBUG" -eq 0 ]]; then
 #    /vagrant/provision/scripts/nginx-gunicorn.sh "$PROJECT_NAME"
@@ -105,16 +105,16 @@ if [[ "$BUILD_MODE" == "project" ]]; then
     run_script "$PROVISION_DIR/scripts/write-env-settings.sh" "$DB_PASS" "$TIME_ZONE"
 fi
 
-#echo " "
-#echo " --- Run migrations ---"
-#if [[ -f "/vagrant/manage.py" ]]; then
-#    su - vagrant -c "source ~/proj/virtualenv/bin/activate && /vagrant/manage.py migrate"
-#else
-#    echo "--------------------------------------------------"
-#    echo "WARNING: No manage.py file detected."
-#    echo "No migrations have been run."
-#    echo "--------------------------------------------------"
-#fi
+echo " "
+echo " --- Run migrations ---"
+if [[ -f "$SRC_DIR/manage.py" ]]; then
+    su - webmaster -c "$VENV_ACTIVATE_CMD && $SRC_DIR/manage.py migrate"
+else
+    echo "--------------------------------------------------"
+    echo "WARNING: No manage.py file detected."
+    echo "No migrations have been run."
+    echo "--------------------------------------------------"
+fi
 
 echo " "
 echo "END PROVISION"

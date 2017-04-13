@@ -70,6 +70,9 @@ else
     DEBUG=0
 fi
 
+# Define virtualenv activation command, for when the virtualenv gets created
+VENV_ACTIVATE_CMD="source $APP_DIR/virtualenv/bin/activate"
+
 # Write the temporary shell script files to contain the settings that can then
 # be sourced by other provisioning scripts
 cat <<EOF > /tmp/vagrant_provision_settings.sh
@@ -79,6 +82,7 @@ DEBUG="$DEBUG"
 APP_DIR="$APP_DIR"
 SRC_DIR="$SRC_DIR"
 PROVISION_DIR="$PROVISION_DIR"
+VENV_ACTIVATE_CMD="$VENV_ACTIVATE_CMD"
 EOF
 
 cat <<EOF > /tmp/vagrant_provision_bootstrap_settings.sh
