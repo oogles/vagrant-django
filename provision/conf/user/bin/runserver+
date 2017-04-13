@@ -1,10 +1,4 @@
-SCRIPT_PATH="/home/vagrant/bin/runserver+"
-
-if [[ -f "$SCRIPT_PATH" ]]; then
-	exit
-fi
-
-cat <<EOF >> "$SCRIPT_PATH"
+#!/usr/bin/env bash
 port=\$1
 shift
 
@@ -20,18 +14,14 @@ for i in "\$@"; do
 done
 
 echo "Cleaning .pyc files..."
-/vagrant/manage.py clean_pyc
+/opt/app/src/manage.py clean_pyc
 
 echo "Initiating runserver..."
 delay=3
 while true; do
 	stty echo
-	/vagrant/manage.py runserver_plus \${args[@]}
+	/opt/app/src/manage.py runserver_plus \${args[@]}
 	echo '--------------------------------------------------'
 	echo "Runserver crashed/stopped. Restarting in \$delay seconds. Ctrl+C to cancel."
 	sleep "\$delay"
 done
-EOF
-
-chown vagrant:vagrant "$SCRIPT_PATH"
-chmod u+x "$SCRIPT_PATH"
