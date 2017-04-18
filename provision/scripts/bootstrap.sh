@@ -82,10 +82,10 @@ fi
 # libraries if installing Pillow.
 run_script "$PROVISION_DIR/scripts/pip-virtualenv.sh"
 
-## Install nginx and gunicorn for production environments
-#if [[ "$DEBUG" -eq 0 ]]; then
-#    /vagrant/provision/scripts/nginx-gunicorn.sh "$PROJECT_NAME"
-#fi
+# Install nginx and gunicorn for production environments
+if [[ "$DEBUG" -eq 0 ]]; then
+    run_script "$PROVISION_DIR/scripts/nginx-gunicorn.sh"
+fi
 
 # Install and configure nodejs/npm and install node dependencies, if the project
 # makes use of them

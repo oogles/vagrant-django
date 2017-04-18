@@ -10,11 +10,11 @@ echo " --- Setup app directory structure (at $APP_DIR) ---"
 # required by the rest of the provisioning. Use -p to only create the directories
 # if they don't already exist, and to create any necessary parent directories.
 mkdir -p "$APP_DIR/media/"
+mkdir -p "$APP_DIR/conf/"
+mkdir -p "$APP_DIR/logs/"
 
 if [[ "$DEBUG" -eq 0 ]]; then
     mkdir -p "$APP_DIR/static/"
-    mkdir -p "$APP_DIR/logs/nginx/"
-    mkdir -p "$APP_DIR/logs/gunicorn/"
 fi
 
 # Set ownership of everything in the app directory

@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
 
-PROJECT_NAME="$1"
-VENV_ACTIVATE_STR="source ~/proj/virtualenv/bin/activate"
+# Source global provisioning settings
+source /tmp/vagrant_provision_settings.sh
+
+#
+# NOTE: The various config files copied and/or linked to as part of provisioning
+# nginx and gunicorn are deliberately copied out of the provision/conf directory.
+# Symlinks and/or references *could* be made to the repository's own copy of
+# these config files, but that allows a "git pull" to make server configuration
+# changes. Referencing a copy means the provisioning scripts need to be re-run
+# to enact such changes - a deliberate step with expected side-effects.
+#
 
 echo " "
 echo " --- Install nginx ---"
@@ -9,12 +18,26 @@ echo " --- Install nginx ---"
 echo "Installing..."
 apt-get -qq install nginx
 
+# Create additional directories
+mkdir -p "$APP_DIR/conf/nginx/"
+mkdir -p "$APP_DIR/logs/nginx/"
+
 echo " "
-echo "Linking site config..."
+echo "Copying nginx.conf..."
+
+# Copy nginx.conf into $APP_DIR/conf, where it can be referenced by the
+# supervisor program
+cp "$PROVISION_DIR/conf/nginx/nginx.conf" "$APP_DIR/conf/nginx/"
+
+echo " "
+echo "Copying site config..."
+
+# Copy the site config into sites-available
+cp "$PROVISION_DIR/conf/nginx/site" "/etc/nginx/sites-available/$PROJECT_NAME"
 
 # Link the copied site config into sites-enabled
 if [[ ! -L "/etc/nginx/sites-enabled/$PROJECT_NAME" ]]; then
-    ln -s "/vagrant/provision/conf/nginx/site" "/etc/nginx/sites-enabled/$PROJECT_NAME"
+    ln -s "/etc/nginx/sites-available/$PROJECT_NAME" "/etc/nginx/sites-enabled/$PROJECT_NAME"
 fi
 
 # Remove the "default" site config from sites-enabled
@@ -23,12 +46,8 @@ if [[ -L "/etc/nginx/sites-enabled/default" ]]; then
 fi
 
 echo " "
-echo "Stopping service..."
+echo "Stopping service (to be handled by supervisor)..."
 service nginx stop
-
-echo " "
-echo "Adding supervisor program..."
-cp "/vagrant/provision/conf/nginx/supervisor_program.conf" "/etc/supervisor/conf.d/nginx.conf"
 
 echo "Done"
 
@@ -37,10 +56,17 @@ echo " "
 echo " --- Install gunicorn ---"
 
 echo "Installing..."
-su - vagrant -c "$VENV_ACTIVATE_STR && pip install -q gunicorn"
+su - webmaster -c "$VENV_ACTIVATE_CMD && pip install -q gunicorn"
+
+# Create additional directories
+mkdir -p "$APP_DIR/conf/gunicorn/"
+mkdir -p "$APP_DIR/logs/gunicorn/"
 
 echo " "
-echo "Adding supervisor program..."
-cp "/vagrant/provision/conf/gunicorn/supervisor_program.conf" "/etc/supervisor/conf.d/gunicorn.conf"
+echo "Copying conf.py..."
+
+# Copy conf.py into $APP_DIR/conf, where it can be referenced by the
+# supervisor program
+cp "$PROVISION_DIR/conf/gunicorn/conf.py" "$APP_DIR/conf/gunicorn/"
 
 echo "Done"
