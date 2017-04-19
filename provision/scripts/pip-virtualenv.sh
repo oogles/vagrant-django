@@ -32,8 +32,8 @@ cd $SRC_DIR
 EOF
 fi
 
-# Install Python dependencies from requirements.txt or dev_requirements.txt,
-# depending on DEBUG
+# Install Python dependencies from requirements.txt. If DEBUG is true, also
+# install extra dev dependencies from dev_requirements.txt.
 echo " "
 echo " --- Install Python dependencies ---"
 if [[ -f "$SRC_DIR/requirements.txt" ]]; then
