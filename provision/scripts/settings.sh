@@ -48,6 +48,7 @@ else
     exit 1
 fi
 
+# A public key is required
 if [[ ! "$PUBLIC_KEY" ]]; then
     echo "--------------------------------------------------"
     echo "ERROR: No PUBLIC_KEY variable defined in provision/env.sh."
@@ -55,13 +56,12 @@ if [[ ! "$PUBLIC_KEY" ]]; then
     exit 1
 fi
 
+# Generate a database password if one is not given
 if [[ ! "$DB_PASS" ]]; then
-    echo "--------------------------------------------------"
-    echo "ERROR: No DB_PASS variable defined in provision/env.sh."
-    echo "--------------------------------------------------"
-    exit 1
+    DB_PASS=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 20)
 fi
 
+# Normalise the DEBUG flag
 if [[ "$BUILD_MODE" == "app" ]]; then
     DEBUG=1
 elif [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then

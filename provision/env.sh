@@ -3,10 +3,19 @@
 
 ## EXAMPLE FILE ONLY ##
 
+#
 # Required
-DB_PASS='password'  # do not use this password
+#
 
-# Optional
 PUBLIC_KEY=''
+
+#
+# Optional
+#
+
+# A database password will be generated automatically if not provided.
+# Do not use this password.
+#DB_PASS='password'
+
 TIME_ZONE='Australia/Sydney'
 DEBUG=1

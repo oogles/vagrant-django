@@ -38,12 +38,8 @@ fi
 DB_PASS="$1"
 TIME_ZONE="$2"
 
-# Generate SECRET_KEY using a Python script to choose 100 random characters from
-# a set of letters, numbers and punctuation. Note: an explicit list of punctuation
-# is provided, rather than using string.punctuation, so as to exclude single quotes,
-# double quotes and backticks. This is done to avoid SyntaxErrors, both in this script and in
-# the env.py file when it is written.
-SECRET_KEY=`python -c 'import random; import string; print "".join([random.SystemRandom().choice(string.letters + string.digits + "!#$%&\()*+,-./:;<=>?@[\\]^_{|}~") for i in range(128)])'`
+# Generate 128-character SECRET_KEY
+SECRET_KEY=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 128)
 
 cat <<EOF > "$ENV_FILE"
 # Format these environment-specific settings as a dictionary, in order to:
