@@ -63,7 +63,7 @@ fi
 run_script "$PROVISION_DIR/scripts/install.sh"
 
 # Install and configure supervisor
-#run_script "$PROVISION_DIR/scripts/supervisor.sh"
+run_script "$PROVISION_DIR/scripts/supervisor.sh"
 
 # Install and configure database
 run_script "$PROVISION_DIR/scripts/database.sh" "$DB_PASS"
@@ -82,10 +82,10 @@ fi
 # libraries if installing Pillow.
 run_script "$PROVISION_DIR/scripts/pip-virtualenv.sh"
 
-## Install nginx and gunicorn for production environments
-#if [[ "$DEBUG" -eq 0 ]]; then
-#    /vagrant/provision/scripts/nginx-gunicorn.sh "$PROJECT_NAME"
-#fi
+# Install nginx and gunicorn for production environments
+if [[ "$DEBUG" -eq 0 ]]; then
+    run_script "$PROVISION_DIR/scripts/nginx-gunicorn.sh"
+fi
 
 # Install and configure nodejs/npm and install node dependencies, if the project
 # makes use of them
@@ -93,12 +93,12 @@ if [[ -f "$SRC_DIR/package.json" ]]; then
     run_script "$PROVISION_DIR/scripts/node-npm.sh"
 fi
 
-# Update supervisor to be aware of any programs configs added/updated as
-# part of the above provisioning
-#echo " "
-#echo " --- Update supervisor ---"
-#supervisorctl reread
-#supervisorctl update
+# Start supervisor now that program files are in place and any necessary
+# installations/configurations for those programs are complete
+echo " "
+echo " --- Start supervisor ---"
+service supervisor start
+echo "Done"
 
 # Write environment settings file
 if [[ "$BUILD_MODE" == "project" ]]; then

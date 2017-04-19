@@ -32,20 +32,20 @@ cd $SRC_DIR
 EOF
 fi
 
-# Install Python dependencies from requirements.txt or dev_requirements.txt,
-# depending on DEBUG
-if [[ "$DEBUG" -eq 0 ]]; then
-    echo " "
-    echo " --- Install Python dependencies ---"
-    if [[ -f "$SRC_DIR/requirements.txt" ]]; then
-        su - webmaster -c "$VENV_ACTIVATE_CMD && pip install -q -r $SRC_DIR/requirements.txt"
-        echo "Done"
-    else
-        echo "None found"
-    fi
+# Install Python dependencies from requirements.txt. If DEBUG is true, also
+# install extra dev dependencies from dev_requirements.txt.
+echo " "
+echo " --- Install Python dependencies ---"
+if [[ -f "$SRC_DIR/requirements.txt" ]]; then
+    su - webmaster -c "$VENV_ACTIVATE_CMD && pip install -q -r $SRC_DIR/requirements.txt"
+    echo "Done"
 else
+    echo "None found"
+fi
+
+if [[ "$DEBUG" -eq 1 ]]; then
     echo " "
-    echo " ---  Install Python dev dependencies ---"
+    echo " ---  Install Python additional dev dependencies ---"
     if [[ -f "$SRC_DIR/dev_requirements.txt" ]]; then
         su - webmaster -c "$VENV_ACTIVATE_CMD && pip install -q -r $SRC_DIR/dev_requirements.txt"
         echo "Done"

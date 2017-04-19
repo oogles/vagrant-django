@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Put any project-specific provisioning steps here
+# Put any project-specific provisioning steps here.
+# This script is executed with superuser privileges.
 
 # The following provisioning settings are available:
 #  - $PROJECT_NAME: The name of the project
