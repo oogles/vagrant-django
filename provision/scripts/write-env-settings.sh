@@ -38,9 +38,6 @@ fi
 DB_PASS="$1"
 TIME_ZONE="$2"
 
-# Generate 128-character SECRET_KEY
-SECRET_KEY=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 128)
-
 cat <<EOF > "$ENV_FILE"
 # Format these environment-specific settings as a dictionary, in order to:
 # - mimic the use of environment variables in other settings files

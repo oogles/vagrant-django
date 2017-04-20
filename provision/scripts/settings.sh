@@ -3,6 +3,9 @@
 # sourced by all provisioning scripts, and the other to contain some additional
 # variables only required by the bootstrap script.
 
+echo " "
+echo " --- Establishing settings ---"
+
 PROJECT_NAME="$1"
 BUILD_MODE="$2"
 
@@ -58,7 +61,24 @@ fi
 
 # Generate a database password if one is not given
 if [[ ! "$DB_PASS" ]]; then
+    echo " "
+    echo "Generating database password..."
     DB_PASS=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 20)
+
+    # Write the generated value back to env.sh so the same value will be read
+    # in if the VM is re-provisioned
+    "$PROVISION_DIR/scripts/utils/write_var.sh" DB_PASS "$DB_PASS" /opt/app/src/provision/env.sh
+fi
+
+# Generate a secret key if one is not given
+if [[ ! "$SECRET_KEY" ]]; then
+    echo " "
+    echo "Generating Django secret key..."
+    SECRET_KEY=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 128)
+
+    # Write the generated value back to env.sh so the same value will be read
+    # in if the VM is re-provisioned
+    "$PROVISION_DIR/scripts/utils/write_var.sh" SECRET_KEY "$SECRET_KEY" /opt/app/src/provision/env.sh
 fi
 
 # Normalise the DEBUG flag
@@ -73,6 +93,10 @@ fi
 # Define virtualenv activation command, for when the virtualenv gets created
 VENV_ACTIVATE_CMD="source $APP_DIR/virtualenv/bin/activate"
 
+
+echo " "
+echo "Saving settings..."
+
 # Write the temporary shell script files to contain the settings that can then
 # be sourced by other provisioning scripts
 cat <<EOF > /tmp/vagrant_provision_settings.sh
@@ -83,6 +107,7 @@ APP_DIR="$APP_DIR"
 SRC_DIR="$SRC_DIR"
 PROVISION_DIR="$PROVISION_DIR"
 VENV_ACTIVATE_CMD="$VENV_ACTIVATE_CMD"
+SECRET_KEY="$SECRET_KEY"
 EOF
 
 cat <<EOF > /tmp/vagrant_provision_bootstrap_settings.sh

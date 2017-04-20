@@ -22,17 +22,17 @@ function run_script() {
     fi
 }
 
+echo " "
+echo "=================================================="
+echo " "
+echo "START PROVISION"
+
 # Define common settings, passing the arguments that were passed to this script
 run_script /opt/app/src/provision/scripts/settings.sh "$1" "$2"
 
 # Source the defined settings
 source /tmp/vagrant_provision_settings.sh
 source /tmp/vagrant_provision_bootstrap_settings.sh
-
-echo " "
-echo "=================================================="
-echo " "
-echo "START PROVISION FOR \"$PROJECT_NAME\""
 
 # Add/update apt repos - get software current before doing anything
 run_script "$PROVISION_DIR/scripts/apt.sh"
