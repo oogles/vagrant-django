@@ -26,7 +26,7 @@ echo " --- Install/configure PostgreSQL ---"
 
 export DEBIAN_FRONTEND=noninteractive
 
-if command -v psql; then
+if command -v psql >/dev/null; then
     echo "Already installed and configured."
     print_db_usage
     exit

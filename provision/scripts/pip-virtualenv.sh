@@ -7,7 +7,7 @@ echo " "
 echo " --- Install/configure pip/virtualenv ---"
 
 # Download get-pip.py if it doesn't already exist, install pip
-if ! command -v pip; then
+if ! command -v pip  >/dev/null; then
     wget -q https://bootstrap.pypa.io/get-pip.py
 	python get-pip.py
 	rm get-pip.py
