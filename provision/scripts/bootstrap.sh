@@ -106,17 +106,6 @@ if [[ "$BUILD_MODE" == "project" ]]; then
 fi
 
 echo " "
-echo " --- Run migrations ---"
-if [[ -f "$SRC_DIR/manage.py" ]]; then
-    su - webmaster -c "$VENV_ACTIVATE_CMD && $SRC_DIR/manage.py migrate"
-else
-    echo "--------------------------------------------------"
-    echo "WARNING: No manage.py file detected."
-    echo "No migrations have been run."
-    echo "--------------------------------------------------"
-fi
-
-echo " "
 echo "END PROVISION"
 echo " "
 echo "=================================================="
