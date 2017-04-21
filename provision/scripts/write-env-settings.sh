@@ -67,9 +67,14 @@ environ = {
 }
 EOF
 
+# Explicitly set owner and group to www-data. This is required when writing to
+# a location outside of the vagrant-managed synced folder (e.g. a production
+# environment).
+chown www-data:www-data "$ENV_FILE"
+
 # Make the file only accessible to the owner.
 # Won't work in VirtualBox shared folders, but will in a proper Linux production
 # environment.
-chmod 600 "$ENV_FILE"
+chmod 440 "$ENV_FILE"
 
 echo "File written to $ENV_FILE."
