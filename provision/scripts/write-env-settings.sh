@@ -60,9 +60,9 @@ cat <<EOF > "$ENV_FILE"
 
 environ = {
     'DEBUG': $DEBUG,
-    'SECRET_KEY': '$SECRET_KEY',
+    'SECRET_KEY': r'$SECRET_KEY',
     'DB_USER': '$PROJECT_NAME',
-    'DB_PASSWORD': '$DB_PASS',
+    'DB_PASSWORD': r'$DB_PASS',
     'TIME_ZONE': '$TIME_ZONE'
 }
 EOF
