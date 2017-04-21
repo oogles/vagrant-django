@@ -65,6 +65,11 @@ if [[ ! "$DB_PASS" ]]; then
     echo "Generating database password..."
     DB_PASS=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 20)
 
+    if [[ $? != 0 ]]; then
+        echo "Could not generate database password" >&2
+        exit 1
+    fi
+
     # Write the generated value back to env.sh so the same value will be read
     # in if the VM is re-provisioned
     "$PROVISION_DIR/scripts/utils/write_var.sh" DB_PASS "$DB_PASS" /opt/app/src/provision/env.sh
@@ -75,6 +80,11 @@ if [[ ! "$SECRET_KEY" ]]; then
     echo " "
     echo "Generating Django secret key..."
     SECRET_KEY=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 128)
+
+    if [[ $? != 0 ]]; then
+        echo "Could not generate secret key" >&2
+        exit 1
+    fi
 
     # Write the generated value back to env.sh so the same value will be read
     # in if the VM is re-provisioned

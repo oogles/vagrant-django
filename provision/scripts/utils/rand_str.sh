@@ -14,4 +14,15 @@ fi
 # string.punctuation, so as to exclude single quotes, double quotes and
 # backticks. This is done to avoid SyntaxErrors, both in this script and if the
 # result is output to a language file (e.g. Python) as a string.
-python -c "import random; import string; print ''.join([random.SystemRandom().choice(string.letters + string.digits + '!#$%&\()*+,-./:;<=>?@[\\]^_{|}~') for i in range($LENGTH)])"
+
+# The default version of Python available on an unprovisioned system may vary,
+# but there should always be one.
+
+if command -v python >/dev/null; then
+    python -c "import random; import string; print ''.join([random.SystemRandom().choice(string.letters + string.digits + '!#$%&\()*+,-./:;<=>?@[\\]^_{|}~') for i in range($LENGTH)])"
+elif command -v python3 >/dev/null; then
+    python -c "import random; import string; print(''.join([random.SystemRandom().choice(string.ascii_letters + string.digits + '!#$%&\()*+,-./:;<=>?@[\\]^_{|}~') for i in range($LENGTH)]))"
+else
+    echo "Python not available" >&2
+    exit 1
+fi
