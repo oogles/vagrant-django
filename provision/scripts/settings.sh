@@ -46,20 +46,11 @@ if [[ ! "$PUBLIC_KEY" ]]; then
     exit 1
 fi
 
-# Generate a database password if one is not given
-if [[ ! "$DB_PASS" ]]; then
-    echo " "
-    echo "Generating database password..."
-    DB_PASS=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 20)
-
-    if [[ $? != 0 ]]; then
-        echo "Could not generate database password" >&2
-        exit 1
-    fi
-
-    # Write the generated value back to env.sh so the same value will be read
-    # in if the VM is re-provisioned
-    "$PROVISION_DIR/scripts/utils/write_var.sh" DB_PASS "$DB_PASS" /opt/app/src/provision/env.sh
+# Normalise the DEBUG flag
+if [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
+    DEBUG=1
+else
+    DEBUG=0
 fi
 
 # Generate a secret key if one is not given
@@ -78,11 +69,25 @@ if [[ ! "$SECRET_KEY" ]]; then
     "$PROVISION_DIR/scripts/utils/write_var.sh" SECRET_KEY "$SECRET_KEY" /opt/app/src/provision/env.sh
 fi
 
-# Normalise the DEBUG flag
-if [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
-    DEBUG=1
-else
-    DEBUG=0
+# Generate a database password if one is not given
+if [[ ! "$DB_PASS" ]]; then
+    echo " "
+    echo "Generating database password..."
+    DB_PASS=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 20)
+
+    if [[ $? != 0 ]]; then
+        echo "Could not generate database password" >&2
+        exit 1
+    fi
+
+    # Write the generated value back to env.sh so the same value will be read
+    # in if the VM is re-provisioned
+    "$PROVISION_DIR/scripts/utils/write_var.sh" DB_PASS "$DB_PASS" /opt/app/src/provision/env.sh
+fi
+
+# Use default env.py template if one is not given
+if [[ ! "$ENV_PY_TEMPLATE" ]]; then
+    ENV_PY_TEMPLATE='env.py.txt'
 fi
 
 # Define virtualenv activation command, for when the virtualenv gets created
@@ -101,6 +106,7 @@ APP_DIR='$APP_DIR'
 SRC_DIR='$SRC_DIR'
 PROVISION_DIR='$PROVISION_DIR'
 VENV_ACTIVATE_CMD='$VENV_ACTIVATE_CMD'
+ENV_PY_TEMPLATE='$ENV_PY_TEMPLATE'
 EOF
 
 cat <<EOF > /tmp/vagrant_provision_bootstrap_settings.sh

@@ -29,43 +29,24 @@ fi
 
 # Get additional variables
 if [[ "$DEBUG" -eq 1 ]]; then
-	DEBUG='True'
+    DEBUG='True'
 else
-	DEBUG='False'
+    DEBUG='False'
 fi
 
 SECRET_KEY="$1"
 TIME_ZONE="$2"
-DB_PASS="$3"
+DB_PASSWORD="$3"
 
-cat <<EOF > "$ENV_FILE"
-# Format these environment-specific settings as a dictionary, in order to:
-# - mimic the use of environment variables in other settings files
-#   os.environ.get() vs env.environ.get()
-# - enable the use of defaults
-#   env.environ.get('LEVEL_OF_AWESOME', 0)
-# - enable the use of Python types (int, bool, etc)
-# - provide those with little knowledge of the vagrant provisioning process, or
-#   environment variables in general, a single point of reference for all
-#   environment-specific settings and a visible source for those magically
-#   obtained settings values.
-#
-# While this is Python, the convention should be to use simple name/value pairs
-# in the dictionary below, without the use of code statements (conditionals,
-# loops, etc). Such statements should be left to the other settings files,
-# though they could be based on some setting/s below.
-# The idea is to provide an easy reference to, and use of, environment-specific
-# settings, without violating 12factor (http://12factor.net/) too heavily (by
-# having code that is not committed to source control)
-
-environ = {
-    'DEBUG': $DEBUG,
-    'SECRET_KEY': r'$SECRET_KEY',
-    'TIME_ZONE': '$TIME_ZONE',
-    'DB_USER': '$PROJECT_NAME',
-    'DB_PASSWORD': r'$DB_PASS'
-}
-EOF
+# Get the env.py template, replace the variable placeholders, and write the file
+template=$(< "$PROVISION_DIR/templates/$ENV_PY_TEMPLATE")
+echo "$template" \
+  | sed -r -e "s|\\\$DEBUG|$DEBUG|g" \
+           -e "s|\\\$SECRET_KEY|$SECRET_KEY|g" \
+           -e "s|\\\$TIME_ZONE|$TIME_ZONE|g" \
+           -e "s|\\\$PROJECT_NAME|$PROJECT_NAME|g" \
+           -e "s|\\\$DB_PASSWORD|$DB_PASSWORD|g" \
+  > $ENV_FILE
 
 # Explicitly set owner and group to www-data. This is required when writing to
 # a location outside of the vagrant-managed synced folder (e.g. a production

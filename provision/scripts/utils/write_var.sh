@@ -17,8 +17,5 @@ sed -i -e '$a\' "$file"
 if ! grep -q "$key" "$file" ; then
     echo "$output" >> "$file"
 else
-    # Sanitise the output so it is treated literally by sed.
-    # See http://stackoverflow.com/a/2705678/405174
-    output=$(echo "$output" | sed -e 's/[\|&]/\\&/g')
     sed -i -r "s|#?$key.*|$output|" "$file"
 fi
