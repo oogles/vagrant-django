@@ -4,7 +4,6 @@
 VAGRANT_COMMAND = ARGV[0]
 
 project = 'project_name'
-build_mode = 'project' # or 'app'
 
 Vagrant.configure(2) do |config|
   # Reference: https://docs.vagrantup.com.
@@ -23,7 +22,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell" do |s|
     s.path = "provision/scripts/bootstrap.sh"
-    s.args = [project, build_mode]
+    s.args = [project]
   end
 
   # Create a forwarded port mapping which allows access to a specific port

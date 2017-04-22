@@ -15,8 +15,7 @@ echo " --- Write env.py file ---"
 PROJECT_SUBDIR="$SRC_DIR/$PROJECT_NAME"
 if [[ ! -d "$PROJECT_SUBDIR" ]]; then
     echo "--------------------------------------------------"
-    echo "WARNING: No $PROJECT_SUBDIR directory to write env.py to."
-    echo "No env.py file written."
+    echo "No env.py file written: No $PROJECT_SUBDIR directory to write to."
     echo "--------------------------------------------------"
     exit 0;
 fi

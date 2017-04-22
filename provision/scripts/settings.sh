@@ -7,23 +7,10 @@ echo " "
 echo " --- Establishing settings ---"
 
 PROJECT_NAME="$1"
-BUILD_MODE="$2"
 
 if [[ ! "$PROJECT_NAME" ]]; then
     echo "--------------------------------------------------"
     echo "ERROR: No project name provided."
-    echo "--------------------------------------------------"
-    exit 1
-fi
-
-if [[ ! "$BUILD_MODE" ]]; then
-    echo "--------------------------------------------------"
-    echo "ERROR: No build mode provided."
-    echo "--------------------------------------------------"
-    exit 1
-elif [[ "$BUILD_MODE" != "project" && "$BUILD_MODE" != "app" ]]; then
-    echo "--------------------------------------------------"
-    echo "ERROR: Unknown build mode \"$BUILD_MODE\"."
     echo "--------------------------------------------------"
     exit 1
 fi
@@ -92,9 +79,7 @@ if [[ ! "$SECRET_KEY" ]]; then
 fi
 
 # Normalise the DEBUG flag
-if [[ "$BUILD_MODE" == "app" ]]; then
-    DEBUG=1
-elif [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
+if [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
     DEBUG=1
 else
     DEBUG=0
@@ -111,7 +96,6 @@ echo "Saving settings..."
 # be sourced by other provisioning scripts
 cat <<EOF > /tmp/vagrant_provision_settings.sh
 PROJECT_NAME="$PROJECT_NAME"
-BUILD_MODE="$BUILD_MODE"
 DEBUG="$DEBUG"
 APP_DIR="$APP_DIR"
 SRC_DIR="$SRC_DIR"

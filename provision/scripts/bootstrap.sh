@@ -28,7 +28,7 @@ echo " "
 echo "START PROVISION"
 
 # Define common settings, passing the arguments that were passed to this script
-run_script /opt/app/src/provision/scripts/settings.sh "$1" "$2"
+run_script /opt/app/src/provision/scripts/settings.sh "$1"
 
 # Source the defined settings
 source /tmp/vagrant_provision_settings.sh
@@ -101,9 +101,7 @@ service supervisor start
 echo "Done"
 
 # Write environment settings file
-if [[ "$BUILD_MODE" == "project" ]]; then
-    run_script "$PROVISION_DIR/scripts/write-env-settings.sh" "$DB_PASS" "$TIME_ZONE"
-fi
+run_script "$PROVISION_DIR/scripts/write-env-settings.sh" "$DB_PASS" "$TIME_ZONE"
 
 echo " "
 echo "END PROVISION"

@@ -5,6 +5,7 @@ Change Log
 0.4
 ===
 
+* Removed ``BUILD_MODE`` setting.
 * Moved custom scripts from ``provision/scripts/bin`` to``provision/user/bin``.
 * Moved shared folder to ``/opt/app/src``.
 * Moved other important directories under ``/opt/app``. This is now the home of everything related to the project.
