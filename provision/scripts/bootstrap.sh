@@ -54,6 +54,9 @@ dpkg-reconfigure --frontend noninteractive tzdata
 # Set up app directory
 run_script "$PROVISION_DIR/scripts/app-dir.sh"
 
+# Write environment settings file
+run_script "$PROVISION_DIR/scripts/write-env-settings.sh" "$SECRET_KEY" "$TIME_ZONE" "$DB_PASS"
+
 # Enable a firewall in production environments
 if [[ "$DEBUG" -eq 0 ]]; then
     run_script "$PROVISION_DIR/scripts/firewall.sh"
@@ -67,6 +70,11 @@ run_script "$PROVISION_DIR/scripts/supervisor.sh"
 
 # Install and configure database
 run_script "$PROVISION_DIR/scripts/database.sh" "$DB_PASS"
+
+# Install nginx and gunicorn for production environments
+if [[ "$DEBUG" -eq 0 ]]; then
+    run_script "$PROVISION_DIR/scripts/nginx-gunicorn.sh"
+fi
 
 # If a project-specific provisioning file is present, ensure it is executable
 # and run it
@@ -82,11 +90,6 @@ fi
 # libraries if installing Pillow.
 run_script "$PROVISION_DIR/scripts/pip-virtualenv.sh"
 
-# Install nginx and gunicorn for production environments
-if [[ "$DEBUG" -eq 0 ]]; then
-    run_script "$PROVISION_DIR/scripts/nginx-gunicorn.sh"
-fi
-
 # Install and configure nodejs/npm and install node dependencies, if the project
 # makes use of them
 if [[ -f "$SRC_DIR/package.json" ]]; then
@@ -99,9 +102,6 @@ echo " "
 echo " --- Start supervisor ---"
 service supervisor start
 echo "Done"
-
-# Write environment settings file
-run_script "$PROVISION_DIR/scripts/write-env-settings.sh" "$SECRET_KEY" "$TIME_ZONE" "$DB_PASS"
 
 echo " "
 echo "END PROVISION"
