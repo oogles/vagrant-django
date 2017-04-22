@@ -95,17 +95,17 @@ echo "Saving settings..."
 # Write the temporary shell script files to contain the settings that can then
 # be sourced by other provisioning scripts
 cat <<EOF > /tmp/vagrant_provision_settings.sh
-PROJECT_NAME="$PROJECT_NAME"
-DEBUG="$DEBUG"
-APP_DIR="$APP_DIR"
-SRC_DIR="$SRC_DIR"
-PROVISION_DIR="$PROVISION_DIR"
-VENV_ACTIVATE_CMD="$VENV_ACTIVATE_CMD"
-SECRET_KEY="$SECRET_KEY"
+PROJECT_NAME='$PROJECT_NAME'
+DEBUG=$DEBUG
+APP_DIR='$APP_DIR'
+SRC_DIR='$SRC_DIR'
+PROVISION_DIR='$PROVISION_DIR'
+VENV_ACTIVATE_CMD='$VENV_ACTIVATE_CMD'
 EOF
 
 cat <<EOF > /tmp/vagrant_provision_bootstrap_settings.sh
-DB_PASS="\"$DB_PASS\""  # wrap in quotes to make spaces safe
-PUBLIC_KEY="\"$PUBLIC_KEY\""  # wrap in quotes to make spaces safe
-TIME_ZONE="$TIME_ZONE"
+PUBLIC_KEY='$PUBLIC_KEY'
+SECRET_KEY='$SECRET_KEY'
+TIME_ZONE='$TIME_ZONE'
+DB_PASS='$DB_PASS'
 EOF

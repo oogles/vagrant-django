@@ -14,7 +14,7 @@ chmod 774 -R /opt/app/src/provision/scripts/
 # in a function is to exit this outer script if one of the executed scripts
 # returns a non-zero exit code.
 function run_script() {
-    eval "$1" "${@:2}"
+    "$1" "${@:2}"
     if [[ $? != 0 ]]; then
         echo " "
         echo "=================================================="
@@ -101,7 +101,7 @@ service supervisor start
 echo "Done"
 
 # Write environment settings file
-run_script "$PROVISION_DIR/scripts/write-env-settings.sh" "$DB_PASS" "$TIME_ZONE"
+run_script "$PROVISION_DIR/scripts/write-env-settings.sh" "$SECRET_KEY" "$TIME_ZONE" "$DB_PASS"
 
 echo " "
 echo "END PROVISION"

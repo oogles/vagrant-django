@@ -34,8 +34,9 @@ else
 	DEBUG='False'
 fi
 
-DB_PASS="$1"
+SECRET_KEY="$1"
 TIME_ZONE="$2"
+DB_PASS="$3"
 
 cat <<EOF > "$ENV_FILE"
 # Format these environment-specific settings as a dictionary, in order to:
@@ -60,9 +61,9 @@ cat <<EOF > "$ENV_FILE"
 environ = {
     'DEBUG': $DEBUG,
     'SECRET_KEY': r'$SECRET_KEY',
+    'TIME_ZONE': '$TIME_ZONE',
     'DB_USER': '$PROJECT_NAME',
-    'DB_PASSWORD': r'$DB_PASS',
-    'TIME_ZONE': '$TIME_ZONE'
+    'DB_PASSWORD': r'$DB_PASS'
 }
 EOF
 
