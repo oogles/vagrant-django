@@ -11,4 +11,4 @@
 # See http://vagrant-django.readthedocs.io/ for more info on these settings.
 
 # Uncomment the following line to source these variables.
-#source /tmp/vagrant_provision_settings.sh
+#source /tmp/env.sh

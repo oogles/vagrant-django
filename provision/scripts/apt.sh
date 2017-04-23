@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Source global provisioning settings
-source /tmp/vagrant_provision_settings.sh
+source /tmp/env.sh
 
 DISTRO=$(lsb_release -c -s)
 

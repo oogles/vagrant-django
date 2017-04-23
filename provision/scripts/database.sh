@@ -3,7 +3,7 @@
 # Adapted from https://github.com/jackdb/pg-app-dev-vm
 
 # Source global provisioning settings
-source /tmp/vagrant_provision_settings.sh
+source /tmp/env.sh
 
 DB_PASS="$1"
 DB_USER="$PROJECT_NAME"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Source global provisioning settings
-source /tmp/vagrant_provision_settings.sh
+source /tmp/env.sh
 
 #
 # NOTE: The various config files copied and/or linked to as part of provisioning

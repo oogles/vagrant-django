@@ -4,7 +4,7 @@
 # values and useful defaults
 
 # Source global provisioning settings
-source /tmp/vagrant_provision_settings.sh
+source /tmp/env.sh
 
 echo " "
 echo " --- Write env.py file ---"

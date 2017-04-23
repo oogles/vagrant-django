@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Source global provisioning settings
-source /tmp/vagrant_provision_settings.sh
+source /tmp/env.sh
 
 echo " "
 echo " --- Set firewall rules ---"

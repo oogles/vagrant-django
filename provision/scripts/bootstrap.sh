@@ -31,8 +31,7 @@ echo "START PROVISION"
 run_script /opt/app/src/provision/scripts/settings.sh "$1"
 
 # Source the defined settings
-source /tmp/vagrant_provision_settings.sh
-source /tmp/vagrant_provision_bootstrap_settings.sh
+source /tmp/env.sh
 
 # Add/update apt repos - get software current before doing anything
 run_script "$PROVISION_DIR/scripts/apt.sh"

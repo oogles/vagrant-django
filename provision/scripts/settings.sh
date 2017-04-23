@@ -63,10 +63,6 @@ if [[ ! "$SECRET_KEY" ]]; then
         echo "Could not generate secret key" >&2
         exit 1
     fi
-
-    # Write the generated value back to env.sh so the same value will be read
-    # in if the VM is re-provisioned
-    "$PROVISION_DIR/scripts/utils/write_var.sh" SECRET_KEY "$SECRET_KEY" /opt/app/src/provision/env.sh
 fi
 
 # Generate a database password if one is not given
@@ -79,10 +75,6 @@ if [[ ! "$DB_PASS" ]]; then
         echo "Could not generate database password" >&2
         exit 1
     fi
-
-    # Write the generated value back to env.sh so the same value will be read
-    # in if the VM is re-provisioned
-    "$PROVISION_DIR/scripts/utils/write_var.sh" DB_PASS "$DB_PASS" /opt/app/src/provision/env.sh
 fi
 
 # Use default env.py template if one is not given
@@ -95,23 +87,27 @@ VENV_ACTIVATE_CMD="source $APP_DIR/virtualenv/bin/activate"
 
 
 echo " "
-echo "Saving settings..."
+echo "Storing settings..."
 
-# Write the temporary shell script files to contain the settings that can then
-# be sourced by other provisioning scripts
-cat <<EOF > /tmp/vagrant_provision_settings.sh
-PROJECT_NAME='$PROJECT_NAME'
-DEBUG=$DEBUG
-APP_DIR='$APP_DIR'
-SRC_DIR='$SRC_DIR'
-PROVISION_DIR='$PROVISION_DIR'
-VENV_ACTIVATE_CMD='$VENV_ACTIVATE_CMD'
-ENV_PY_TEMPLATE='$ENV_PY_TEMPLATE'
-EOF
+#
+# Write all necessary settings back to env.sh, storing their
+# defaulted/generated/normalised values. They will be read from there by most
+# other provisioning scripts. In the case of generated values, this also ensures
+# the same values get used if re-provisioning the same environment.
+#
 
-cat <<EOF > /tmp/vagrant_provision_bootstrap_settings.sh
-PUBLIC_KEY='$PUBLIC_KEY'
-SECRET_KEY='$SECRET_KEY'
-TIME_ZONE='$TIME_ZONE'
-DB_PASS='$DB_PASS'
-EOF
+# Customisable settings
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'DEBUG' "$DEBUG" "$PROVISION_DIR/env.sh"
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'SECRET_KEY' "$SECRET_KEY" "$PROVISION_DIR/env.sh"
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'DB_PASS' "$DB_PASS" "$PROVISION_DIR/env.sh"
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'ENV_PY_TEMPLATE' "$ENV_PY_TEMPLATE" "$PROVISION_DIR/env.sh"
+
+# Convenience settings for provisioning scripts
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'PROJECT_NAME' "$PROJECT_NAME" "$PROVISION_DIR/env.sh"
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'APP_DIR' "$APP_DIR" "$PROVISION_DIR/env.sh"
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'SRC_DIR' "$SRC_DIR" "$PROVISION_DIR/env.sh"
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'PROVISION_DIR' "$PROVISION_DIR" "$PROVISION_DIR/env.sh"
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'VENV_ACTIVATE_CMD' "$VENV_ACTIVATE_CMD" "$PROVISION_DIR/env.sh"
+
+# Create symlink to env.sh for easy reference by provisioning scripts
+ln -sf "$PROVISION_DIR/env.sh" /tmp/env.sh

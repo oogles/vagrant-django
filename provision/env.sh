@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # Environment-specific settings used by the provisioning process
 
-## EXAMPLE FILE ONLY ##
-
 #
 # Required
 #
@@ -26,3 +24,8 @@ TIME_ZONE='Australia/Sydney'
 # to provision/templates/.
 # Defaults env.py.txt
 #ENV_PY_TEMPLATE=''
+
+#
+# Non-customisable settings will be created below here by
+# the provisioning process
+#

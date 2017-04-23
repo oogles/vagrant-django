@@ -3,7 +3,7 @@
 PUBLIC_KEY="$1"
 
 # Source global provisioning settings
-source /tmp/vagrant_provision_settings.sh
+source /tmp/env.sh
 
 echo " "
 echo " --- Configure SSH ---"
