@@ -9,8 +9,6 @@ DB_PASS="$1"
 DB_USER="$PROJECT_NAME"
 DB_NAME="$PROJECT_NAME"
 
-PG_VERSION=9.4
-
 print_db_usage () {
 	echo " "
     echo "PostgreSQL database setup and accessible on your local machine on the forwarded port (default: 15432)"
@@ -33,10 +31,11 @@ if command -v psql >/dev/null; then
 fi
 
 apt-get -qq install libpq-dev python-dev
-apt-get -qq install "postgresql-$PG_VERSION" "postgresql-contrib-$PG_VERSION"
+apt-get -qq install postgresql postgresql-contrib
 
 echo " "
 echo "Configuring..."
+PG_VERSION=$(psql --version | egrep -o '[0-9]{1,}\.[0-9]{1,}')
 PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
 PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
 PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
