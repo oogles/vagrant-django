@@ -53,9 +53,9 @@ echo "$template" \
 # environment).
 chown www-data:www-data "$ENV_FILE"
 
-# Make the file only accessible to the owner.
-# Won't work in VirtualBox shared folders, but will in a proper Linux production
+# Lock down the file permissions.
+# Won't have an effect on a Windows host, but will in a proper Linux production
 # environment.
-chmod 440 "$ENV_FILE"
+chmod 640 "$ENV_FILE"
 
 echo "File written to $ENV_FILE."
