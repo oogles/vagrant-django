@@ -14,6 +14,7 @@ Change Log
 * Added provisioning for gunicorn as a production application server for Django, managed by supervisor.
 * Added provisioning for nginx as a reverse proxy to gunicorn, managed by supervisor.
 * Added provisioning for firewall rules via ufw.
+* Added pull+ command.
 
 0.3.2
 =====
