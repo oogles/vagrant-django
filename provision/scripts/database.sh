@@ -10,7 +10,7 @@ DB_USER="$PROJECT_NAME"
 DB_NAME="$PROJECT_NAME"
 
 print_db_usage () {
-	echo " "
+    echo " "
     echo "PostgreSQL database setup and accessible on your local machine on the forwarded port (default: 15432)"
     echo "  Host: localhost"
     echo "  Port: 5432"

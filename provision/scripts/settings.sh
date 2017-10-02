@@ -23,12 +23,6 @@ PROVISION_DIR="$SRC_DIR/provision"
 # Get environment-specific variables from config.
 # For a full description of the available variables, and the effects they have
 # on the provisioning process, see the docs at https://vagrant-django.readthedocs.org/.
-# DB_PASS:         Required. The password to use for the app database created in
-#                  PostgreSQL.
-# PUBLIC_KEY:      Optional. A custom public key to install in .ssh/authorized_keys.
-# DEBUG:           Optional. Set to 1 to set 'DEBUG': True in the environment-specific
-#                  settings file for the project.
-# TIME_ZONE:       Optional. The server time zone. Defaults to Australia/Sydney.
 if [[ -f "$PROVISION_DIR/env.sh" ]]; then
     source "$PROVISION_DIR/env.sh"
 else

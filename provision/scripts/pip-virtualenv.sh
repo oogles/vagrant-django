@@ -9,8 +9,8 @@ echo " --- Install/configure pip/virtualenv ---"
 # Download get-pip.py if it doesn't already exist, install pip
 if ! command -v pip  >/dev/null; then
     wget -q https://bootstrap.pypa.io/get-pip.py
-	python get-pip.py
-	rm get-pip.py
+    python get-pip.py
+    rm get-pip.py
 fi
 
 # Install virtualenv
@@ -20,7 +20,7 @@ pip install -q virtualenv
 if [[ ! -d "$APP_DIR/virtualenv/" ]]; then
     echo " "
     echo "Creating virtualenv..."
-	su - webmaster -c "virtualenv $APP_DIR/virtualenv"
+    su - webmaster -c "virtualenv $APP_DIR/virtualenv"
 fi
 
 # Configure virtualenv to activate automatically when SSHing in
