@@ -70,11 +70,6 @@ run_script "$PROVISION_DIR/scripts/supervisor.sh"
 # Install and configure database
 run_script "$PROVISION_DIR/scripts/database.sh" "$DB_PASS"
 
-# Install nginx and gunicorn for production environments
-if [[ "$DEBUG" -eq 0 ]]; then
-    run_script "$PROVISION_DIR/scripts/nginx-gunicorn.sh"
-fi
-
 # If a project-specific provisioning file is present, ensure it is executable
 # and run it
 if [[ -f "$PROVISION_DIR/project.sh" ]]; then
@@ -93,6 +88,12 @@ run_script "$PROVISION_DIR/scripts/pip-virtualenv.sh"
 # makes use of them
 if [[ -f "$SRC_DIR/package.json" ]]; then
     run_script "$PROVISION_DIR/scripts/node-npm.sh"
+fi
+
+# Install nginx and gunicorn for production environments. Must run after
+# virtualenv is installed.
+if [[ "$DEBUG" -eq 0 ]]; then
+    run_script "$PROVISION_DIR/scripts/nginx-gunicorn.sh"
 fi
 
 # Start supervisor now that program files are in place and any necessary
