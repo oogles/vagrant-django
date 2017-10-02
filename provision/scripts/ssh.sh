@@ -27,6 +27,24 @@ fi
 
 
 echo " "
+echo "Fixing www-data user..."
+
+# Create a .ssh directory for the www-data user so they can use SSH.
+# E.g. If executing remote git commands over SSH from within the provisioned
+# environment.
+# The /var/www/ directory itself may also need creating.
+# This does not allow the www-data user to login to the provisioned environment
+# using SSH.
+if [[ ! -d /var/www/.ssh ]]; then
+    mkdir -p /var/www/.ssh
+    chown www-data:www-data /var/www/.ssh/
+    echo "Done"
+else
+    echo "Already fixed"
+fi
+
+
+echo " "
 echo "Hardening SSH..."
 
 SSH_CONFIG="/etc/ssh/sshd_config"

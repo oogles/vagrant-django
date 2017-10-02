@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+# Source global provisioning settings for DEBUG flag
+source /opt/app/src/provision/env.sh
+
+orange='\033[1;33m'
+red='\033[0;31m'
+reset='\033[0m'
+
+function header() {
+    echo -e "\n${orange}$1${reset}\n"
+}
+
+function error() {
+    echo -e "${red}$1${reset}\n"
+}
+
+
+temp_req_file="/tmp/lastpull.requirements.txt"
+
+# If this is the first time the command has been run, make a copy of the
+# requirements.txt file prior to pulling
+if [[ ! -f "$temp_req_file" ]]; then
+    cp requirements.txt "$temp_req_file"
+fi
+
+
+# Pull in latest changes
+header "Pulling"
+sudo -u www-data git pull origin master
+
+if [ "$?" -ne 0 ]; then
+    # Stop script here if the pull was not successful for any reason
+    error "\nPull errored/aborted"
+    exit 0
+fi
+
+
+# In production environments, build and collect the necessary static files
+if [[ "$DEBUG" -eq 0 ]]; then
+    header "Generating static files"
+    sudo -u www-data /opt/app/virtualenv/bin/python manage.py collectstatic
+fi
+
+
+# Check for updates to python library dependencies
+header "Checking Python library dependencies"
+
+# Diff requirements.txt
+result=$(diff -U 0 "$temp_req_file" requirements.txt)
+
+if [ "$?" -ne 0 ]; then
+    echo -e "$result\n"
+    read -p "The above Python library dependency changes were detected, update now (Y/n)? " answer
+
+    case $answer in
+        [Yy]* )
+            sudo -u www-data /opt/app/virtualenv/bin/pip install -r requirements.txt
+
+            # Make a copy of the now-applied requirements.txt to compare with
+            # next time the command is run
+            cp requirements.txt "$temp_req_file"
+            ;;
+        [Nn]* ) ;;
+        * ) error "Dependency update aborted";;
+    esac
+else
+    echo -e "No changes detected"
+fi
+
+
+# Check for unapplied migrations
+header "Checking migrations"
+
+# Django doesn't give a nice command to find unapplied migrations, so grep the
+# entire migration list to exclude:
+# - applied migrations (denoted by [X])
+# - (no migrations) lines for apps without migrations
+# - leftover app names with no migrations listed between them and either the
+#   next app or the end of the input
+# The grep -v flag excludes the lines that match and the -P flag is used to
+# activate perl-regexp, which enables using \n.
+result=$(/opt/app/virtualenv/bin/python manage.py showmigrations --list | grep -v '[X]' | grep -v 'no migrations' | grep -Pv '^[a-zA-Z0-9_]+(?=\Z|\n[a-zA-Z_])')
+
+if [ "$result" ]; then
+    echo -e "$result\n"
+    read -p "The above migrations are unapplied, apply them now (Y/n)? " answer
+
+    case $answer in
+        [Yy]* ) /opt/app/virtualenv/bin/python manage.py migrate;;
+        [Nn]* ) ;;
+        * ) error "Migration aborted";;
+    esac
+else
+    echo -e "No changes detected"
+fi
+
+
+# Stale content type checks require a separate command on Django >= 1.11
+check_stale=`python -c "import django;print(django.VERSION[:2] >= (1, 11))"`
+if [[ "$check_stale" == 'True' ]]; then
+    header "Checking stale content types";
+    /opt/app/virtualenv/bin/python manage.py remove_stale_contenttypes
+fi
+
+
+# In production environments, restart gunicorn
+if [[ "$DEBUG" -eq 0 ]]; then
+    header "Restarting gunicorn"
+    sudo supervisorctl restart gunicorn
+fi
+
+
+header "Done!"
