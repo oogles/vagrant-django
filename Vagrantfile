@@ -3,7 +3,7 @@
 
 VAGRANT_COMMAND = ARGV[0]
 
-project = 'project_name'
+project = "project_name"
 
 Vagrant.configure(2) do |config|
   # Reference: https://docs.vagrantup.com.

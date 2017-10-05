@@ -5,9 +5,9 @@ Change Log
 0.4
 ===
 
-* Removed ``BUILD_MODE`` setting.
-* Moved custom scripts from ``provision/scripts/bin`` to``provision/user/bin``.
-* Moved shared folder to ``/opt/app/src``.
+* Removed the notion of "build modes".
+* Updated ``provision/`` directory structure to support additional configuration files and templates.
+* Moved synced folder to ``/opt/app/src``.
 * Moved other important directories under ``/opt/app``. This is now the home of everything related to the project.
 * Switched to using the "webmaster" user, created during the provisioning process, as the SSH user. The custom public key installed during provisioning is now installed for this user instead of "vagrant".
 * Added provisioning for supervisor.
@@ -15,6 +15,7 @@ Change Log
 * Added provisioning for nginx as a reverse proxy to gunicorn, managed by supervisor.
 * Added provisioning for firewall rules via ufw.
 * Added pull+ command.
+* Removed shell+ and runserver+ commands.
 
 0.3.2
 =====

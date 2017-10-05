@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-/opt/app/src/manage.py shell_plus
