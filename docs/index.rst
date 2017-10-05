@@ -7,7 +7,10 @@ The building blocks for a `Vagrant <https://www.vagrantup.com/>`_ environment fo
 .. toctree::
     :caption: Contents
     :maxdepth: 2
-    
+
     intro
-    config
     features
+    limitations
+    config
+    project-provisioning
+    production

@@ -2,26 +2,21 @@
 
 # Adapted from https://github.com/jackdb/pg-app-dev-vm
 
-PROJECT_NAME="$1"
+# Source global provisioning settings
+source /tmp/env.sh
 
-# Edit the following to change the name of the database user that will be created:
-APP_DB_USER="$PROJECT_NAME"
-APP_DB_PASS="$2"
-
-# Edit the following to change the name of the database that is created (defaults to the user name)
-APP_DB_NAME="$APP_DB_USER"
-
-# Edit the following to change the version of PostgreSQL that is installed
-PG_VERSION=9.4
+DB_PASS="$1"
+DB_USER="$PROJECT_NAME"
+DB_NAME="$PROJECT_NAME"
 
 print_db_usage () {
-	echo " "
+    echo " "
     echo "PostgreSQL database setup and accessible on your local machine on the forwarded port (default: 15432)"
     echo "  Host: localhost"
     echo "  Port: 5432"
-    echo "  Database: $APP_DB_NAME"
-    echo "  Username: $APP_DB_USER"
-    echo "  Password: $APP_DB_PASS"
+    echo "  Database: $DB_NAME"
+    echo "  Username: $DB_USER"
+    echo "  Password: $DB_PASS"
 }
 
 echo " "
@@ -29,17 +24,18 @@ echo " --- Install/configure PostgreSQL ---"
 
 export DEBIAN_FRONTEND=noninteractive
 
-if command -v psql; then
+if command -v psql >/dev/null; then
     echo "Already installed and configured."
     print_db_usage
     exit
 fi
 
 apt-get -qq install libpq-dev python-dev
-apt-get -qq install "postgresql-$PG_VERSION" "postgresql-contrib-$PG_VERSION"
+apt-get -qq install postgresql postgresql-contrib
 
 echo " "
 echo "Configuring..."
+PG_VERSION=$(psql --version | egrep -o '[0-9]{1,}\.[0-9]{1,}')
 PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
 PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
 PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
@@ -57,13 +53,13 @@ echo "client_encoding = utf8" >> "$PG_CONF"
 service postgresql restart
 
 echo " "
-echo "Creating \"$APP_DB_NAME\" database..."
+echo "Creating \"$DB_NAME\" database..."
 cat << EOF | su - postgres -c psql
 -- Create the database user:
-CREATE USER $APP_DB_USER WITH PASSWORD '$APP_DB_PASS';
+CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';
 
 -- Create the database:
-CREATE DATABASE $APP_DB_NAME WITH OWNER=$APP_DB_USER
+CREATE DATABASE $DB_NAME WITH OWNER=$DB_USER
                                   LC_COLLATE='en_US.utf8'
                                   LC_CTYPE='en_US.utf8'
                                   ENCODING='UTF8'
@@ -71,7 +67,7 @@ CREATE DATABASE $APP_DB_NAME WITH OWNER=$APP_DB_USER
 
 -- Give the database user permission to create databases, so it can be used
 -- to create test databases
-ALTER USER $APP_DB_USER CREATEDB;
+ALTER USER $DB_USER CREATEDB;
 EOF
 
 print_db_usage
