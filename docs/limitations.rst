@@ -27,6 +27,14 @@ The scripts *do* run ``apt-get update``, so the packages they do install are the
 It is incumbent on the user to run ``apt-get upgrade``, especially for a newly provisioned system. **This is particularly important in production environments**.
 
 
+.. _limitations-python:
+
+Python
+======
+
+Python (either 2 or 3) is required to be installed on the *unprovisioned* system. This is due to its use generating random strings, which is potentially one of the first things the provisioning scripts do (if ``env.sh`` settings such as ``DB_PASS`` and ``SECRET_KEY`` are not given).
+
+
 .. _limitations-dir-structure:
 
 Directory structure
