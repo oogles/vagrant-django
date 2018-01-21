@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+0.5
+===
+
+* Added support for pyenv and installing multiple versions of Python.
+* Switched from using virtualenv directly to using pyenv-virtualenv.
+
 0.4
 ===
 

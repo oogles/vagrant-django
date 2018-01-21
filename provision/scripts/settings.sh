@@ -7,6 +7,7 @@ echo " "
 echo " --- Establishing settings ---"
 
 PROJECT_NAME="$1"
+BASE_PYTHON_VERSION="$2"
 
 if [[ ! "$PROJECT_NAME" ]]; then
     echo "--------------------------------------------------"
@@ -76,9 +77,6 @@ if [[ ! "$ENV_PY_TEMPLATE" ]]; then
     ENV_PY_TEMPLATE='env.py.txt'
 fi
 
-# Define virtualenv activation command, for when the virtualenv gets created
-VENV_ACTIVATE_CMD="source $APP_DIR/virtualenv/bin/activate"
-
 
 echo " "
 echo "Storing settings..."
@@ -98,10 +96,10 @@ echo "Storing settings..."
 
 # Convenience settings for provisioning scripts
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'PROJECT_NAME' "$PROJECT_NAME" "$PROVISION_DIR/env.sh"
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'BASE_PYTHON_VERSION' "$BASE_PYTHON_VERSION" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'APP_DIR' "$APP_DIR" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'SRC_DIR' "$SRC_DIR" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'PROVISION_DIR' "$PROVISION_DIR" "$PROVISION_DIR/env.sh"
-"$PROVISION_DIR/scripts/utils/write_var.sh" 'VENV_ACTIVATE_CMD' "$VENV_ACTIVATE_CMD" "$PROVISION_DIR/env.sh"
 
 # Create symlink to env.sh for easy reference by provisioning scripts
 ln -sf "$PROVISION_DIR/env.sh" /tmp/env.sh
