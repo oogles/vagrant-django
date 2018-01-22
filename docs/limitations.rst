@@ -52,12 +52,11 @@ See :ref:`feat-dir-structure` for a description of this structure.
 Users
 =====
 
-The provisioning process creates a ``webmaster`` user. This is the only user with SSH access.
+The provisioning process creates a ``webmaster`` user. This is the only user with SSH access and is granted ``sudo`` privileges. See :ref:`the feature documentation <feat-users>` for more details.
 
 The ``webmaster`` user is placed in the ``www-data`` group.
 
 File ownership of almost everything under ``/opt/app/`` is ``www-data:www-data``. Various services, such as nginx and gunicorn, are configured to run under ``www-data``.
-
 
 .. _limitations-windows:
 

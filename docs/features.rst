@@ -39,6 +39,10 @@ The ``webmaster`` user is given sudo privileges. In development environments, fo
 
 Most provisioned services, such as nginx and gunicorn, are designed to run under the default ``www-data`` user.
 
+.. warning::
+
+    Using the provisioning scripts in a production environment with :ref:`conf-var-debug` set to ``1`` will leave the ``webmaster`` user with open ``sudo`` access, unprotected by a password prompt. This is a Bad Idea.
+
 
 .. _feat-time-zone:
 
