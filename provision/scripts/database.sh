@@ -35,22 +35,38 @@ apt-get -qq install postgresql postgresql-contrib
 
 echo " "
 echo "Configuring..."
-PG_VERSION=$(psql --version | egrep -o '[0-9]{1,}\.[0-9]{1,}')
+PG_VERSION=$(psql --version | egrep -o '[0-9]+\.[0-9]+')
 PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
 PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
-PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
 
-# Edit postgresql.conf to change listen address to '*':
-sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
+if [[ ! -f "$PG_CONF" ]]; then
+    # Could not find config files in "<major_version>.<minor_version>/main"
+    # directory, try just the "<major_version>/main" directory
+    PG_VERSION=$(psql --version | egrep -o '[0-9]+' | head -1)
+    PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
+    PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
+fi
 
-# Append to pg_hba.conf to add password auth:
-echo "host    all             all             all                     md5" >> "$PG_HBA"
+if [[ ! -f "$PG_CONF" ]]; then
+    # Still couldn't find the config files
+    echo " "
+    echo "--------------------------------------------------"
+    echo "ERROR: Could not locate postgres config files."
+    echo "Some configuration steps not performed."
+    echo "--------------------------------------------------"
+else
+    # Edit postgresql.conf to change listen address to '*':
+    sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
 
-# Explicitly set default client_encoding
-echo "client_encoding = utf8" >> "$PG_CONF"
+    # Append to pg_hba.conf to add password auth:
+    echo "host    all             all             all                     md5" >> "$PG_HBA"
 
-# Restart so that all new config is loaded
-service postgresql restart
+    # Explicitly set default client_encoding
+    echo "client_encoding = utf8" >> "$PG_CONF"
+
+    # Restart so that all new config is loaded
+    service postgresql restart
+fi
 
 echo " "
 echo "Creating \"$DB_NAME\" database..."

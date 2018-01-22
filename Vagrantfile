@@ -3,7 +3,8 @@
 
 VAGRANT_COMMAND = ARGV[0]
 
-project = "project_name"
+project = ""
+python = ""
 
 Vagrant.configure(2) do |config|
   # Reference: https://docs.vagrantup.com.
@@ -22,7 +23,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell" do |s|
     s.path = "provision/scripts/bootstrap.sh"
-    s.args = [project]
+    s.args = [project, python]
   end
 
   # Create a forwarded port mapping which allows access to a specific port

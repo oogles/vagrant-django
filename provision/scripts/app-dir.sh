@@ -23,4 +23,10 @@ chown www-data:www-data -R "$APP_DIR"
 # Allow group writes to the app directory (the webmaster user is in the www-data group)
 chmod g+w "$APP_DIR"
 
+# Update the webmaster user's profile to automatically change to the project
+# source directory when they SSH in
+if ! grep -Fxq "cd $SRC_DIR" /home/webmaster/.profile ; then
+    echo -e "\n# Change into the $PROJECT_NAME source directory by default\ncd $SRC_DIR" >> /home/webmaster/.profile
+fi
+
 echo "Done"

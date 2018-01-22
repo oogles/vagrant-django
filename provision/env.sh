@@ -14,6 +14,11 @@ PUBLIC_KEY=''
 DEBUG=1
 TIME_ZONE='Australia/Sydney'
 
+# List of python versions to install (e.g. to use non-system version for
+# virtualenv or to test with multiple versions via tox).
+# Define explicit versions: PYTHON_VERSIONS=('2.7.14' '3.5.4' '3.6.4')
+PYTHON_VERSIONS=()
+
 # A secret key will be generated automatically if not provided.
 #SECRET_KEY=''
 

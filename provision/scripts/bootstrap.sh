@@ -3,7 +3,7 @@
 # vagrant-django
 # Vagrant provisioning for Django projects.
 # https://github.com/oogles/vagrant-django
-# v0.4.0
+# v0.5.0
 
 # Ensure all provisioning scripts are executable
 chmod 774 -R /opt/app/src/provision/scripts/
@@ -17,6 +17,8 @@ function run_script() {
     "$1" "${@:2}"
     if [[ $? != 0 ]]; then
         echo " "
+        echo "PROVISION ABORTED"
+        echo " "
         echo "=================================================="
         exit 1
     fi
@@ -28,7 +30,7 @@ echo " "
 echo "START PROVISION"
 
 # Define common settings, passing the arguments that were passed to this script
-run_script /opt/app/src/provision/scripts/settings.sh "$1"
+run_script /opt/app/src/provision/scripts/settings.sh "$1" "$2"
 
 # Source the defined settings
 source /tmp/env.sh
@@ -82,7 +84,7 @@ fi
 # Install and configure virtualenv and install python dependencies.
 # Must run after postgres is installed if installing psycopg2, and after image
 # libraries if installing Pillow.
-run_script "$PROVISION_DIR/scripts/pip-virtualenv.sh"
+run_script "$PROVISION_DIR/scripts/python.sh"
 
 # Install and configure nodejs/npm and install node dependencies, if the project
 # makes use of them

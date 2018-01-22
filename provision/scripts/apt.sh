@@ -17,7 +17,7 @@ if [[ ! -f "$PG_SOURCE_LIST" ]]; then
     curl -s https://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
     echo "deb http://apt.postgresql.org/pub/repos/apt/ ${DISTRO}-pgdg main" > "$PG_SOURCE_LIST"
 else
-	echo "Already added."
+    echo "Already added."
 fi
 
 

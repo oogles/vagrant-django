@@ -23,10 +23,12 @@ An example ``Vagrantfile`` is included, but an entirely custom one can be used. 
 
         config.vm.provision "shell" do |s|
             s.path = "provision/scripts/bootstrap.sh"
-            s.args = ["<project_name>"]
+            s.args = ["<project_name>", "<python_version>"]
         end
 
     ``<project_name>`` should be replaced with a suitable name for the project. It dictates multiple features of the environment. :ref:`See below <conf-var-project-name>` for details.
+
+    ``<python_version>`` should be replaced with the full version string of the version of Python the project should run under. E.g. "2.7.14" or "3.6.4". It can be excluded to use the operating system's standard python version. :ref:`See below <conf-var-base-python>` for details.
 * **Synced folder**
     The type of synced folder used is not important, however the following aspects are:
 
@@ -48,6 +50,15 @@ The name of the project is used by the provisioning scripts for the following:
 * The name of the nginx site config file (placed in ``/etc/nginx/sites-available/`` and linked to in ``/etc/nginx/sites-enabled/``).
 
 This means that the name given must be valid for each of those uses. E.g. names incorporating hyphens should use underscores instead (use ``project_name`` instead of ``project-name``).
+
+.. _conf-var-base-python:
+
+Base Python version
+-------------------
+
+The "base" Python version is the version that will be used to create the virtualenv under which all relevant Python processes for the project will be run. It can be specified in the Vagrantfile, or left unspecified in order to use the operating system's standard version.
+
+If specified, it must be the full version string, e.g. "2.7.14", "3.6.4", etc. In addition, it must be a version recognised and usable by `pyenv <https://github.com/pyenv/pyenv>`_. Pyenv is used to automate the process of downloading and installing the specified version of Python, and using it to build the virtualenv (via its `pyenv-virtualenv <https://github.com/pyenv/pyenv-virtualenv>`_ plugin).
 
 
 .. _conf-env-sh:
@@ -102,14 +113,31 @@ The time zone that the provisioned environment should use. Defaults to "Australi
 
 This value is also written to ``env.py`` so it may be imported into ``settings.py`` and used for Django's ``TIME_ZONE`` setting.
 
-.. _conf-var-secret_key:
+.. _conf-var-python-versions:
+
+PYTHON_VERSIONS
+---------------
+
+*Optional*
+
+An array of Python versions to install, e.g. to use with `tox <https://tox.readthedocs.io/en/latest/>`_ for testing under multiple versions. If specified, each version should be a full version string, such as "2.7.14", "3.6.4", etc. For example:
+
+.. code-block:: none
+
+    PYTHON_VERSIONS=('2.7.14' '3.5.4' '3.6.4')
+
+`Pyenv <https://github.com/pyenv/pyenv>`_ is used to automate the download and installation of the specified versions.
+
+These versions are installed *in addition* to any :ref:`base version <conf-var-base-python>` in the :ref:`Vagrantfile <conf-vagrantfile>`, but the same base version can be included in the list in order to control its position in the version priority list used with the ``pyenv global`` command. See the :ref:`feature documentation <feat-python>` for more details.
+
+.. _conf-var-secret-key:
 
 SECRET_KEY
 ----------
 
 *Optional*
 
-A value for the Django ``SECRET_KEY`` setting. If provided as an empty string, or left out of the file altogether, a default 128-character random string will be generated.
+A value for the Django ``SECRET_KEY`` setting. If provided as an empty string, or left out of the file altogether, a default random string will be generated. This generated value is more secure than the default provided by Django's ``startproject`` - containing 128 characters from an expanded alphabet, chosen using Python's ``random.SystemRandom().choice``.
 
 If a default value is generated, it will be written back to this file so the same value can be used in the case of re-provisioning.
 
