@@ -89,7 +89,7 @@ if [[ ${#PYTHON_VERSIONS[@]} -ne 0 ]]; then
     # Enable global commands for all installed versions of python, for use by tox
     echo " "
     echo "Enabling global commands..."
-    su - webmaster -c "$PYENV_CMD global system ${PYTHON_VERSIONS[@]}"
+    su - webmaster -c "$PYENV_CMD global ${PYTHON_VERSIONS[@]} system"
 fi
 
 
