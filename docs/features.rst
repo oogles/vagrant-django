@@ -85,7 +85,7 @@ Image libraries
 
 Various system-level image libraries used by `Pillow <https://python-pillow.github.io/>`_ are installed in the guest machine.
 
-To install Pillow itself, it should be included in ``requirements.txt`` along with other Python dependencies (see :ref:`feat-py-dependencies` below). But considering many of its features `require external libraries <http://pillow.readthedocs.org/en/3.0.x/installation.html#external-libraries>`_, and the high likelihood that a Django project will require Pillow, those libraries are installed in readiness.
+To install Pillow itself, it should be included in ``requirements.txt`` along with other Python dependencies (see :ref:`feat-py-dependencies` below). But considering many of its features `require external libraries <http://pillow.readthedocs.io/en/3.0.x/installation.html#external-libraries>`_, and the high likelihood that a Django project will require Pillow, those libraries are installed in readiness.
 
 The exact packages installed are taken from the Pillow `"depends" script for Ubuntu <https://github.com/python-pillow/Pillow/blob/master/depends/ubuntu_14.04.sh>`_, though not all are used.
 

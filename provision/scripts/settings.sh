@@ -23,7 +23,7 @@ PROVISION_DIR="$SRC_DIR/provision"
 
 # Get environment-specific variables from config.
 # For a full description of the available variables, and the effects they have
-# on the provisioning process, see the docs at https://vagrant-django.readthedocs.org/.
+# on the provisioning process, see the docs at https://vagrant-django.readthedocs.io/.
 if [[ -f "$PROVISION_DIR/env.sh" ]]; then
     source "$PROVISION_DIR/env.sh"
 else

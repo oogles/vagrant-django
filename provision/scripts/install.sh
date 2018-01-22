@@ -9,7 +9,7 @@ apt-get -qq install git silversearcher-ag
 # Install various image processing libraries, namely for Pillow.
 # Pillow itself is not installed - if necessary, it should be listed in requirements.txt.
 # But a Django project is highly likely to use it, so these are included.
-# See http://pillow.readthedocs.org/en/3.0.x/installation.html#external-libraries
+# See http://pillow.readthedocs.io/en/3.0.x/installation.html#external-libraries
 
 # Exact packages taken from:
 # https://github.com/python-pillow/Pillow/blob/master/depends/ubuntu_14.04.sh
