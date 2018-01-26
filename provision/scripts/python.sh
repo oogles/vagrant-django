@@ -17,12 +17,13 @@ function contains_element() {
 echo " "
 echo " --- Install/configure python/virtualenv ---"
 
-echo " "
-echo "Installing necessary system packages..."
-
-# List obtained from pyenv wiki. For latest, see:
-# https://github.com/pyenv/pyenv/wiki/Common-build-problems
-apt-get -qq install make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev
+# Add BASE_PYTHON_VERSION to PYTHON_VERSIONS if it isn't already present,
+# ensuring it is always installed
+if [[ "$BASE_PYTHON_VERSION" ]]; then
+    if ! contains_element "$BASE_PYTHON_VERSION" "${PYTHON_VERSIONS[@]}"; then
+        PYTHON_VERSIONS+=("$BASE_PYTHON_VERSION")
+    fi
+fi
 
 #
 # Install/configure pyenv and pyenv-virtualenv plugin
@@ -66,19 +67,19 @@ EOF
 fi
 
 #
-# Install additional versions of python if they are specified
+# Install additional versions of python (and the system packages required to do
+# so) if any are specified
 #
-
-# Add BASE_PYTHON_VERSION to PYTHON_VERSIONS if it isn't already present,
-# ensuring it is always installed
-if [[ "$BASE_PYTHON_VERSION" ]]; then
-    if ! contains_element "$BASE_PYTHON_VERSION" "${PYTHON_VERSIONS[@]}"; then
-        PYTHON_VERSIONS+=("$BASE_PYTHON_VERSION")
-    fi
-fi
 
 # Install each specified version
 if [[ ${#PYTHON_VERSIONS[@]} -ne 0 ]]; then
+    echo " "
+    echo "Installing necessary system packages..."
+
+    # List obtained from pyenv wiki. For latest, see:
+    # https://github.com/pyenv/pyenv/wiki/Common-build-problems
+    apt-get -qq install make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev
+
     echo " "
     echo "Installing additional python versions..."
     for i in ${PYTHON_VERSIONS[@]}; do
