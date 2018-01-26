@@ -19,7 +19,8 @@ Vagrant.configure(2) do |config|
 
   config.vm.synced_folder ".", "/opt/app/src",
     owner: "www-data",
-    group: "www-data"
+    group: "www-data",
+    mount_options: ["dmode=775"]  # ensure group read/write access for webmaster user
 
   config.vm.provision "shell" do |s|
     s.path = "provision/scripts/bootstrap.sh"
