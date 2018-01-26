@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+0.5.1
+=====
+
+* Ensured group read/write permissions are assigned to appropriate directories, specifically the synced folder (for webmaster user access)
+
 0.5
 ===
 
