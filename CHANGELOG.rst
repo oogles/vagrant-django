@@ -5,13 +5,15 @@ Change Log
 0.5.1
 =====
 
-* Ensured group read/write permissions are assigned to appropriate directories, specifically the synced folder (for webmaster user access)
+* Ensured group read/write permissions are assigned to appropriate directories, specifically the synced folder (for webmaster user access).
+* Updated to skip installing the system libraries required for installing additional Python versions if none are specified.
 
 0.5
 ===
 
 * Added support for pyenv and installing multiple versions of Python.
 * Switched from using virtualenv directly to using pyenv-virtualenv.
+* Increased robustness of postgres configuration (now looks in more places for config files).
 
 0.4
 ===
