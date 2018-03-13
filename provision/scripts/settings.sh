@@ -33,10 +33,10 @@ else
     exit 1
 fi
 
-# A public key is required
-if [[ ! "$PUBLIC_KEY" ]]; then
+# A DEBUG flag is required
+if [[ ! "$DEBUG" ]]; then
     echo "--------------------------------------------------"
-    echo "ERROR: No PUBLIC_KEY variable defined in provision/env.sh."
+    echo "ERROR: No DEBUG variable defined in provision/env.sh."
     echo "--------------------------------------------------"
     exit 1
 fi
@@ -44,8 +44,21 @@ fi
 # Normalise the DEBUG flag
 if [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
     DEBUG=1
-else
+elif [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
     DEBUG=0
+else
+    echo "--------------------------------------------------"
+    echo "ERROR: Invalid DEBUG value '$DEBUG'."
+    echo "--------------------------------------------------"
+    exit 1
+fi
+
+# A public key is required
+if [[ ! "$PUBLIC_KEY" ]]; then
+    echo "--------------------------------------------------"
+    echo "ERROR: No PUBLIC_KEY variable defined in provision/env.sh."
+    echo "--------------------------------------------------"
+    exit 1
 fi
 
 # Generate a secret key if one is not given
