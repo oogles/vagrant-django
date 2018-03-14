@@ -11,3 +11,6 @@ BASE_PYTHON_VERSION=''
 # appended to the end.
 # Define explicit versions: PYTHON_VERSIONS=('2.7.14' '3.5.4' '3.6.4')
 PYTHON_VERSIONS=()
+
+# Node.js version (major version only - the latest minor version will always be used)
+NODE_VERSION='8'

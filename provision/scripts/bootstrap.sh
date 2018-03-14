@@ -35,8 +35,11 @@ run_script /opt/app/src/provision/scripts/settings.sh "$1"
 # Source the defined settings
 source /tmp/env.sh
 
-# Add/update apt repos - get software current before doing anything
-run_script "$PROVISION_DIR/scripts/apt.sh"
+# Get package lists current before doing anything
+echo " "
+echo " --- Update package lists ---"
+apt-get -qq update
+echo "Done"
 
 # Setup the "webmaster" user and home directory
 run_script "$PROVISION_DIR/scripts/user.sh"

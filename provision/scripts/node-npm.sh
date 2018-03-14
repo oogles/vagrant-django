@@ -2,11 +2,13 @@
 
 # Source global provisioning settings
 source /tmp/env.sh
+source /tmp/versions.sh
 
 echo " "
 echo " --- Install node.js/npm ---"
 
 # Install node and update npm
+curl -sL "https://deb.nodesource.com/setup_$NODE_VERSION.x" | sudo -E bash -
 apt-get -qq install nodejs
 npm install npm -g --quiet
 
