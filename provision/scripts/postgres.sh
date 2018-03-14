@@ -5,7 +5,6 @@
 # Source global provisioning settings
 source /tmp/env.sh
 
-DB_PASS="$1"
 DB_USER="$PROJECT_NAME"
 DB_NAME="$PROJECT_NAME"
 
@@ -30,8 +29,7 @@ if command -v psql >/dev/null; then
     exit
 fi
 
-apt-get -qq install libpq-dev python-dev
-apt-get -qq install postgresql postgresql-contrib
+apt-get -qq install libpq-dev python-dev postgresql postgresql-contrib
 
 echo " "
 echo "Configuring..."

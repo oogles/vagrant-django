@@ -70,7 +70,7 @@ run_script "$PROVISION_DIR/scripts/install.sh"
 run_script "$PROVISION_DIR/scripts/supervisor.sh"
 
 # Install and configure database
-run_script "$PROVISION_DIR/scripts/database.sh" "$DB_PASS"
+run_script "$PROVISION_DIR/scripts/postgres.sh"
 
 # If a project-specific provisioning file is present, ensure it is executable
 # and run it

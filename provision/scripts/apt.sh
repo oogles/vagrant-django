@@ -9,18 +9,6 @@ echo " "
 echo " --- Add/update apt repos ---"
 
 
-echo " "
-echo "Adding PostgreSQL repo..."
-
-PG_SOURCE_LIST="/etc/apt/sources.list.d/pgdg.list"
-if [[ ! -f "$PG_SOURCE_LIST" ]]; then
-    curl -s https://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ ${DISTRO}-pgdg main" > "$PG_SOURCE_LIST"
-else
-    echo "Already added."
-fi
-
-
 if [[ -f "$SRC_DIR/package.json" ]]; then
     echo " "
     echo "Adding node.js repo..."

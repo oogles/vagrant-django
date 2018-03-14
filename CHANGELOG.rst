@@ -9,6 +9,8 @@ Change Log
 * Added ``versions.sh`` to keep project version information outside ``env.sh`` (as it is not environment-specific)
 * Moved base Python version definition from ``Vagrantfile`` to ``versions.sh``.
 * Moved PYTHON_VERSIONS setting from ``env.sh`` to ``versions.sh``.
+* Renamed ``scripts/database.sh`` to ``scripts/postgres.sh``
+* Removed installation of custom postgres apt repo in favour of using the OS's default
 
 0.5.1
 =====
