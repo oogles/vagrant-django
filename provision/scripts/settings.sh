@@ -7,7 +7,6 @@ echo " "
 echo " --- Establishing settings ---"
 
 PROJECT_NAME="$1"
-BASE_PYTHON_VERSION="$2"
 
 if [[ ! "$PROJECT_NAME" ]]; then
     echo "--------------------------------------------------"
@@ -33,10 +32,10 @@ else
     exit 1
 fi
 
-# A public key is required
-if [[ ! "$PUBLIC_KEY" ]]; then
+# A DEBUG flag is required
+if [[ ! "$DEBUG" ]]; then
     echo "--------------------------------------------------"
-    echo "ERROR: No PUBLIC_KEY variable defined in provision/env.sh."
+    echo "ERROR: No DEBUG variable defined in provision/env.sh."
     echo "--------------------------------------------------"
     exit 1
 fi
@@ -44,8 +43,21 @@ fi
 # Normalise the DEBUG flag
 if [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
     DEBUG=1
-else
+elif [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
     DEBUG=0
+else
+    echo "--------------------------------------------------"
+    echo "ERROR: Invalid DEBUG value '$DEBUG'."
+    echo "--------------------------------------------------"
+    exit 1
+fi
+
+# A public key is required
+if [[ ! "$PUBLIC_KEY" ]]; then
+    echo "--------------------------------------------------"
+    echo "ERROR: No PUBLIC_KEY variable defined in provision/env.sh."
+    echo "--------------------------------------------------"
+    exit 1
 fi
 
 # Generate a secret key if one is not given
@@ -96,10 +108,10 @@ echo "Storing settings..."
 
 # Convenience settings for provisioning scripts
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'PROJECT_NAME' "$PROJECT_NAME" "$PROVISION_DIR/env.sh"
-"$PROVISION_DIR/scripts/utils/write_var.sh" 'BASE_PYTHON_VERSION' "$BASE_PYTHON_VERSION" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'APP_DIR' "$APP_DIR" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'SRC_DIR' "$SRC_DIR" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'PROVISION_DIR' "$PROVISION_DIR" "$PROVISION_DIR/env.sh"
 
-# Create symlink to env.sh for easy reference by provisioning scripts
+# Create symlink to env.sh and versions.sh for easy reference by provisioning scripts
 ln -sf "$PROVISION_DIR/env.sh" /tmp/env.sh
+ln -sf "$PROVISION_DIR/versions.sh" /tmp/versions.sh

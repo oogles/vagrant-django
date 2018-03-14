@@ -2,6 +2,7 @@
 
 # Source global provisioning settings
 source /tmp/env.sh
+source /tmp/versions.sh
 
 
 # A function to test if an array contains an element.
@@ -24,6 +25,7 @@ if [[ "$BASE_PYTHON_VERSION" ]]; then
         PYTHON_VERSIONS+=("$BASE_PYTHON_VERSION")
     fi
 fi
+
 
 #
 # Install/configure pyenv and pyenv-virtualenv plugin
@@ -66,6 +68,7 @@ fi
 EOF
 fi
 
+
 #
 # Install additional versions of python (and the system packages required to do
 # so) if any are specified
@@ -90,7 +93,7 @@ if [[ ${#PYTHON_VERSIONS[@]} -ne 0 ]]; then
     # Enable global commands for all installed versions of python, for use by tox
     echo " "
     echo "Enabling global commands..."
-    su - webmaster -c "$PYENV_CMD global ${PYTHON_VERSIONS[@]} system"
+    su - webmaster -c "$PYENV_CMD global ${PYTHON_VERSIONS[*]} system"
 fi
 
 

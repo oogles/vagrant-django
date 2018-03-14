@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-PUBLIC_KEY="$1"
-
 # Source global provisioning settings
 source /tmp/env.sh
 

@@ -30,19 +30,22 @@ echo " "
 echo "START PROVISION"
 
 # Define common settings, passing the arguments that were passed to this script
-run_script /opt/app/src/provision/scripts/settings.sh "$1" "$2"
+run_script /opt/app/src/provision/scripts/settings.sh "$1"
 
 # Source the defined settings
 source /tmp/env.sh
 
-# Add/update apt repos - get software current before doing anything
-run_script "$PROVISION_DIR/scripts/apt.sh"
+# Get package lists current before doing anything
+echo " "
+echo " --- Update package lists ---"
+apt-get -qq update
+echo "Done"
 
 # Setup the "webmaster" user and home directory
 run_script "$PROVISION_DIR/scripts/user.sh"
 
 # Configure SSH
-run_script "$PROVISION_DIR/scripts/ssh.sh" "$PUBLIC_KEY"
+run_script "$PROVISION_DIR/scripts/ssh.sh"
 
 echo " "
 echo " --- Set time zone ---"
@@ -70,7 +73,7 @@ run_script "$PROVISION_DIR/scripts/install.sh"
 run_script "$PROVISION_DIR/scripts/supervisor.sh"
 
 # Install and configure database
-run_script "$PROVISION_DIR/scripts/database.sh" "$DB_PASS"
+run_script "$PROVISION_DIR/scripts/postgres.sh"
 
 # If a project-specific provisioning file is present, ensure it is executable
 # and run it
