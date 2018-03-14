@@ -45,7 +45,7 @@ echo "Done"
 run_script "$PROVISION_DIR/scripts/user.sh"
 
 # Configure SSH
-run_script "$PROVISION_DIR/scripts/ssh.sh" "$PUBLIC_KEY"
+run_script "$PROVISION_DIR/scripts/ssh.sh"
 
 echo " "
 echo " --- Set time zone ---"
