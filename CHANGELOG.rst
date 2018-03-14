@@ -2,6 +2,14 @@
 Change Log
 ==========
 
+0.6
+===
+
+* Made ``DEBUG`` flag required.
+* Added ``versions.sh`` to keep project version information outside ``env.sh`` (as it is not environment-specific)
+* Moved base Python version definition from ``Vagrantfile`` to ``versions.sh``.
+* Moved PYTHON_VERSIONS setting from ``env.sh`` to ``versions.sh``.
+
 0.5.1
 =====
 

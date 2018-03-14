@@ -30,7 +30,7 @@ echo " "
 echo "START PROVISION"
 
 # Define common settings, passing the arguments that were passed to this script
-run_script /opt/app/src/provision/scripts/settings.sh "$1" "$2"
+run_script /opt/app/src/provision/scripts/settings.sh "$1"
 
 # Source the defined settings
 source /tmp/env.sh
