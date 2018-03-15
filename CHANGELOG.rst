@@ -5,6 +5,8 @@ Change Log
 0.6
 ===
 
+This release adds a ``provision/versions.sh`` file. If upgrading from a previous version, in addition to replacing the ``provision/scripts`` directory, be sure to copy this file into your project.
+
 * Made ``DEBUG`` flag required.
 * Added ``versions.sh`` to keep project version information outside ``env.sh`` (as it is not environment-specific)
 * Moved base Python version definition from ``Vagrantfile`` to ``versions.sh``.
