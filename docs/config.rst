@@ -23,12 +23,10 @@ An example ``Vagrantfile`` is included, but an entirely custom one can be used. 
 
         config.vm.provision "shell" do |s|
             s.path = "provision/scripts/bootstrap.sh"
-            s.args = ["<project_name>", "<python_version>"]
+            s.args = ["<project_name>"]
         end
 
     ``<project_name>`` should be replaced with a suitable name for the project. It dictates multiple features of the environment. :ref:`See below <conf-var-project-name>` for details.
-
-    ``<python_version>`` should be replaced with the full version string of the version of Python the project should run under. E.g. "2.7.14" or "3.6.4". It can be excluded to use the operating system's standard python version. :ref:`See below <conf-var-base-python>` for details.
 * **Synced folder**
     The type of synced folder used is not important, however the following aspects are:
 
@@ -51,15 +49,6 @@ The name of the project is used by the provisioning scripts for the following:
 
 This means that the name given must be valid for each of those uses. E.g. names incorporating hyphens should use underscores instead (use ``project_name`` instead of ``project-name``).
 
-.. _conf-var-base-python:
-
-Base Python version
--------------------
-
-The "base" Python version is the version that will be used to create the virtualenv under which all relevant Python processes for the project will be run. It can be specified in the Vagrantfile, or left unspecified in order to use the operating system's standard version.
-
-If specified, it must be the full version string, e.g. "2.7.14", "3.6.4", etc. In addition, it must be a version recognised and usable by `pyenv <https://github.com/pyenv/pyenv>`_. Pyenv is used to automate the process of downloading and installing the specified version of Python, and using it to build the virtualenv (via its `pyenv-virtualenv <https://github.com/pyenv/pyenv-virtualenv>`_ plugin).
-
 
 .. _conf-env-sh:
 
@@ -80,6 +69,19 @@ When provisioning is first run, it will most likely modify this file. Some of th
 
     Several of these settings affect ``env.py``. See :ref:`feat-env-py` for the virtues of using these values over values hardcoded in ``settings.py``.
 
+.. _conf-var-debug:
+
+DEBUG
+-----
+
+**Required**
+
+This flag controls whether or not to provision a development or production environment. A value of ``1`` indicates a development environment, a value of ``0`` indicates a production environment.
+
+This flag affects numerous aspects of the environment. For a breakdown of the features only available in production environments (when the flag is ``0``), see :doc:`production`.
+
+This value is also written to ``env.py`` so it may be imported into ``settings.py`` and used for Django's ``DEBUG`` setting. A value of ``1`` is written as ``True``, a value of ``0`` is written as ``False``.
+
 .. _conf-var-public-key:
 
 PUBLIC_KEY
@@ -88,19 +90,6 @@ PUBLIC_KEY
 **Required**
 
 This public key will be installed into ``/home/webmaster/.ssh/authorized_keys`` so it may be used to SSH into the provisioned environment as the ``webmaster`` user.
-
-.. _conf-var-debug:
-
-DEBUG
------
-
-*Optional*
-
-This flag controls whether or not to provision a development or production environment. A value of ``1`` indicates a development environment, otherwise (including when it is not specified at all) it indicates a production environment.
-
-This flag affects numerous aspects of the environment. For a breakdown of the features only available in production environments (when the flag is not ``1``), see :doc:`production`.
-
-This value is also written to ``env.py`` so it may be imported into ``settings.py`` and used for Django's ``DEBUG`` setting. A value of ``1`` is written as ``True``, anything else is written as ``False``.
 
 .. _conf-var-time-zone:
 
@@ -112,23 +101,6 @@ TIME_ZONE
 The time zone that the provisioned environment should use. Defaults to "Australia/Sydney".
 
 This value is also written to ``env.py`` so it may be imported into ``settings.py`` and used for Django's ``TIME_ZONE`` setting.
-
-.. _conf-var-python-versions:
-
-PYTHON_VERSIONS
----------------
-
-*Optional*
-
-An array of Python versions to install, e.g. to use with `tox <https://tox.readthedocs.io/en/latest/>`_ for testing under multiple versions. If specified, each version should be a full version string, such as "2.7.14", "3.6.4", etc. For example:
-
-.. code-block:: none
-
-    PYTHON_VERSIONS=('2.7.14' '3.5.4' '3.6.4')
-
-`Pyenv <https://github.com/pyenv/pyenv>`_ is used to automate the download and installation of the specified versions.
-
-These versions are installed *in addition* to any :ref:`base version <conf-var-base-python>` in the :ref:`Vagrantfile <conf-vagrantfile>`, but the same base version can be included in the list in order to control its position in the version priority list used with the ``pyenv global`` command. See the :ref:`feature documentation <feat-python>` for more details.
 
 .. _conf-var-secret-key:
 
@@ -166,6 +138,55 @@ ENV_PY_TEMPLATE
 The template to use when writing the ``env.py`` file, as a file path relative to ``provision/templates/``. Defaults to ``env.py.txt``. A default template file is provided at ``provision/templates/env.py.txt``.
 
 See :ref:`conf-env-py` for more details on using custom ``env.py`` templates.
+
+
+.. _conf-versions-sh:
+
+versions.sh
+===========
+
+Location: ``provision/versions.sh``
+
+This file contains the versions of various packages to be installed during provisioning. Like ``env.sh``, it is simply a shell script that gets executed by the provisioning scripts to load the variables it contains. Unlike ``env.sh``, this file *should* be committed to source control. All environments should install the same versions of the software they use.
+
+The included ``versions.sh`` comes with acceptable default values for all variables. It will not require modification unless the default values are unsuitable for your project.
+
+.. _conf-var-base-python:
+
+BASE_PYTHON_VERSION
+-------------------
+
+The "base" Python version is the version that will be used to create the virtualenv under which all relevant Python processes for the project will be run. It can be left blank in order to use the operating system's standard version.
+
+If specified, it must be the full version string, e.g. "2.7.14", "3.6.4", etc. In addition, it must be a version recognised and usable by `pyenv <https://github.com/pyenv/pyenv>`_. Pyenv is used to automate the process of downloading and installing the specified version of Python, and using it to build the virtualenv (via its `pyenv-virtualenv <https://github.com/pyenv/pyenv-virtualenv>`_ plugin).
+
+.. _conf-var-python-versions:
+
+PYTHON_VERSIONS
+---------------
+
+An array of Python versions to install, e.g. to use with `tox <https://tox.readthedocs.io/en/latest/>`_ for testing under multiple versions. It can be left empty to install no additional versions of Python on the provisioned system. If specified, each version should be a full version string, such as "2.7.14", "3.6.4", etc. For example:
+
+.. code-block:: none
+
+    PYTHON_VERSIONS=('2.7.14' '3.5.4' '3.6.4')
+
+`Pyenv <https://github.com/pyenv/pyenv>`_ is used to automate the download and installation of the specified versions.
+
+These versions are installed *in addition* to any :ref:`base version <conf-var-base-python>`, but the same base version can be included in the list in order to control its position in the version priority list used with the ``pyenv global`` command. If the base version is *not* included in the list, it will be added to the end of it for the purposes of the ``pyenv global`` command. See the :ref:`feature documentation <feat-python>` for more details.
+
+.. _conf-var-node-version:
+
+NODE_VERSION
+------------
+
+The version of `node.js <https://nodejs.org/en/>`_ to install. Only the major version should be specified - the latest minor version will always be used.
+
+Installation is performed by first installing the relevant `Nodesource <https://nodesource.com/>`_ apt repo, using a script from the Nodesource `binary distribution repository <https://github.com/nodesource/distributions/tree/master/deb>`_ on GitHub. Therefore, the version must correspond to a installation script provided by Nodesource.
+
+.. note::
+
+    Regardless of this version setting, node.js will only be installed if a ``package.json`` file is present in the root directory of your project.
 
 
 .. _conf-firewall:
