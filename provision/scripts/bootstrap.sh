@@ -3,7 +3,7 @@
 # vagrant-django
 # Vagrant provisioning for Django projects.
 # https://github.com/oogles/vagrant-django
-# v0.5.1
+# v0.6.0
 
 # Ensure all provisioning scripts are executable
 chmod 774 -R /opt/app/src/provision/scripts/
