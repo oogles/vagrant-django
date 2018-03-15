@@ -8,7 +8,7 @@ echo " "
 echo " --- Install node.js/npm ---"
 
 # Install node and update npm
-curl -sL "https://deb.nodesource.com/setup_$NODE_VERSION.x" | sudo -E bash -
+curl -sL "https://deb.nodesource.com/setup_$NODE_VERSION.x" | bash -
 apt-get -qq install nodejs
 npm install npm -g --quiet
 
