@@ -40,3 +40,9 @@ How to use
 #. ``vagrant up``
 
 Additional steps may be required in production environments. See `Usage in Production <https://vagrant-django.readthedocs.io/en/stable/production.html>`_ for details.
+
+
+License
+=======
+
+vagrant-django is released under the MIT license, and may be freely included in other projects to support the provisioning of their environments.

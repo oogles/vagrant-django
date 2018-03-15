@@ -14,6 +14,7 @@ Change Log
 * Added ``NODE_VERSION`` setting to ``version.sh``.
 * Updated installation of custom node.js repo to use ``NODE_VERSION``.
 * Removed ``apt.sh``.
+* Added MIT license.
 
 0.5.1
 =====
