@@ -41,9 +41,9 @@ if [[ ! "$DEBUG" ]]; then
 fi
 
 # Normalise the DEBUG flag
-if [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
+if [[ "$DEBUG" == '1' ]]; then
     DEBUG=1
-elif [[ "$DEBUG" && "$DEBUG" -eq 1 ]]; then
+elif [[ "$DEBUG" == '0' ]]; then
     DEBUG=0
 else
     echo "--------------------------------------------------"

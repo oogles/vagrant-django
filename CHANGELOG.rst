@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+0.6.1
+=====
+
+* Fixed bug validating ``DEBUG`` flag.
+
 0.6
 ===
 
