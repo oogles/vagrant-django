@@ -6,6 +6,7 @@ Change Log
 =====
 
 * Fixed bug validating ``DEBUG`` flag.
+* Fixed bug in rand_str when 'python' is not found and 'python3' is: actually use the 'python3' command.
 
 0.6
 ===
