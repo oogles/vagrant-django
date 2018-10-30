@@ -153,6 +153,9 @@ if ! grep -Fxq "$VENV_ACTIVATE_CMD" /home/webmaster/.profile ; then
     echo -e "\n# Automate virtualenv activation\n$VENV_ACTIVATE_CMD" >> /home/webmaster/.profile
 fi
 
+# Add a shortcut symlink to the virtualenv directory in the "ln" directory
+ln -sf "$VENV_DIR" "$APP_DIR/ln/virtualenv"
+
 
 #
 # Install Python dependencies from requirements.txt. If DEBUG is true, also
@@ -170,7 +173,7 @@ fi
 
 if [[ "$DEBUG" -eq 1 ]]; then
     echo " "
-    echo " ---  Install Python additional dev dependencies ---"
+    echo " --- Install Python additional dev dependencies ---"
     if [[ -f "$SRC_DIR/dev_requirements.txt" ]]; then
         su - webmaster -c "$VENV_ACTIVATE_CMD && pip install -q -r $SRC_DIR/dev_requirements.txt"
         echo "Done"

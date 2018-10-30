@@ -28,7 +28,7 @@ fi
 if command -v python >/dev/null; then
     python -c "import random; import string; print ''.join([random.SystemRandom().choice(string.letters + string.digits + '!#$%()*+,-./:;<=>?@[]^_{}~') for i in range($LENGTH)])"
 elif command -v python3 >/dev/null; then
-    python -c "import random; import string; print(''.join([random.SystemRandom().choice(string.ascii_letters + string.digits + '!#$%()*+,-./:;<=>?@[]^_{}~') for i in range($LENGTH)]))"
+    python3 -c "import random; import string; print(''.join([random.SystemRandom().choice(string.ascii_letters + string.digits + '!#$%()*+,-./:;<=>?@[]^_{}~') for i in range($LENGTH)]))"
 else
     echo "Python not available" >&2
     exit 1
