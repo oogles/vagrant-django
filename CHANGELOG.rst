@@ -5,7 +5,8 @@ Change Log
 0.7
 ===
 
-...
+* Separated installation of python from installation of the project's python dependencies.
+* Separated installation of node/npm from installation of the project's npm dependencies.
 
 0.6.1
 =====

@@ -33,12 +33,3 @@ if [[ -L "$NODE_LINK_PATH" ]]; then
 fi
 
 ln -s "$NODE_MODULES_PATH" "$NODE_LINK_PATH"
-
-## Install project dependencies
-echo " "
-echo " --- Install node.js dependencies ---"
-if [[ "$DEBUG" -eq 1 ]]; then
-    su - webmaster -c "cd $SRC_DIR && npm install --quiet"
-else
-    su - webmaster -c "cd $SRC_DIR && npm install --production --quiet"
-fi

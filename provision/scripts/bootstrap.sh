@@ -75,6 +75,18 @@ run_script "$PROVISION_DIR/scripts/supervisor.sh"
 # Install and configure database
 run_script "$PROVISION_DIR/scripts/postgres.sh"
 
+# Install and configure python and create a virtualenv.
+# Must run after postgres is installed if installing psycopg2, and after image
+# libraries if installing Pillow.
+# Run before project-specific provisioning in case it needs to use python.
+run_script "$PROVISION_DIR/scripts/python.sh"
+
+# Install and configure nodejs/npm, if the project makes use of them.
+# Run before project-specific provisioning in case it needs to use them.
+if [[ -f "$SRC_DIR/package.json" ]]; then
+    run_script "$PROVISION_DIR/scripts/node-npm.sh"
+fi
+
 # If a project-specific provisioning file is present, ensure it is executable
 # and run it
 if [[ -f "$PROVISION_DIR/project.sh" ]]; then
@@ -84,16 +96,8 @@ if [[ -f "$PROVISION_DIR/project.sh" ]]; then
     run_script "$PROVISION_DIR/project.sh"
 fi
 
-# Install and configure virtualenv and install python dependencies.
-# Must run after postgres is installed if installing psycopg2, and after image
-# libraries if installing Pillow.
-run_script "$PROVISION_DIR/scripts/python.sh"
-
-# Install and configure nodejs/npm and install node dependencies, if the project
-# makes use of them
-if [[ -f "$SRC_DIR/package.json" ]]; then
-    run_script "$PROVISION_DIR/scripts/node-npm.sh"
-fi
+# Install project dependencies (python and npm)
+run_script "$PROVISION_DIR/scripts/dependencies.sh"
 
 # Install nginx and gunicorn for production environments. Must run after
 # virtualenv is installed.
