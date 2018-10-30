@@ -18,13 +18,14 @@ The root of this structure is ``/opt/app/``.
 
 The most important subdirectory is ``/opt/app/src/``. This is the project root directory, and the target of the Vagrant synced folder. Subsequently, ``/opt/app/src/provision/`` contains all the provisioning scripts.
 
-Some of the other directories in this structure are:
+Some of the other useful directories in this structure are:
 
 * ``/opt/app/conf/``: For storage of configuration files such as ``nginx.conf`` and gunicorn's ``conf.py``. Such files are copied here instead of being referenced directly from within ``provision/conf/`` so they may be modified without affecting the committed source files.
 * ``/opt/app/logs/``: For storage of log files output by supervisor, etc.
 * ``/opt/app/media/``: Target for Django's ``MEDIA_ROOT``.
 * ``/opt/app/static/``: Target for Django's ``STATIC_ROOT`` (in production environments).
 
+The final directory is ``/opt/app/ln/``. This directory is primarily used to simplify the process of configuring the server. It acts as a container for shortcut symlinks to various project-specific files and directories (i.e. those that contain the project name). It is designed to allow using known paths in config files, without forcing customisation in projects that would not otherwise need it. Using the shortcuts in the ``ln`` directory, default config files that work out-of-the-box can be provided (such as ``provision/conf/supervisor/production_programs/gunicorn.conf``). Otherwise, such files would require the modification of a series of paths to include the project name.
 
 .. _feat-users:
 

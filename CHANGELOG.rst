@@ -5,8 +5,11 @@ Change Log
 0.6.1
 =====
 
+This release updates the default supervisor program for gunicorn, in ``provision/conf/supervisor/production_programs/gunicorn.conf``. If upgrading from a previous version, in addition to replacing the ``provision/scripts`` directory, you may want to copy this file into your project.
+
 * Fixed bug validating ``DEBUG`` flag.
 * Fixed bug in rand_str when 'python' is not found and 'python3' is: actually use the 'python3' command.
+* Added ``/opt/app/ln/`` directory as a container for shortcut symlinks to project-specific directories (i.e. that contain the project name). This allows using known paths in config files without forcing customisation per project. This restores a working supervisor program for gunicorn out of the box (it was broken in 0.5 with the move to pyenv/pyenv-virtualenv).
 
 0.6
 ===
@@ -14,7 +17,7 @@ Change Log
 This release adds a ``provision/versions.sh`` file. If upgrading from a previous version, in addition to replacing the ``provision/scripts`` directory, be sure to copy this file into your project.
 
 * Made ``DEBUG`` flag required.
-* Added ``versions.sh`` to keep project version information outside ``env.sh`` (as it is not environment-specific)
+* Added ``versions.sh`` to keep project version information outside ``env.sh`` (as it is not environment-specific).
 * Moved base Python version definition from ``Vagrantfile`` to ``versions.sh``.
 * Moved ``PYTHON_VERSIONS`` setting from ``env.sh`` to ``versions.sh``.
 * Renamed ``scripts/database.sh`` to ``scripts/postgres.sh``.
