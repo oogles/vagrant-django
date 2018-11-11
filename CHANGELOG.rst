@@ -9,6 +9,7 @@ With the support for separate configuration files for multiple deployments, this
 
 The default nginx and gunicorn supervisor programs are moved from ``production_programs`` to ``programs``. If upgrading from a previous version, in addition to replacing the ``provision/scripts`` directory, you will also need to mirror the renaming of this directory.
 
+* Updated default Vagrant box to Ubuntu 18.04.
 * Separated installation of python from installation of the project's python dependencies.
 * Separated installation of node/npm from installation of the project's npm dependencies.
 * Added support for keeping separate configuration files for different deployments.

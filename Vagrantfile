@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
     config.ssh.keys_only = false  # enable use of keys in ssh-agent
   end
 
-  config.vm.box = "bento/ubuntu-16.04"
+  config.vm.box = "bento/ubuntu-18.04"
 
   config.vm.synced_folder ".", "/opt/app/src",
     owner: "www-data",
