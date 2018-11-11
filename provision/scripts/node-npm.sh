@@ -5,13 +5,20 @@ source /tmp/env.sh
 source /tmp/versions.sh
 
 echo " "
-echo " --- Install node.js/npm ---"
+echo " --- Install node.js & friends ---"
 
+echo " "
+echo "Installing node..."
 # Install node and update npm
 curl -sL "https://deb.nodesource.com/setup_$NODE_VERSION.x" | bash -
 apt-get -qq install nodejs
+
+echo " "
+echo "Updating npm..."
 npm install npm -g --quiet
 
+echo " "
+echo "Symlinking node_modules..."
 # Get node_modules out of the shared folder.
 # This avoids multiple issues when using a Windows host.
 # NOTE: The name of the linked directory seems to want to be "node_modules".
@@ -33,3 +40,16 @@ if [[ -L "$NODE_LINK_PATH" ]]; then
 fi
 
 ln -s "$NODE_MODULES_PATH" "$NODE_LINK_PATH"
+
+# If a package-scripts.js file is present, also install nps as an alternative
+# to "npm run" as a task runner
+if [[ -f "$SRC_DIR/package-scripts.js" ]]; then
+    echo " "
+    echo "Installing nps..."
+    npm install -g --quiet nps
+
+    # Configure command autocompletion for nps
+    if ! grep -Fxq "###-begin-nps-completions-###" /home/webmaster/.bashrc ; then
+        nps completion >> /home/webmaster/.bashrc
+    fi
+fi
