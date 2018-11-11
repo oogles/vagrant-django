@@ -27,13 +27,13 @@ echo "Copying nginx.conf..."
 
 # Copy nginx.conf into $APP_DIR/conf, where it can be referenced by the
 # supervisor program
-cp "$PROVISION_DIR/conf/nginx/nginx.conf" "$APP_DIR/conf/nginx/"
+cp "/tmp/conf/nginx/nginx.conf" "$APP_DIR/conf/nginx/"
 
 echo " "
 echo "Copying site config..."
 
 # Copy the site config into sites-available
-cp "$PROVISION_DIR/conf/nginx/site" "/etc/nginx/sites-available/$PROJECT_NAME"
+cp "/tmp/conf/nginx/site" "/etc/nginx/sites-available/$PROJECT_NAME"
 
 # Link the copied site config into sites-enabled
 if [[ ! -L "/etc/nginx/sites-enabled/$PROJECT_NAME" ]]; then
@@ -67,6 +67,6 @@ echo "Copying conf.py..."
 
 # Copy conf.py into $APP_DIR/conf, where it can be referenced by the
 # supervisor program
-cp "$PROVISION_DIR/conf/gunicorn/conf.py" "$APP_DIR/conf/gunicorn/"
+cp "/tmp/conf/gunicorn/conf.py" "$APP_DIR/conf/gunicorn/"
 
 echo "Done"

@@ -5,8 +5,13 @@ Change Log
 0.7
 ===
 
+With the support for separate configuration files for multiple deployments, this release changes the structure of ``provision/conf/supervisor/``. Instead of looking for separate ``production_programs`` and ``dev_programs`` subdirectories, the provisioning scripts only look for a directory called ``programs``. If needing different supervisor programs in development vs production, create a separate "conf" directory for the different deployment/s, along with a ``DEPLOYMENT`` entry in ``env.sh``, and add the programs in there. For more information, see the documentation on multiple deployment support: ???.
+
+The default nginx and gunicorn supervisor programs are moved from ``production_programs`` to ``programs``. If upgrading from a previous version, in addition to replacing the ``provision/scripts`` directory, you will also need to mirror the renaming of this directory.
+
 * Separated installation of python from installation of the project's python dependencies.
 * Separated installation of node/npm from installation of the project's npm dependencies.
+* Added support for keeping separate configuration files for different deployments.
 
 0.6.1
 =====

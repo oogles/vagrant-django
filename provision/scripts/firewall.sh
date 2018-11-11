@@ -5,7 +5,7 @@ source /tmp/env.sh
 
 echo " "
 echo " --- Set firewall rules ---"
-if [[ ! -f "$PROVISION_DIR/conf/firewall-rules.conf" ]]; then
+if [[ ! -f "/tmp/conf/firewall-rules.conf" ]]; then
     echo "None found."
 else
     # Enable IPv6
@@ -20,7 +20,7 @@ else
     while read -r line; do
         [[ $line = \#* ]] && continue
         ufw $line
-    done < "$PROVISION_DIR/conf/firewall-rules.conf"
+    done < "/tmp/conf/firewall-rules.conf"
 
     # Enable (or re-enable in case of re-provisioning)
     ufw --force enable

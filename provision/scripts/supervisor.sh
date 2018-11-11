@@ -38,14 +38,10 @@ cp "$PROVISION_DIR/conf/supervisor/supervisord.conf" /etc/supervisor/supervisord
 
 echo " "
 echo "Copying programs..."
-if [[ "$DEBUG" -eq 1 ]]; then
-    PROGRAM_DIR="$PROVISION_DIR/conf/supervisor/dev_programs"
-else
-    PROGRAM_DIR="$PROVISION_DIR/conf/supervisor/production_programs"
-fi
-
-if [[ ! -d "$PROGRAM_DIR" ]]; then
+program_dir="/tmp/conf/supervisor/programs"
+if [[ ! -d "$program_dir" ]]; then
     echo "Nothing to copy"
 else
-    rsync -r "$PROGRAM_DIR/" /etc/supervisor/conf.d
+    # Copy over changes and also delete obsolete files
+    rsync -r --del "$program_dir/" /etc/supervisor/conf.d
 fi

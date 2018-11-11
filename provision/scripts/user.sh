@@ -41,14 +41,14 @@ fi
 echo " "
 echo " Copying files to home directory..."
 
-if [[ ! -d "$PROVISION_DIR/conf/user/" ]]; then
+if [[ ! -d "/tmp/conf/user/" ]]; then
     echo "Nothing to copy"
 else
     # Copy all contents of conf/user/ to the webmaster user's home directory.
     # Use rsync to change ownership at the same time (as chown -R in the
     # destination directory is not viable here), and to avoid needing to use
     # "shopt -s dotglib" to enable cp to pick up dotfiles.
-    rsync -r -og --chown=webmaster:webmaster "$PROVISION_DIR/conf/user/" /home/webmaster/
+    rsync -r -og --chown=webmaster:webmaster "/tmp/conf/user/" /home/webmaster/
 
     # Make the bin/ scripts executable
     chmod u+x -R /home/webmaster/bin/

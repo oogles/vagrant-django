@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 # Environment-specific settings used by the provisioning process
 
-DEBUG=1
+DEBUG='1'
 PUBLIC_KEY=''
 
 #
 # Options
 #
+
+DEPLOYMENT=''
 
 TIME_ZONE='Australia/Sydney'
 

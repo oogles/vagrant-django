@@ -4,7 +4,7 @@
 # variables only required by the bootstrap script.
 
 echo " "
-echo " --- Establishing settings ---"
+echo " --- Establish settings ---"
 
 PROJECT_NAME="$1"
 
@@ -50,6 +50,11 @@ else
     echo "ERROR: Invalid DEBUG value '$DEBUG'."
     echo "--------------------------------------------------"
     exit 1
+fi
+
+# Normalise the DEPLOYMENT setting
+if [[ ! "$DEPLOYMENT" ]]; then
+    DEPLOYMENT=''
 fi
 
 # A public key is required
@@ -102,6 +107,7 @@ echo "Storing settings..."
 
 # Customisable settings
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'DEBUG' "$DEBUG" "$PROVISION_DIR/env.sh"
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'DEPLOYMENT' "$DEPLOYMENT" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'SECRET_KEY' "$SECRET_KEY" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'DB_PASS' "$DB_PASS" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'ENV_PY_TEMPLATE' "$ENV_PY_TEMPLATE" "$PROVISION_DIR/env.sh"
@@ -115,3 +121,25 @@ echo "Storing settings..."
 # Create symlink to env.sh and versions.sh for easy reference by provisioning scripts
 ln -sf "$PROVISION_DIR/env.sh" /tmp/env.sh
 ln -sf "$PROVISION_DIR/versions.sh" /tmp/versions.sh
+
+#
+# Create a definitive source of config files for the the provisioning scripts
+# to access, taking into consideration deployment-specific overrides
+#
+
+echo " "
+echo "Copying config files..."
+
+# Copy all contents of conf/ to a temporary directory. Use rsync to avoid
+# needing to use "shopt -s dotglib" to enable cp to pick up dotfiles.
+rsync -r --del "$PROVISION_DIR/conf/" /tmp/conf/
+
+# Update with the relevant files specific to the configured deployment. Use
+# rsync again to intelligently update only the files that differ.
+if [[ "$DEPLOYMENT" != '' ]]; then
+    deployment_conf_dir="$PROVISION_DIR/conf-$DEPLOYMENT/"
+    if [[ -d "$deployment_conf_dir" ]]; then
+        echo "Adding $DEPLOYMENT overrides..."
+        rsync -r "$deployment_conf_dir" /tmp/conf/
+    fi
+fi
