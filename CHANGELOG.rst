@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+0.6.2
+=====
+
+* Fixed bugs creating symlinks under ``/opt/app/ln/`` when re-provisioning.
+
 0.6.1
 =====
 

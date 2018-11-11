@@ -154,7 +154,7 @@ if ! grep -Fxq "$VENV_ACTIVATE_CMD" /home/webmaster/.profile ; then
 fi
 
 # Add a shortcut symlink to the virtualenv directory in the "ln" directory
-ln -sf "$VENV_DIR" "$APP_DIR/ln/virtualenv"
+ln -sfT "$VENV_DIR" "$APP_DIR/ln/virtualenv"
 
 
 #

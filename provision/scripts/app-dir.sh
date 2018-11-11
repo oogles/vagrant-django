@@ -25,11 +25,11 @@ fi
 # below for why. Start with a link to the Django project subdirectory (the
 # project's Python package, where settings.py and wsgi.py live). Additional
 # links are added as needed throughout the provisioning process.
-ln_dir="$APP_DIR/ln/"
+ln_dir="$APP_DIR/ln"
 mkdir -p -m 775 "$ln_dir"
 
 project_subdir="$SRC_DIR/$PROJECT_NAME"
-if [[ -d "$project_subdir" ]]; then
+if [[ -d "$project_subdir" ]] && [[ ! -L "$ln_dir/package_dir" ]]; then
     ln -s "$project_subdir" "$ln_dir/package_dir"
 fi
 
