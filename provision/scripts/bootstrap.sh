@@ -49,11 +49,8 @@ run_script "$PROVISION_DIR/scripts/ssh.sh"
 
 echo " "
 echo " --- Set time zone ---"
-if [[ ! "$TIME_ZONE" ]]; then
-    TIME_ZONE='Australia/Sydney'
-fi
-echo "$TIME_ZONE" | tee /etc/timezone
-dpkg-reconfigure --frontend noninteractive tzdata
+timedatectl set-timezone "$TIME_ZONE"
+timedatectl
 
 # Set up app directory
 run_script "$PROVISION_DIR/scripts/app-dir.sh"

@@ -52,17 +52,22 @@ else
     exit 1
 fi
 
-# Normalise the DEPLOYMENT setting
-if [[ ! "$DEPLOYMENT" ]]; then
-    DEPLOYMENT=''
-fi
-
 # A public key is required
 if [[ ! "$PUBLIC_KEY" ]]; then
     echo "--------------------------------------------------"
     echo "ERROR: No PUBLIC_KEY variable defined in provision/env.sh."
     echo "--------------------------------------------------"
     exit 1
+fi
+
+# Normalise the DEPLOYMENT setting
+if [[ ! "$DEPLOYMENT" ]]; then
+    DEPLOYMENT=''
+fi
+
+# Apply a default TIMEZONE, if necessary
+if [[ ! "$TIME_ZONE" ]]; then
+    TIME_ZONE='Australia/Sydney'
 fi
 
 # Generate a secret key if one is not given
