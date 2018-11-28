@@ -16,6 +16,14 @@ The default nginx and gunicorn supervisor programs are moved from ``production_p
 * Added provisioning of nps if a ``package-scripts.js`` file is detected.
 * Fixed bug setting timezone.
 
+0.6.2
+=====
+
+This release again updates the default supervisor program for gunicorn, in ``provision/conf/supervisor/production_programs/gunicorn.conf``. If upgrading from a previous version, in addition to replacing the ``provision/scripts`` directory, you may want to copy this file into your project.
+
+* Fixed bugs creating symlinks under ``/opt/app/ln/`` when re-provisioning.
+* Added an ``environment`` setting to the included gunicorn supervisor program file to set the PYTHONPATH, making it consistent with Django management commands.
+
 0.6.1
 =====
 
