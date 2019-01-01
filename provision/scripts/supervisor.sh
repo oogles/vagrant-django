@@ -34,7 +34,7 @@ fi
 
 echo " "
 echo "Copying config file..."
-cp "$PROVISION_DIR/conf/supervisor/supervisord.conf" /etc/supervisor/supervisord.conf
+cp "/tmp/conf/supervisor/supervisord.conf" /etc/supervisor/supervisord.conf
 
 echo " "
 echo "Copying programs..."
