@@ -36,7 +36,9 @@ Due to the additional features supported in production environments, some additi
 * :ref:`conf-gunicorn`
 * :ref:`conf-supervisor`
 
-Of particular importance is the nginx site config. It **must** be modified to, at least, provide the ``server_name`` directive.
+In particular, the following modifications are **required**, and will not work out-of-the-box:
+
+* The :ref:`nginx site config <conf-nginx-site>`: The ``server_name`` directive must be provided.
 
 
 .. _production-provisioning:

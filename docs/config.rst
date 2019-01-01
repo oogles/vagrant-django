@@ -2,7 +2,7 @@
 Configuring the environment
 ===========================
 
-The environment of the Vagrant guest machine (or production server) provisioned by these scripts is designed to provide everything necessary for developing and hosting Django-based projects with minimal configuration. However, several configuration files are recognised and utilised by the scripts.
+The environment of the Vagrant guest machine (or production server) provisioned by these scripts is designed to provide everything necessary for developing and hosting Django-based projects with minimal configuration. Several configuration files are included and utilised by the scripts. For the most part, these configuration files do not *require* any modification, but can be modified if necessary. Files which *do* require modification are highlighted below.
 
 
 .. _conf-vagrantfile:
@@ -12,9 +12,13 @@ Vagrantfile
 
 Location: project root (``/opt/app/src/``)
 
+.. important:: Modification required
+
 The use and feature set of the ``Vagrantfile`` are beyond the scope of this documentation. For more information on the file itself, see `the Vagrant documentation <https://docs.vagrantup.com/v2/vagrantfile/>`_.
 
-An example ``Vagrantfile`` is included, but an entirely custom one can be used. In either case, the following features are of note:
+An example ``Vagrantfile`` is included, which only requires minimal configuration to use: The project's name must be included. This is done by way of the ``project`` variable defined at the top of the file. The existing value (an empty string) should be replaced by your project's name, as a string.
+
+Alternatively, an entirely custom ``Vagrantfile`` can be used. In either case, the following features are of note:
 
 * **The provisioner**
     The ``provision/scripts/bootstrap.sh`` shell provisioner needs to be included and configured.
@@ -31,7 +35,7 @@ An example ``Vagrantfile`` is included, but an entirely custom one can be used. 
     The type of synced folder used is not important, however the following aspects are:
 
     * The location of the folder on the guest machine must be ``/opt/app/src/``. Various provisioning scripts and included config files expect the project's source to be found there.
-    * The owner and group should be ``www-data``. Various other files and directories will have their owners/groups set to ``www-data``, and certain included config files (such as the supervisor programs for nginx and gunicorn) run programs under ``www-data``.
+    * The owner and group should be ``www-data``. Various other files and directories will have their owners/groups set to ``www-data``, and certain included config files (such as the supervisor programs for nginx and gunicorn) run programs as ``www-data``.
 * **The box**
     While not necessarily a requirement, the most recent versions of the provisioning scripts have only been tested on "bento/ubuntu-16.04".
 
@@ -57,11 +61,13 @@ env.sh
 
 Location: ``provision/env.sh``
 
-The primary configuration file is ``env.sh``. It is simply a shell script that gets executed by the provisioning scripts to load the variables it contains. Each of the variables is discussed below. An example file is included.
+.. important:: Modification required
 
-When provisioning is first run, it will most likely modify this file. Some of the settings below generate defaults if no value is provided, and that default will get written back to the file so the same value will be used in the case of re-provisioning. Some additional settings may also be written to this file - these are convenience settings used internally by the provisioning process and should not be modified.
+The primary configuration file is ``env.sh``. It is simply a shell script that gets executed by the provisioning scripts to load the variables it contains. An example file is included. Most variables can be left as-is, but some will require being set correctly - each of the variables is discussed below.
 
-.. note::
+When provisioning is first run, it will modify this file. Some of the settings below generate defaults if no value is provided, and that default will get written back to the file so the same value will be used in the case of re-provisioning. Some additional settings may also be written to this file - these are convenience settings used internally by the provisioning process and should not be modified.
+
+.. important::
 
     The settings contained in ``env.sh`` are sensitive and/or environment-specific, and thus should not be committed to source control.
 
@@ -149,7 +155,7 @@ Location: ``provision/versions.sh``
 
 This file contains the versions of various packages to be installed during provisioning. Like ``env.sh``, it is simply a shell script that gets executed by the provisioning scripts to load the variables it contains. Unlike ``env.sh``, this file *should* be committed to source control. All environments should install the same versions of the software they use.
 
-The included ``versions.sh`` comes with acceptable default values for all variables. It will not require modification unless the default values are unsuitable for your project.
+The included ``versions.sh`` contains default values for all variables. It will not require modification unless the default values are unsuitable for your project, or have since become outdated.
 
 .. _conf-var-base-python:
 
@@ -232,14 +238,18 @@ Making changes to this file and re-provisioning via ``vagrant provision`` will e
 
     On-the-fly changes to the copied file will not survive re-provisioning. Any changes made to this file should be duplicated in ``provision/conf/nginx/nginx.conf``.
 
+.. _conf-nginx-site:
+
 Site config
 -----------
 
 Location: ``provision/conf/nginx/site``
 
+.. important:: Modification required
+
 In production environments, this file is copied to ``/etc/nginx/sites-available/<project_name>``, and symlinked into ``sites-enabled``, as part of the provisioning process.
 
-A default file is provided which **does require minimal configuration**: setting the ``server_name`` directive.
+A default file is provided, but it does require minimal configuration: setting the ``server_name`` directive.
 
 The default configuration contains a single server context for port 80, with three location contexts:
 
@@ -299,11 +309,14 @@ Making changes to this file and re-provisioning via ``vagrant provision`` will e
 Supervisor programs
 -------------------
 
-Location: ``provision/conf/supervisor/dev_programs/`` or ``provision/conf/supervisor/production_programs/``
+Location: ``provision/conf/supervisor/programs/``
 
-A separate set of supervisor program files is used in development and production environments. In either case, though, the entire contents of the relevant ``*_programs`` directory is copied into ``/etc/supervisor/conf.d/`` as part of the provisioning process.
+The entire contents of the relevant ``programs/`` directory is copied into ``/etc/supervisor/conf.d/`` as part of the provisioning process.
 
-Default programs are provided for running nginx and gunicorn in production environments. Neither program should require any configuration out of the box.
+Default programs are provided for running nginx and gunicorn in production environments:
+
+* Nginx: ``provision/conf/supervisor/programs/nginx.conf``
+* Gunicorn: ``provision/conf/supervisor/programs/gunicorn.conf``
 
 Making changes or additions to program files and re-provisioning via ``vagrant provision`` will enact the changes.
 

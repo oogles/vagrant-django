@@ -14,7 +14,7 @@ The default nginx and gunicorn supervisor programs are moved from ``production_p
 * Separated installation of node/npm from installation of the project's npm dependencies.
 * Added support for keeping separate configuration files for different deployments.
 * Added provisioning of nps if a ``package-scripts.js`` file is detected.
-* Fixed bug setting timezone.
+* Fixed long-standing bug setting the timezone.
 
 0.6.2
 =====
