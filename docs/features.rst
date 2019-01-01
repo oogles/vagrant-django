@@ -25,7 +25,7 @@ Some of the other useful directories in this structure are:
 * ``/opt/app/media/``: Target for Django's ``MEDIA_ROOT``.
 * ``/opt/app/static/``: Target for Django's ``STATIC_ROOT`` (in production environments).
 
-The final directory is ``/opt/app/ln/``. This directory is primarily used to simplify the process of configuring the server. It acts as a container for shortcut symlinks to various project-specific files and directories (i.e. those that contain the project name). It is designed to allow using known paths in config files, without forcing customisation in projects that would not otherwise need it. Using the shortcuts in the ``ln`` directory, default config files that work out-of-the-box can be provided (such as ``provision/conf/supervisor/production_programs/gunicorn.conf``). Otherwise, such files would require the modification of a series of paths to include the project name.
+The final directory is ``/opt/app/ln/``. This directory is primarily used to simplify the process of configuring the server. It acts as a container for shortcut symlinks to various project-specific files and directories (i.e. those that contain the project name). It is designed to allow using known paths in config files, without forcing customisation in projects that would not otherwise need it. Using the shortcuts in the ``ln`` directory, default config files that work out-of-the-box can be provided (such as ``provision/conf/supervisor/programs/gunicorn.conf``). Otherwise, such files would require the modification of a series of paths to include the project name.
 
 .. _feat-users:
 
@@ -43,6 +43,20 @@ Most provisioned services, such as nginx and gunicorn, are designed to run under
 .. warning::
 
     Using the provisioning scripts in a production environment with :ref:`conf-var-debug` set to ``1`` will leave the ``webmaster`` user with open ``sudo`` access, unprotected by a password prompt. This is a Bad Idea.
+
+
+.. _feat-deployments:
+
+Multiple deployments
+====================
+
+In addition to differentiating between development and production environments by way of the :ref:`conf-var-debug` setting, different deployments can also be named using the :ref:`conf-var-deployment` setting. This deployment name is used when retrieving config files.
+
+Many of the features described below can be configured by way of files located (by default) in ``provision/conf/``. Using a named deployment allows using an entirely different set of configuration files between environments. This could mean using different configs between development and production, between multiple different production deployments of the project, etc.
+
+When a value is provided for the :ref:`conf-var-deployment` setting, it is appended to the directory in which the provisioning scripts look for configuration files. E.g. a ``DEPLOYMENT`` of ``'dev'`` would check the ``provision/conf-dev/`` directory.
+
+To avoid the need to create copies of *every* config file per deployment, the files in deployment-specific config directories (e.g. ``provision/conf-dev/``) are not used in isolation, but rather they are *applied* to the primary config directory (``provision/conf/``). If a file exists in a deployment-specific directory, it will override a matching file in the primary directory. If a file does *not* exist in a deployment-specific directory, the file from the primary directory will be used.
 
 
 .. _feat-time-zone:
@@ -68,8 +82,8 @@ Git
 
 `Git <https://git-scm.com/>`_ is installed.
 
-.. note::
-    A ``.gitconfig`` file can be placed in ``provision/conf/`` to enable configuration of the git environment for the ``webmaster`` user.
+.. tip::
+    A ``.gitconfig`` file can be placed in ``provision/conf/user/`` to enable configuration of the git environment for the ``webmaster`` user. This file should be ignored by source control.
 
 
 .. _feat-ag:
@@ -79,8 +93,8 @@ Ag (silver searcher)
 
 The `"silver searcher" <https://github.com/ggreer/the_silver_searcher>`_ commandline utility, ``ag``, is installed in the guest machine. ``ag`` provides fast code search that is `better than ack <http://geoff.greer.fm/2011/12/27/the-silver-searcher-better-than-ack/>`_.
 
-.. note::
-    An ``.agignore`` file can be placed in ``provision/conf/`` to add some additional automatic "ignores" for the command.
+.. tip::
+    An ``.agignore`` file can be placed in ``provision/conf/user/`` to add some additional user-specific "ignores" for the command. This file should be ignored by source control.
 
 
 .. _feat-image-libs:
@@ -174,8 +188,8 @@ In development environments, a ``dev_requirements.txt`` file can also be specifi
 
 .. _feat-node:
 
-Node.js/npm
-===========
+Node.js/npm and nps
+===================
 
 If a ``package.json`` file is found in the project root directory (``/opt/app/src/``), `node.js <https://nodejs.org/en/>`_ and `npm <https://www.npmjs.com/>`_ are installed. The version of node.js installed is dictated by the :ref:`conf-var-node-version` setting in ``versions.sh``.
 
@@ -185,7 +199,6 @@ A ``node_modules`` directory is created at ``/opt/app/node_modules/`` and a syml
     In order to create the ``node_modules`` symlink when running a Windows host and using VirtualBox shared folders, ``vagrant up`` must be run with Administrator privileges to allow the creation of symlinks in the synced folder. See :ref:`limitations-windows` for details.
 
 .. note::
-
     If a ``package.json`` file is added to the project at a later date, provisioning can be safely re-run to install node/npm (using the ``vagrant provision`` command).
 
 .. _feat-node-dependencies:
@@ -196,6 +209,14 @@ Node.js dependency installation
 ``npm install`` will be run in the project root directory.
 
 In production environments, ``npm install --production`` will be used, limiting the installed dependencies to those listed in the ``dependencies`` section of ``package.json``. Otherwise, dependencies listed in ``dependencies`` and ``devDependencies`` will be installed. See the `documentation on npm install <https://docs.npmjs.com/cli/install>`_.
+
+nps
+---
+
+If node and npm were installed, and a ``package-scripts.js`` file is also found in the project root directory (``/opt/app/src/``), `nps <https://www.npmjs.com/package/nps>`_ is installed globally.
+
+.. note::
+    If a ``package-scripts.js`` file is added to the project at a later date, provisioning can be safely re-run to install nps (using the ``vagrant provision`` command).
 
 
 .. _feat-python:

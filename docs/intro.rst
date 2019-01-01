@@ -2,7 +2,7 @@
 Introduction
 ============
 
-Included are shell provisioning scripts and sample configuration files allowing the construction of a Vagrant guest machine designed to support either full Django projects or the development of single Django apps for packaging and distribution.
+Included are shell provisioning scripts and sample configuration files allowing the construction of a Vagrant guest machine designed to support development of Django projects.
 
 The scripts are also designed to be run independently of Vagrant in order to provision production environments that match those used in development. See :doc:`production`.
 
@@ -15,11 +15,11 @@ How to use
 ==========
 
 #.  Copy the ``provision/`` directory into your project.
-#.  Copy the included ``Vagrantfile`` or add ``provision/scripts/bootstrap.sh`` as a shell provisioner in your existing ``Vagrantfile``, specifying the project name. The included ``Vagrantfile`` is pretty basic, but it can be used as a foundation. See :ref:`conf-vagrantfile` for details.
+#.  Copy and modify the included ``Vagrantfile`` or make the necessary modifications to an existing ``Vagrantfile``. The included ``Vagrantfile`` is pretty basic, but it can be used as a foundation. See :ref:`conf-vagrantfile` for details.
 #.  Modify the example ``provision/env.sh`` file. See :ref:`conf-env-sh` for details.
-#.  Add/modify any further configuration files to ``provision/conf/``. See :doc:`config` for details on what further customisation options are available.
+#.  Add/modify any further configuration files in ``provision/conf/``. See :doc:`config` for details on what further customisation options are available.
 #.  Add any project-specific provisioning steps to a ``provision/project.sh`` file. See :doc:`project-provisioning` for details.
-#.  Add ``provision/env.sh`` (and any other necessary config files) to your ``.gitignore`` file, or equivalent. Environment-specific configurations should not be committed to source control.
+#.  Add ``provision/env.sh`` to your ``.gitignore`` file, or equivalent. Environment-specific configurations should not be committed to source control.
 #. ``vagrant up``
 
 In production environments, a few additional steps are necessary. See :doc:`production` for details.

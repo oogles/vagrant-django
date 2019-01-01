@@ -2,7 +2,10 @@
 Configuring the environment
 ===========================
 
-The environment of the Vagrant guest machine (or production server) provisioned by these scripts is designed to provide everything necessary for developing and hosting Django-based projects with minimal configuration. Several configuration files are included and utilised by the scripts. For the most part, these configuration files do not *require* any modification, but can be modified if necessary. Files which *do* require modification are highlighted below.
+The environment of the Vagrant guest machine (or production server) provisioned by these scripts is designed to provide everything necessary for developing and hosting Django-based projects with minimal configuration. Several configuration files are included and utilised by the scripts. For the most part, these configuration files do not *require* any modification, but can be modified if necessary. Files which *do* require modification are highlighted.
+
+.. note::
+    Any of the below configuration files that are listed as being located in ``provision/conf/`` are subject to :ref:`deployment-specific overrides <feat-deployments>`. While they reside in ``provision/conf/`` by default, they may be moved to or overridden by files in deployment-specific config directories.
 
 
 .. _conf-vagrantfile:
@@ -37,7 +40,7 @@ Alternatively, an entirely custom ``Vagrantfile`` can be used. In either case, t
     * The location of the folder on the guest machine must be ``/opt/app/src/``. Various provisioning scripts and included config files expect the project's source to be found there.
     * The owner and group should be ``www-data``. Various other files and directories will have their owners/groups set to ``www-data``, and certain included config files (such as the supervisor programs for nginx and gunicorn) run programs as ``www-data``.
 * **The box**
-    While not necessarily a requirement, the most recent versions of the provisioning scripts have only been tested on "bento/ubuntu-16.04".
+    While not necessarily a requirement, the most recent versions of the provisioning scripts have only been tested on "bento/ubuntu-18.04".
 
 .. _conf-var-project-name:
 
@@ -96,6 +99,15 @@ PUBLIC_KEY
 **Required**
 
 This public key will be installed into ``/home/webmaster/.ssh/authorized_keys`` so it may be used to SSH into the provisioned environment as the ``webmaster`` user.
+
+.. _conf-var-deployment:
+
+DEPLOYMENT
+----------
+
+*Optional*
+
+The name of this deployment of the project. Naming a deployment allows the use of :ref:`deployment-specific configuration files <feat-deployments>`.
 
 .. _conf-var-time-zone:
 

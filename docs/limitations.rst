@@ -10,9 +10,9 @@ While various aspects of the provisioned environment are configurable, some are 
 Target OS
 =========
 
-The provisioning scripts have only been tested on Ubuntu Linux, specifically 16.04 Xenial Xerus.
+The provisioning scripts have only been tested on Ubuntu Linux, specifically 18.04 Bionic Beaver.
 
-While some versions have been tested in Ubuntu 16.04 production environments (outside of Vagrant), recent and in-development versions will probably only have been tested via Vagrant, using the "bento/ubuntu-16.04" box.
+While some versions have been tested in Ubuntu 18.04 production environments (outside of Vagrant), recent and in-development versions will probably only have been tested via Vagrant, using the "bento/ubuntu-18.04" box.
 
 
 .. _limitations-apt-get:
