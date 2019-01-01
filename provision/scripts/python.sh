@@ -153,5 +153,8 @@ if ! grep -Fxq "$VENV_ACTIVATE_CMD" /home/webmaster/.profile ; then
     echo -e "\n# Automate virtualenv activation\n$VENV_ACTIVATE_CMD" >> /home/webmaster/.profile
 fi
 
+# Update the version of pip in the virtualenv
+su - webmaster -c "$VENV_ACTIVATE_CMD && pip install --upgrade pip"
+
 # Add a shortcut symlink to the virtualenv directory in the "ln" directory
 ln -sfT "$VENV_DIR" "$APP_DIR/ln/virtualenv"

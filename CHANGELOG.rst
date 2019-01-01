@@ -14,6 +14,7 @@ The default nginx and gunicorn supervisor programs are moved from ``production_p
 * Separated installation of node/npm from installation of the project's npm dependencies.
 * Added support for keeping separate configuration files for different deployments.
 * Added provisioning of nps if a ``package-scripts.js`` file is detected.
+* Added support for ensuring the latest version of pip is installed in the Python virtualenv.
 * Fixed long-standing bug setting the timezone.
 
 0.6.2
