@@ -96,11 +96,8 @@ fi
 # Install project dependencies (python and npm)
 run_script "$PROVISION_DIR/scripts/dependencies.sh"
 
-# Install nginx and gunicorn for production environments. Must run after
-# virtualenv is installed.
-if [[ "$DEBUG" -eq 0 ]]; then
-    run_script "$PROVISION_DIR/scripts/nginx-gunicorn.sh"
-fi
+# Install nginx and gunicorn. Must run after virtualenv is installed.
+run_script "$PROVISION_DIR/scripts/nginx-gunicorn.sh"
 
 # Start supervisor now that program files are in place and any necessary
 # installations/configurations for those programs are complete

@@ -8,7 +8,7 @@ PUBLIC_KEY=''
 # Options
 #
 
-DEPLOYMENT=''
+DEPLOYMENT='dev'
 
 TIME_ZONE='Australia/Sydney'
 

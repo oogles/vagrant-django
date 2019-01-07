@@ -7,12 +7,14 @@ Change Log
 
 With the support for separate configuration files for multiple deployments, this release changes the structure of ``provision/conf/supervisor/``. Instead of looking for separate ``production_programs`` and ``dev_programs`` subdirectories, the provisioning scripts only look for a directory called ``programs``. If needing different supervisor programs in development vs production, create a separate "conf" directory for the different deployment/s, along with a ``DEPLOYMENT`` entry in ``env.sh``, and add the programs in there. For more information, see the documentation on multiple deployment support: https://vagrant-django.readthedocs.io/en/latest/features.html#multiple-deployments.
 
-The default nginx and gunicorn supervisor programs are moved from ``production_programs`` to ``programs``. If upgrading from a previous version, in addition to replacing the ``provision/scripts`` directory, you will also need to mirror the renaming of this directory.
+The default nginx and gunicorn supervisor programs are moved from ``provision/conf/production_programs`` to ``provision/conf/programs``. In addition, config overrides for a default "dev" deployment are added in ``provision/conf-dev/``. If upgrading from a previous version, in addition to replacing the ``provision/scripts`` directory, you will also need to add the new ``conf-dev`` directory and mirror the renaming of the ``production_programs`` directory.
 
 * Updated default Vagrant box to Ubuntu 18.04.
 * Separated installation of python from installation of the project's python dependencies.
 * Separated installation of node/npm from installation of the project's npm dependencies.
+* Added support for provisioning nginx in development environments.
 * Added support for keeping separate configuration files for different deployments.
+* Added config files for a default "dev" deployment.
 * Added provisioning of nps if a ``package-scripts.js`` file is detected.
 * Added support for ensuring the latest version of pip is installed in the Python virtualenv.
 * Fixed long-standing bug setting the timezone.

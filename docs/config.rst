@@ -109,6 +109,8 @@ DEPLOYMENT
 
 The name of this deployment of the project. Naming a deployment allows the use of :ref:`deployment-specific configuration files <feat-deployments>`.
 
+The included ``env.sh`` file uses a default value of ``'dev'``, to take advantage of the included config files that are :ref:`customised for development environments <feat-deployments-dev>`.
+
 .. _conf-var-time-zone:
 
 TIME_ZONE
@@ -231,8 +233,6 @@ Making changes to this file and re-provisioning via ``vagrant provision`` will e
 Configuring nginx
 =================
 
-**Only applicable in production environments**
-
 nginx.conf
 ----------
 
@@ -252,14 +252,14 @@ Making changes to this file and re-provisioning via ``vagrant provision`` will e
 
 .. _conf-nginx-site:
 
-Site config
------------
+Default site config
+-------------------
 
 Location: ``provision/conf/nginx/site``
 
 .. important:: Modification required
 
-In production environments, this file is copied to ``/etc/nginx/sites-available/<project_name>``, and symlinked into ``sites-enabled``, as part of the provisioning process.
+Unless a :ref:`named deployment <feat-deployments>` that contains an override is used, this file is copied to ``/etc/nginx/sites-available/<project_name>``, and symlinked into ``sites-enabled``, as part of the provisioning process. It is designed for use in production environments. An alternate site config suitable for development environments is :ref:`provided separately <conf-nginx-site-dev>`.
 
 A default file is provided, but it does require minimal configuration: setting the ``server_name`` directive.
 
@@ -268,6 +268,30 @@ The default configuration contains a single server context for port 80, with thr
 * ``/static/``: Directly serving static content out of ``/opt/app/static/``.
 * ``/media/``: Directly serving media content out of ``/opt/app/media/``.
 * ``/``: Proxying to gunicorn via a unix socket.
+
+Making changes to this file and re-provisioning via ``vagrant provision`` will enact the changes. Alternatively, on-the-fly changes can be made to the copied file, simply restarting nginx via ``supervisorctl restart nginx`` to make them effective.
+
+.. note::
+
+    On-the-fly changes to the copied file will not survive re-provisioning. Any changes made to this file should be duplicated in ``provision/conf/nginx/site``.
+
+.. _conf-nginx-site-dev:
+
+``dev`` deployment site config
+------------------------------
+
+Location: ``provision/conf-dev/nginx/site``
+
+When the ``'dev'`` :ref:`deployment <feat-deployments>` is used, this file is copied to ``/etc/nginx/sites-available/<project_name>``, and symlinked into ``sites-enabled``, as part of the provisioning process.
+
+A default file is provided which requires no configuration out of the box.
+
+The default configuration contains a single server context for port 80, with two location contexts:
+
+* ``/media/``: Directly serving media content out of ``/opt/app/media/``.
+* ``/``: Proxying to a Django runserver on port 8460.
+
+Static files are not configured to be served by nginx in development. These files are left to be served by Django, which handles automatically locating the appropriate files among the various locations they can reside, avoiding the need to run the ``collectstatic`` command after every modification (as is required in production).
 
 Making changes to this file and re-provisioning via ``vagrant provision`` will enact the changes. Alternatively, on-the-fly changes can be made to the copied file, simply restarting nginx via ``supervisorctl restart nginx`` to make them effective.
 
@@ -321,14 +345,16 @@ Making changes to this file and re-provisioning via ``vagrant provision`` will e
 Supervisor programs
 -------------------
 
-Location: ``provision/conf/supervisor/programs/``
+Location: ``provision/conf/supervisor/programs/`` and ``provision/conf-dev/supervisor/programs/``
 
-The entire contents of the relevant ``programs/`` directory is copied into ``/etc/supervisor/conf.d/`` as part of the provisioning process.
+The entire contents of the ``provision/conf/supervisor/programs/`` directory is copied into ``/etc/supervisor/conf.d/`` as part of the provisioning process. When the ``'dev'`` :ref:`deployment <feat-deployments>` is used, any overrides present in the ``provision/conf-dev/supervisor/programs/`` directory will also be copied, and take precedence.
 
 Default programs are provided for running nginx and gunicorn in production environments:
 
 * Nginx: ``provision/conf/supervisor/programs/nginx.conf``
 * Gunicorn: ``provision/conf/supervisor/programs/gunicorn.conf``
+
+The ``'dev'`` deployment overrides the gunicorn program to clear it. Gunicorn is not provisioned in development environments, so the supervisor command is unnecessary. In addition, including commands for services that are not available can potentially prevent supervisor from starting at all - e.g. if configured paths to log files do not exist.
 
 Making changes or additions to program files and re-provisioning via ``vagrant provision`` will enact the changes.
 

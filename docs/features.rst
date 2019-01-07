@@ -56,7 +56,19 @@ Many of the features described below can be configured by way of files located (
 
 When a value is provided for the :ref:`conf-var-deployment` setting, it is appended to the directory in which the provisioning scripts look for configuration files. E.g. a ``DEPLOYMENT`` of ``'dev'`` would check the ``provision/conf-dev/`` directory.
 
-To avoid the need to create copies of *every* config file per deployment, the files in deployment-specific config directories (e.g. ``provision/conf-dev/``) are not used in isolation, but rather they are *applied* to the primary config directory (``provision/conf/``). If a file exists in a deployment-specific directory, it will override a matching file in the primary directory. If a file does *not* exist in a deployment-specific directory, the file from the primary directory will be used.
+To avoid the need to create copies of *every* config file per deployment, the files in deployment-specific config directories (e.g. ``provision/conf-dev/``) are not used in isolation, but rather they *override* those in the primary config directory (``provision/conf/``). If a file exists in a deployment-specific directory, it will take precedence over a matching file in the primary directory. If a file does *not* exist in a deployment-specific directory, the file from the primary directory will be used.
+
+.. _feat-deployments-dev:
+
+The ``dev`` deployment
+----------------------
+
+A default deployment named "dev" is available out of the box. The included ``env.sh`` file uses a :ref:`conf-var-deployment` setting of ``'dev'`` and a ``conf-dev/`` directory of config files is provided.
+
+This deployment overrides some of the included default config files to make them compatible with development environments. Specifically, the following alterations are made during development:
+
+* :ref:`Nginx <feat-nginx>` is configured to run, but in a more limited capacity than in production. The differences are explained further in the nginx :ref:`feature <feat-nginx>` and :ref:`configuration <conf-nginx>` documentation.
+* The :ref:`supervisor <feat-supervisor>` command for :ref:`gunicorn <feat-gunicorn>` is overridden to clear the command. Gunicorn is not provisioned in development environments, so the supervisor command would only fail anyway.
 
 
 .. _feat-time-zone:
@@ -134,11 +146,17 @@ The Postgres installation is configured to listen on the default port (5432).
 Nginx
 =====
 
-In production environments, `nginx <https://nginx.org/en/>`_ is installed.
+`nginx <https://nginx.org/en/>`_ is installed.
 
-The ``nginx.conf`` file used can be modified. Also, the site config can - and must - be modified. See :ref:`conf-nginx` for details.
+The ``nginx.conf`` file used can be modified. Also, the site config can - and in some cases must - be modified, as elaborated on below. See :ref:`conf-nginx` for details.
 
 Nginx is controlled and monitored by :ref:`feat-supervisor`. A default supervisor program is provided, but can be modified. See :ref:`conf-supervisor-programs` for details.
+
+Nginx is provisioned even in development environments, for situations where it is useful to have a production-level web server available. Its usage is optional, but it is available if necessary. The default site configuration of nginx differs between production and development, as detailed below. Further details on configuring nginx can be found in the :ref:`configuration documentation <conf-nginx>`.
+
+In production, nginx is configured to serve static and media files, and to proxy all remaining requests through to :ref:`gunicorn <feat-gunicorn>`. The production site config **must be modified**, at least to provide the ``server_name`` directive. See :ref:`conf-nginx-site` for details.
+
+In development, nginx is configured to serve media files only and proxy all remaining requests through to a Django runserver on port 8460. The development site config can be modified but, unlike the production config, it is not required. Static files are not configured to be served by nginx in development, because Django handles automatically finding and serving them in order to avoid the need to run the ``collectstatic`` command after every modification.
 
 
 .. _feat-gunicorn:

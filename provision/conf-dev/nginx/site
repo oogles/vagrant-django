@@ -1,20 +1,20 @@
 server {
     listen 80;
-    server_name <domain_or_ip>;
+
+    # No explicit server_name directive. Allows the use of "localhost" as well
+    # as the local IP.
+    #server_name ;
 
     # Don't bother logging requests for the favicon
     location = /favicon.ico { access_log off; log_not_found off; }
 
-    # Serve static and media files
-    location /static/ {
-        root /opt/app/;
-    }
-
+    # Serve media files, but not static files. Django automagically finds and
+    # serves them to avoid needing collectstatic.
     location /media/ {
         root /opt/app/;
     }
 
-    # Proxy any remaining requests through to Django, via gunicorn
+    # Proxy any remaining requests through to Django, via runserver
     location / {
         proxy_set_header Host $http_host;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

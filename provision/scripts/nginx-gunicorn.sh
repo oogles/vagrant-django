@@ -4,12 +4,13 @@
 source /tmp/env.sh
 
 #
-# NOTE: The various config files copied and/or linked to as part of provisioning
-# nginx and gunicorn are deliberately copied out of the provision/conf directory.
-# Symlinks and/or references *could* be made to the repository's own copy of
-# these config files, but that allows a "git pull" to make server configuration
-# changes. Referencing a copy means the provisioning scripts need to be re-run
-# to enact such changes - a deliberate step with expected side-effects.
+# NOTE: The various config files required as part of provisioning nginx and
+# gunicorn are copied out of the /tmp/conf directory so a persistent reference
+# to them can be maintained.
+# The versions in provision/conf/ are not used as this would be complex with
+# regard to multiple deployment support and would allows a "git pull" to make
+# server configuration changes - such changes are better left to a deliberate
+# re-provision step. which is expected to have such side effects.
 #
 
 echo " "
@@ -52,21 +53,24 @@ service nginx stop
 echo "Done"
 
 
-echo " "
-echo " --- Install gunicorn ---"
+# Only install gunicorn in production environments
+if [[ "$DEBUG" -eq 0 ]]; then
+    echo " "
+    echo " --- Install gunicorn ---"
 
-echo "Installing..."
-su - webmaster -c "$VENV_ACTIVATE_CMD && pip install -q gunicorn"
+    echo "Installing..."
+    su - webmaster -c "$VENV_ACTIVATE_CMD && pip install -q gunicorn"
 
-# Create additional directories
-mkdir -p "$APP_DIR/conf/gunicorn/"
-mkdir -p "$APP_DIR/logs/gunicorn/"
+    # Create additional directories
+    mkdir -p "$APP_DIR/conf/gunicorn/"
+    mkdir -p "$APP_DIR/logs/gunicorn/"
 
-echo " "
-echo "Copying conf.py..."
+    echo " "
+    echo "Copying conf.py..."
 
-# Copy conf.py into $APP_DIR/conf, where it can be referenced by the
-# supervisor program
-cp "/tmp/conf/gunicorn/conf.py" "$APP_DIR/conf/gunicorn/"
+    # Copy conf.py into $APP_DIR/conf, where it can be referenced by the
+    # supervisor program
+    cp "/tmp/conf/gunicorn/conf.py" "$APP_DIR/conf/gunicorn/"
 
-echo "Done"
+    echo "Done"
+fi
