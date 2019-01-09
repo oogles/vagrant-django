@@ -20,12 +20,13 @@ A quick feature overview:
 * Development aids: git and ag (silver searcher)
 * Image libraries used by Pillow
 * PostgreSQL, with default database and user
-* Nginx and Gunicorn, for production environments
+* Nginx and Gunicorn
 * Supervisor
 * Virtualenv, plus installation of Python dependencies
 * Node.js and npm, plus installation of Node.js dependencies
 * An environment-specific Python settings file
 * Per-project customisation options
+* Config files for the above, seperately configurable for multiple deployments
 
 
 How to use
