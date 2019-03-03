@@ -1,0 +1,55 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name <domain> www.<domain>;
+
+    # Handle Let's Encrypt validation requests
+    include snippets/letsencrypt.conf;
+
+    # Redirect all other traffic to the secured site
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name www.<domain>;
+
+    # Support secure connections, but redirect all traffic to the non-www site...
+    include snippets/ssl.conf;
+
+    # ...except Let's Encrypt validation requests
+    include snippets/letsencrypt.conf;
+
+    return 301 https://<domain>$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name <domain>;
+
+    # Support secure connections and Let's Encrypt validation requests
+    include snippets/ssl.conf;
+    include snippets/letsencrypt.conf;
+
+    # Don't bother logging requests for the favicon
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    # Serve static and media files
+    location /static/ {
+        root /opt/app/;
+    }
+
+    location /media/ {
+        root /opt/app/;
+    }
+
+    # Proxy any remaining requests through to Django, via gunicorn
+    location / {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_pass http://unix:/tmp/gunicorn.sock;
+    }
+}

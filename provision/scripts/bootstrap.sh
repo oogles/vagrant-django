@@ -102,8 +102,8 @@ run_script "$PROVISION_DIR/scripts/nginx-gunicorn.sh"
 # Start supervisor now that program files are in place and any necessary
 # installations/configurations for those programs are complete
 echo " "
-echo " --- Start supervisor ---"
-service supervisor start
+echo " --- Start/restart supervisor and all programs ---"
+supervisorctl reload
 echo "Done"
 
 echo " "

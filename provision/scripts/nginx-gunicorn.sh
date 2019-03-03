@@ -23,12 +23,22 @@ apt-get -qq install nginx
 mkdir -p "$APP_DIR/conf/nginx/"
 mkdir -p "$APP_DIR/logs/nginx/"
 
+# Copy nginx.conf into $APP_DIR/conf, where it can be referenced by the
+# supervisor program. Also copy any snippets - they will be assumed to be
+# relative to nginx.conf.
 echo " "
 echo "Copying nginx.conf..."
-
-# Copy nginx.conf into $APP_DIR/conf, where it can be referenced by the
-# supervisor program
 cp "/tmp/conf/nginx/nginx.conf" "$APP_DIR/conf/nginx/"
+
+echo " "
+echo "Copying snippets..."
+snippet_dir="/tmp/conf/nginx/snippets"
+if [[ ! -d "$snippet_dir" ]]; then
+    echo "Nothing to copy"
+else
+    # Copy over changes and also delete obsolete files
+    rsync -r --del "$snippet_dir/" "$APP_DIR/conf/nginx/snippets/"
+fi
 
 echo " "
 echo "Copying site config..."

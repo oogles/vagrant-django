@@ -12,6 +12,7 @@ The default nginx and gunicorn supervisor programs are moved from ``provision/co
 * Updated default Vagrant box to Ubuntu 18.04.
 * Separated installation of python from installation of the project's python dependencies.
 * Separated installation of node/npm from installation of the project's npm dependencies.
+* Added manually-invokable script for provisioning TLS via Let's Encrypt.
 * Added support for provisioning nginx in development environments.
 * Added support for keeping separate configuration files for different deployments.
 * Added config files for a default "dev" deployment.

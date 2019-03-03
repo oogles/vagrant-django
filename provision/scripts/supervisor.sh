@@ -9,9 +9,6 @@ echo " --- Install/configure supervisor ---"
 echo "Installing..."
 apt-get -qq install supervisor
 
-# Ensure the supervisord service is stopped (it may or may not be started)
-service supervisor stop
-
 # Add a "supervisor" group and add the webmaster user to it.
 # Updating the [unix_http_server] section of the supervisor configuration file
 # to make the supervisor socket file writable by this group eliminates the
