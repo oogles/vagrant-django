@@ -29,11 +29,9 @@ echo "=================================================="
 echo " "
 echo "START PROVISION"
 
-# Define common settings, passing the arguments that were passed to this script
-run_script /opt/app/src/provision/scripts/settings.sh "$1"
-
-# Source the defined settings
-source /tmp/env.sh
+# Define and source common settings
+run_script /opt/app/src/provision/scripts/init.sh
+source /tmp/settings.sh
 
 # Get package lists current before doing anything
 echo " "

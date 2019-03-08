@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Source global provisioning settings
-source /tmp/env.sh
+source /tmp/settings.sh
 
 #
 # NOTE: The various config files required as part of provisioning nginx and

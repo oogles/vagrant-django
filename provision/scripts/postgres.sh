@@ -3,7 +3,7 @@
 # Adapted from https://github.com/jackdb/pg-app-dev-vm
 
 # Source global provisioning settings
-source /tmp/env.sh
+source /tmp/settings.sh
 
 DB_USER="$PROJECT_NAME"
 DB_NAME="$PROJECT_NAME"

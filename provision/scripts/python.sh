@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # Source global provisioning settings
-source /tmp/env.sh
-source /tmp/versions.sh
+source /tmp/settings.sh
 
 
 # A function to test if an array contains an element.
@@ -145,7 +144,7 @@ fi
 
 # Store the virtualenv activation command in env.sh to be accessible to later
 # provisioning scripts, which may need to activate the virtualenv
-"$PROVISION_DIR/scripts/utils/write_var.sh" 'VENV_ACTIVATE_CMD' "$VENV_ACTIVATE_CMD" "$PROVISION_DIR/env.sh"
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'VENV_ACTIVATE_CMD' "$VENV_ACTIVATE_CMD" /tmp/settings.sh
 
 # Update the webmaster user's profile to automatically activate the virtualenv
 # when they SSH in

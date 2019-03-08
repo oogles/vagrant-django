@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Source global provisioning settings
-source /tmp/env.sh
-
 #
 # See https://linuxize.com/post/secure-nginx-with-let-s-encrypt-on-ubuntu-18-04/
 #
@@ -10,6 +7,16 @@ source /tmp/env.sh
 echo " "
 echo "=================================================="
 echo " "
+
+# Define and source common settings
+/opt/app/src/provision/scripts/init.sh
+if [[ $? != 0 ]]; then
+    echo " "
+    echo "=================================================="
+    exit 1
+fi
+
+source /tmp/settings.sh
 
 function error() {
     echo "--------------------------------------------------"

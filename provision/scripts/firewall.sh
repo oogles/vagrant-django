@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Source global provisioning settings
-source /tmp/env.sh
-
 echo " "
 echo " --- Set firewall rules ---"
 if [[ ! -f "/tmp/conf/firewall-rules.conf" ]]; then

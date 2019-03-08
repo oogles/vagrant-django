@@ -1,24 +1,29 @@
 #!/usr/bin/env bash
-# Define two temporary settings files: one containing common variables to be
-# sourced by all provisioning scripts, and the other to contain some additional
-# variables only required by the bootstrap script.
+# Read the relevant settings files, validate them, and store them in a temporary
+# file for easy reference to the validated settings throughout the provisioning
+# process. Also copy all relevant config files to a temporary location to act
+# as the definitive source for the deployment-specific files throughout the
+# provisioning process.
 
 echo " "
 echo " --- Establish settings ---"
-
-PROJECT_NAME="$1"
-
-if [[ ! "$PROJECT_NAME" ]]; then
-    echo "--------------------------------------------------"
-    echo "ERROR: No project name provided."
-    echo "--------------------------------------------------"
-    exit 1
-fi
 
 # Define common paths used throughout the provisioning process
 APP_DIR="/opt/app"
 SRC_DIR="$APP_DIR/src"
 PROVISION_DIR="$SRC_DIR/provision"
+
+# Get project-specific variables from config.
+# For a full description of the available variables, and the effects they have
+# on the provisioning process, see the docs at https://vagrant-django.readthedocs.io/.
+if [[ -f "$PROVISION_DIR/settings.sh" ]]; then
+    source "$PROVISION_DIR/settings.sh"
+else
+    echo "--------------------------------------------------"
+    echo "ERROR: Missing required project config file provision/settings.sh."
+    echo "--------------------------------------------------"
+    exit 1
+fi
 
 # Get environment-specific variables from config.
 # For a full description of the available variables, and the effects they have
@@ -28,6 +33,14 @@ if [[ -f "$PROVISION_DIR/env.sh" ]]; then
 else
     echo "--------------------------------------------------"
     echo "ERROR: Missing required environment-specific config file provision/env.sh."
+    echo "--------------------------------------------------"
+    exit 1
+fi
+
+# A project name is required
+if [[ ! "$PROJECT_NAME" ]]; then
+    echo "--------------------------------------------------"
+    echo "ERROR: No project name provided in provision/settings.sh."
     echo "--------------------------------------------------"
     exit 1
 fi
@@ -105,9 +118,8 @@ echo "Storing settings..."
 
 #
 # Write all necessary settings back to env.sh, storing their
-# defaulted/generated/normalised values. They will be read from there by most
-# other provisioning scripts. In the case of generated values, this also ensures
-# the same values get used if re-provisioning the same environment.
+# defaulted/generated/normalised values. In the case of generated values, this
+# ensures the same values get used if re-provisioning the same environment.
 #
 
 # Customisable settings
@@ -117,15 +129,17 @@ echo "Storing settings..."
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'DB_PASS' "$DB_PASS" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'ENV_PY_TEMPLATE' "$ENV_PY_TEMPLATE" "$PROVISION_DIR/env.sh"
 
-# Convenience settings for provisioning scripts
-"$PROVISION_DIR/scripts/utils/write_var.sh" 'PROJECT_NAME' "$PROJECT_NAME" "$PROVISION_DIR/env.sh"
-"$PROVISION_DIR/scripts/utils/write_var.sh" 'APP_DIR' "$APP_DIR" "$PROVISION_DIR/env.sh"
-"$PROVISION_DIR/scripts/utils/write_var.sh" 'SRC_DIR' "$SRC_DIR" "$PROVISION_DIR/env.sh"
-"$PROVISION_DIR/scripts/utils/write_var.sh" 'PROVISION_DIR' "$PROVISION_DIR" "$PROVISION_DIR/env.sh"
+#
+# Write ALL settings out to a temporary file for easy reference throughout the
+# remainder of the provisioning process
+#
 
-# Create symlink to env.sh and versions.sh for easy reference by provisioning scripts
-ln -sf "$PROVISION_DIR/env.sh" /tmp/env.sh
-ln -sf "$PROVISION_DIR/versions.sh" /tmp/versions.sh
+# Start with both base settings files
+cat "$PROVISION_DIR/settings.sh" "$PROVISION_DIR/env.sh" > /tmp/settings.sh
+
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'APP_DIR' "$APP_DIR" /tmp/settings.sh
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'SRC_DIR' "$SRC_DIR" /tmp/settings.sh
+"$PROVISION_DIR/scripts/utils/write_var.sh" 'PROVISION_DIR' "$PROVISION_DIR" /tmp/settings.sh
 
 #
 # Create a definitive source of config files for the the provisioning scripts
@@ -144,6 +158,7 @@ rsync -r --del "$PROVISION_DIR/conf/" /tmp/conf/
 if [[ "$DEPLOYMENT" != '' ]]; then
     deployment_conf_dir="$PROVISION_DIR/conf-$DEPLOYMENT/"
     if [[ -d "$deployment_conf_dir" ]]; then
+        echo " "
         echo "Adding $DEPLOYMENT overrides..."
         rsync -r "$deployment_conf_dir" /tmp/conf/
     fi

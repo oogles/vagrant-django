@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # Source global provisioning settings
-source /tmp/env.sh
-source /tmp/versions.sh
+source /tmp/settings.sh
 
 echo " "
 echo " --- Install node.js & friends ---"

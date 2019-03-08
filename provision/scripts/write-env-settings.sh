@@ -4,7 +4,7 @@
 # values and useful defaults
 
 # Source global provisioning settings
-source /tmp/env.sh
+source /tmp/settings.sh
 
 echo " "
 echo " --- Write env.py file ---"

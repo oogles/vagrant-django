@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo " "
-echo " --- Install stuff ---"
+echo " --- Install core bits and pieces ---"
 
 # Install git and ag
 apt-get -qq install git silversearcher-ag

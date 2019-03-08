@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Source global provisioning settings
-source /tmp/env.sh
+source /tmp/settings.sh
 
 # Install Python dependencies from requirements.txt. If DEBUG is true, also
 # install extra dev dependencies from dev_requirements.txt.
