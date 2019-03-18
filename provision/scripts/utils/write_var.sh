@@ -10,7 +10,7 @@ file="$3"
 
 output="$key='$value'"
 
-# Add a newline to the end of the env.sh file, if it doesn't already end with a
+# Add a newline to the end of the file, if it doesn't already end with a
 # newline. Prevents the following statement from adding to an existing line.
 sed -i -e '$a\' "$file"
 

@@ -11,12 +11,15 @@ With the support for separate configuration files for multiple deployments, this
 
 The default nginx and gunicorn supervisor programs are moved from ``provision/conf/production_programs`` to ``provision/conf/programs``. In addition, config overrides for a default "dev" deployment are added in ``provision/conf-dev/``. If upgrading from a previous version, in addition to replacing the ``provision/scripts`` directory, you will also need to add the new ``conf-dev`` directory and mirror the renaming of the ``production_programs`` directory.
 
+The default nginx site configs are significantly updated, not only to provide a separation of development and production configs, but also to provide secured (TLS-aware) and unsecured configs. Snippets are also now found in ``provision/conf/nginx/snippets/``. If upgrading from a previous version, you may need to update these nginx config files in both ``provision/conf/nginx/`` and ``provision/conf-dev/nginx/``.
+
 This release also renames the ``provision/versions.sh`` file to ``provision/settings.sh``, and moves the project name from a provisioner argument in the ``Vagrantfile`` to the ``PROJECT_NAME`` setting in ``settings.sh``.
 
 * Updated default Vagrant box to Ubuntu 18.04.
 * Separated installation of python from installation of the project's python dependencies.
 * Separated installation of node/npm from installation of the project's npm dependencies.
 * Added manually-invokable script for provisioning TLS via Let's Encrypt.
+* Added support for copying nginx snippets from ``provision/conf/nginx/snippets/``.
 * Added support for provisioning nginx in development environments.
 * Added support for keeping separate configuration files for different deployments.
 * Added config files for a default "dev" deployment.
@@ -24,6 +27,7 @@ This release also renames the ``provision/versions.sh`` file to ``provision/sett
 * Added support for ensuring the latest version of pip is installed in the Python virtualenv.
 * Renamed ``provision/versions.sh`` to ``provision/settings.sh``.
 * Moved project name from provisioner argument in ``Vagrantfile`` to ``PROJECT_NAME`` setting in ``provision/settings.sh``.
+* Moved copied nginx config files from ``/opt/app/conf/nginx/`` to ``/etc/nginx/``.
 * Fixed long-standing bug setting the timezone.
 
 0.6.2

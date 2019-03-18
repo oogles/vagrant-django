@@ -3,15 +3,23 @@
 # Source global provisioning settings
 source /tmp/settings.sh
 
-#
-# NOTE: The various config files required as part of provisioning nginx and
-# gunicorn are copied out of the /tmp/conf directory so a persistent reference
-# to them can be maintained.
-# The versions in provision/conf/ are not used as this would be complex with
-# regard to multiple deployment support and would allows a "git pull" to make
-# server configuration changes - such changes are better left to a deliberate
-# re-provision step. which is expected to have such side effects.
-#
+function update_conf() {
+    local file="$1"
+
+    for key in "${!NGINX_CONF_VARS[@]}"; do
+        local value=${NGINX_CONF_VARS[$key]}
+        if [[ ! "$value" ]]; then
+            echo "--------------------------------------------------"
+            echo "ERROR: Empty value for nginx config variable \"$key\"."
+            echo "--------------------------------------------------"
+            exit 1
+        fi
+
+        # Replace all occurrences of $key with $value, using g to replace
+        # multiple on the same line if necessary
+        sed -i "s|{{$key}}|$value|g" "$file"
+    done
+}
 
 echo " "
 echo " --- Install nginx ---"
@@ -23,12 +31,11 @@ apt-get -qq install nginx
 mkdir -p "$APP_DIR/conf/nginx/"
 mkdir -p "$APP_DIR/logs/nginx/"
 
-# Copy nginx.conf into $APP_DIR/conf, where it can be referenced by the
-# supervisor program. Also copy any snippets - they will be assumed to be
-# relative to nginx.conf.
+# Copy nginx.conf and any snippets
 echo " "
 echo "Copying nginx.conf..."
-cp "/tmp/conf/nginx/nginx.conf" "$APP_DIR/conf/nginx/"
+update_conf /tmp/conf/nginx/nginx.conf
+cp /tmp/conf/nginx/nginx.conf /etc/nginx/
 
 echo " "
 echo "Copying snippets..."
@@ -36,15 +43,22 @@ snippet_dir="/tmp/conf/nginx/snippets"
 if [[ ! -d "$snippet_dir" ]]; then
     echo "Nothing to copy"
 else
-    # Copy over changes and also delete obsolete files
-    rsync -r --del "$snippet_dir/" "$APP_DIR/conf/nginx/snippets/"
+    # Copy over changes and also delete obsolete files.
+    # Using $snippet_dir in the for statement does not appear to work.
+    for snippet in /tmp/conf/nginx/snippets/*.conf; do
+        if [[ ! -e "$snippet" ]]; then continue; fi  # handle an empty directory
+        update_conf "$snippet"
+    done
+
+    rsync -r --del "$snippet_dir/" "/etc/nginx/snippets/"
 fi
 
 echo " "
 echo "Copying site config..."
 
 # Copy the site config into sites-available
-cp "/tmp/conf/nginx/site" "/etc/nginx/sites-available/$PROJECT_NAME"
+update_conf /tmp/conf/nginx/site
+cp /tmp/conf/nginx/site "/etc/nginx/sites-available/$PROJECT_NAME"
 
 # Link the copied site config into sites-enabled
 if [[ ! -L "/etc/nginx/sites-enabled/$PROJECT_NAME" ]]; then
@@ -54,6 +68,14 @@ fi
 # Remove the "default" site config from sites-enabled
 if [[ -L "/etc/nginx/sites-enabled/default" ]]; then
     rm "/etc/nginx/sites-enabled/default"
+fi
+
+# Copy the separate secure site config as well, if provided.
+# Do not enable it. See letsencrypt.sh for that.
+secure_config="/tmp/conf/nginx/secure-site"
+if [[ -f "$secure_config" ]]; then
+    update_conf "$secure_config"
+    cp "$secure_config" "/etc/nginx/sites-available/secure-$PROJECT_NAME"
 fi
 
 echo " "

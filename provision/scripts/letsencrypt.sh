@@ -7,6 +7,7 @@
 echo " "
 echo "=================================================="
 echo " "
+echo "CONFIGURE TLS"
 
 # Define and source common settings
 /opt/app/src/provision/scripts/init.sh
@@ -27,6 +28,9 @@ function error() {
     exit 1
 }
 
+echo " "
+echo " --- Verify config ---"
+
 email="$1"
 shift  # move past email address parameter
 if [[ ! "$email" ]]; then
@@ -37,10 +41,10 @@ if [[ ! "$@" ]]; then
     error "At least one domain name required."
 fi
 
-# Requires a separate "secure" site config
-secure_config="/tmp/conf/nginx/secure-site"
+# Requires a separate "secure" site config in sites-available
+secure_config="/etc/nginx/sites-available/secure-$PROJECT_NAME"
 if [[ ! -f "$secure_config" ]]; then
-    error "No secure site config found."
+    error "No secure site config found in sites-available."
 fi
 
 # Requires a supervisor program for nginx
@@ -53,12 +57,6 @@ if [[ -L "/etc/nginx/sites-enabled/secure-$PROJECT_NAME" ]]; then
     error "It appears TLS is already configured."
 fi
 
-echo "CONFIGURE TLS"
-
-# Only copy secure site config into sites-available initially
-echo " "
-echo " --- Copy secure site config ---"
-cp "$secure_config" "/etc/nginx/sites-available/secure-$PROJECT_NAME"
 echo "Done"
 
 echo " "
@@ -106,6 +104,9 @@ echo " --- Enable secure site ---"
 rm "/etc/nginx/sites-enabled/$PROJECT_NAME"
 ln -s "/etc/nginx/sites-available/secure-$PROJECT_NAME" "/etc/nginx/sites-enabled/secure-$PROJECT_NAME"
 echo "Done"
+
+# Clean up before finishing
+"$PROVISION_DIR/scripts/cleanup.sh"
 
 echo " "
 echo "END"

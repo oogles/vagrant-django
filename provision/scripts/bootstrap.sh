@@ -104,6 +104,9 @@ echo " --- Start/restart supervisor and all programs ---"
 supervisorctl reload
 echo "Done"
 
+# Clean up before finishing
+run_script "$PROVISION_DIR/scripts/cleanup.sh"
+
 echo " "
 echo "END PROVISION"
 echo " "

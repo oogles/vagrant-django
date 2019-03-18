@@ -1,7 +1,7 @@
 server {
     listen 80;
     listen [::]:80
-    server_name <domain> www.<domain>;
+    server_name {{domain}} www.{{domain}};
 
     # Handle Let's Encrypt validation requests
     include snippets/letsencrypt.conf;

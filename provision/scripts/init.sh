@@ -137,6 +137,7 @@ echo "Storing settings..."
 # Start with both base settings files
 cat "$PROVISION_DIR/settings.sh" "$PROVISION_DIR/env.sh" > /tmp/settings.sh
 
+# Add shortcut variables only required during the provisioning process itself
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'APP_DIR' "$APP_DIR" /tmp/settings.sh
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'SRC_DIR' "$SRC_DIR" /tmp/settings.sh
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'PROVISION_DIR' "$PROVISION_DIR" /tmp/settings.sh
