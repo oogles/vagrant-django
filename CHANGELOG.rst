@@ -28,6 +28,7 @@ This release also renames the ``provision/versions.sh`` file to ``provision/sett
 * Renamed ``provision/versions.sh`` to ``provision/settings.sh``.
 * Moved project name from provisioner argument in ``Vagrantfile`` to ``PROJECT_NAME`` setting in ``provision/settings.sh``.
 * Moved copied nginx config files from ``/opt/app/conf/nginx/`` to ``/etc/nginx/``.
+* Moved copied gunicorn config file from ``/opt/app/conf/gunicorn/`` to ``/etc/gunicorn/``.
 * Fixed long-standing bug setting the timezone.
 
 0.6.2

@@ -27,8 +27,7 @@ echo " --- Install nginx ---"
 echo "Installing..."
 apt-get -qq install nginx
 
-# Create additional directories
-mkdir -p "$APP_DIR/conf/nginx/"
+# Create directory for logs
 mkdir -p "$APP_DIR/logs/nginx/"
 
 # Copy nginx.conf and any snippets
@@ -93,16 +92,15 @@ if [[ "$DEBUG" -eq 0 ]]; then
     echo "Installing..."
     su - webmaster -c "$VENV_ACTIVATE_CMD && pip install -q gunicorn"
 
-    # Create additional directories
-    mkdir -p "$APP_DIR/conf/gunicorn/"
+    # Create directory for logs
     mkdir -p "$APP_DIR/logs/gunicorn/"
 
     echo " "
     echo "Copying conf.py..."
 
-    # Copy conf.py into $APP_DIR/conf, where it can be referenced by the
-    # supervisor program
-    cp "/tmp/conf/gunicorn/conf.py" "$APP_DIR/conf/gunicorn/"
+    # Copy conf.py to where it can be referenced by the gunicorn supervisor program
+    mkdir -p /etc/gunicorn/
+    cp "/tmp/conf/gunicorn/conf.py" "/etc/gunicorn/"
 
     echo "Done"
 fi

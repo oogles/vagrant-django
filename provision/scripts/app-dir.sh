@@ -14,7 +14,6 @@ chmod 775 "$APP_DIR"
 # required by the rest of the provisioning. Use -p to only create the directories
 # if they don't already exist.
 mkdir -p -m 775 "$APP_DIR/media/"
-mkdir -p -m 775 "$APP_DIR/conf/"
 mkdir -p -m 775 "$APP_DIR/logs/"
 
 if [[ "$DEBUG" -eq 0 ]]; then
