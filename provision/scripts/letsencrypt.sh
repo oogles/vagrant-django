@@ -47,12 +47,6 @@ if [[ ! -f "$secure_config" ]]; then
     error "No secure site config found in sites-available."
 fi
 
-# Requires a supervisor program for nginx
-nginx_program="/tmp/conf/supervisor/programs/nginx.conf"
-if [[ ! -f "$nginx_program" ]]; then
-    error "No supervisor program for nginx found."
-fi
-
 if [[ -L "/etc/nginx/sites-enabled/secure-$PROJECT_NAME" ]]; then
     error "It appears TLS is already configured."
 fi
@@ -72,30 +66,7 @@ echo "Done"
 
 echo " "
 echo " --- Obtain certificate ---"
-
-# Temporarily reconfigure supervisor to just run nginx
-echo " "
-echo "Temporarily starting nginx via supervisor..."
-mv /etc/supervisor/conf.d /etc/supervisor/~conf.d
-mkdir /etc/supervisor/conf.d
-cp "$nginx_program" /etc/supervisor/conf.d
-supervisorctl reload
-
-echo " "
-echo "Running certbot..."
 certbot certonly --agree-tos --email "$email" --webroot -w "$APP_DIR/letsencrypt/" "${@/#/-d }"
-
-# Restore the original supervisor program configuration
-echo " "
-echo "Resetting supervisor..."
-rm -rf /etc/supervisor/conf.d
-mv /etc/supervisor/~conf.d /etc/supervisor/conf.d
-supervisorctl reload
-
-echo " "
-echo " --- Configure auto-renewal ---"
-
-# TODO
 
 echo " "
 echo " --- Enable secure site ---"
@@ -110,5 +81,11 @@ echo "Done"
 
 echo " "
 echo "END"
+echo " "
+echo "=================================================="
+echo " "
+echo "NOTE: Certificates will be automatically renewed."
+echo "You may want to test the certificate renewal process with:"
+echo "sudo certbot renew --dry-run"
 echo " "
 echo "=================================================="
