@@ -107,11 +107,6 @@ if [[ ! "$DB_PASS" ]]; then
     fi
 fi
 
-# Use default env.py template if one is not given
-if [[ ! "$ENV_PY_TEMPLATE" ]]; then
-    ENV_PY_TEMPLATE='env.py.txt'
-fi
-
 
 echo " "
 echo "Storing settings..."
@@ -127,7 +122,6 @@ echo "Storing settings..."
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'DEPLOYMENT' "$DEPLOYMENT" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'SECRET_KEY' "$SECRET_KEY" "$PROVISION_DIR/env.sh"
 "$PROVISION_DIR/scripts/utils/write_var.sh" 'DB_PASS' "$DB_PASS" "$PROVISION_DIR/env.sh"
-"$PROVISION_DIR/scripts/utils/write_var.sh" 'ENV_PY_TEMPLATE' "$ENV_PY_TEMPLATE" "$PROVISION_DIR/env.sh"
 
 #
 # Write ALL settings out to a temporary file for easy reference throughout the

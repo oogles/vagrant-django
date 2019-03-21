@@ -13,6 +13,8 @@ The default nginx and gunicorn supervisor programs are moved from ``provision/co
 
 The default nginx site configs are significantly updated, not only to provide a separation of development and production configs, but also to provide secured (TLS-aware) and unsecured configs. Snippets are also now found in ``provision/conf/nginx/snippets/``. If upgrading from a previous version, you may need to update these nginx config files in both ``provision/conf/nginx/`` and ``provision/conf-dev/nginx/``.
 
+The ``provision/templates/env.py.txt`` file is moved to ``provision/conf/env.py``, and the syntax for replaceable variables is altered. In addition, the ``ENV_PY_TEMPLATE`` environment setting can no longer be used to specify a different template for the ``env.py`` file, the provisioning scripts assume the presence of ``provision/conf/env.py``. Projects customising this template will need to move the file to the new location and update the syntax used to specify replaceable variables. Projects using the setting to specify an alternate template will need to do the same to the custom file. Projects not customising either will still need to move the ``provision/templates/env.py.txt`` file to ``provision/conf/env.py``.
+
 This release also renames the ``provision/versions.sh`` file to ``provision/settings.sh``, and moves the project name from a provisioner argument in the ``Vagrantfile`` to the ``PROJECT_NAME`` setting in ``settings.sh``.
 
 * Updated default Vagrant box to Ubuntu 18.04.
@@ -27,6 +29,7 @@ This release also renames the ``provision/versions.sh`` file to ``provision/sett
 * Added support for ensuring the latest version of pip is installed in the Python virtualenv.
 * Renamed ``provision/versions.sh`` to ``provision/settings.sh``.
 * Moved project name from provisioner argument in ``Vagrantfile`` to ``PROJECT_NAME`` setting in ``provision/settings.sh``.
+* Moved ``env.py`` template from ``provision/templates`` to ``provision/conf`` and removed ``ENV_PY_TEMPLATE`` environment setting.
 * Moved copied nginx config files from ``/opt/app/conf/nginx/`` to ``/etc/nginx/``.
 * Moved copied gunicorn config file from ``/opt/app/conf/gunicorn/`` to ``/etc/gunicorn/``.
 * Fixed long-standing bug setting the timezone.

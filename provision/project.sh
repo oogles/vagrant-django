@@ -2,7 +2,7 @@
 # Put any project-specific provisioning steps here.
 # This script is executed with superuser privileges.
 
-# The following provisioning settings are available:
+# The following provisioning settings are available, among others:
 #  - $PROJECT_NAME: The name of the project
 #  - $DEBUG: 1 if provisioning a development environment, 0 if provisioning a production environment.
 #  - $APP_DIR: The base app directory (/opt/app/)
@@ -11,4 +11,4 @@
 # See http://vagrant-django.readthedocs.io/ for more info on these settings.
 
 # Uncomment the following line to source these variables.
-#source /tmp/env.sh
+#source /tmp/settings.sh

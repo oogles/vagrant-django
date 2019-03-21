@@ -18,9 +18,9 @@
 # having code that is not committed to source control)
 
 environ = {
-    'DEBUG': $DEBUG,
-    'SECRET_KEY': r'$SECRET_KEY',
-    'TIME_ZONE': '$TIME_ZONE',
-    'DB_USER': '$PROJECT_NAME',
-    'DB_PASSWORD': r'$DB_PASSWORD'
+    'DEBUG': {{debug}},
+    'SECRET_KEY': r'{{secret_key}}',
+    'TIME_ZONE': '{{time_zone}}',
+    'DB_USER': '{{project_name}}',
+    'DB_PASSWORD': r'{{db_password}}'
 }

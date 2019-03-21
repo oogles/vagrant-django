@@ -14,7 +14,7 @@ chmod 774 -R /opt/app/src/provision/scripts/
 # in a function is to exit this outer script if one of the executed scripts
 # returns a non-zero exit code.
 function run_script() {
-    "$1" "${@:2}"
+    "$1"
     if [[ $? != 0 ]]; then
         echo " "
         echo "PROVISION ABORTED"
@@ -54,7 +54,7 @@ timedatectl
 run_script "$PROVISION_DIR/scripts/app-dir.sh"
 
 # Write environment settings file
-run_script "$PROVISION_DIR/scripts/write-env-settings.sh" "$SECRET_KEY" "$TIME_ZONE" "$DB_PASS"
+run_script "$PROVISION_DIR/scripts/write-env-settings.sh"
 
 # Enable a firewall in production environments
 if [[ "$DEBUG" -eq 0 ]]; then
