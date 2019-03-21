@@ -25,13 +25,16 @@ if [[ "$DEBUG" -eq 1 ]]; then
     fi
 fi
 
-# Install node.js dependencies from package.json, if necessary
-if [[ -f "$SRC_DIR/package.json" ]]; then
+# Install node.js dependencies from package-lock.json, if necessary.
+# Check for package-lock.json over package.json, and use "npm ci" over
+# "npm install", to avoid the possibility of the provisioning process altering
+# the package-lock.json file.
+if [[ -f "$SRC_DIR/package-lock.json" ]]; then
     echo " "
     echo " --- Install node.js dependencies ---"
     if [[ "$DEBUG" -eq 1 ]]; then
-        su - webmaster -c "cd $SRC_DIR && npm install --quiet"
+        su - webmaster -c "cd $SRC_DIR && npm ci --quiet"
     else
-        su - webmaster -c "cd $SRC_DIR && npm install --production --quiet"
+        su - webmaster -c "cd $SRC_DIR && npm ci --production --quiet"
     fi
 fi

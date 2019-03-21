@@ -33,6 +33,7 @@ This release also renames the ``provision/versions.sh`` file to ``provision/sett
 * Moved copied nginx config files from ``/opt/app/conf/nginx/`` to ``/etc/nginx/``.
 * Moved copied gunicorn config file from ``/opt/app/conf/gunicorn/`` to ``/etc/gunicorn/``.
 * Fixed long-standing bug setting the timezone.
+* Fixed issue of provisioning process altering ``package-lock.json`` files by using "npm ci" rather than "npm install" to install npm dependencies. Installation of npm dependencies is now predicated on the existence of ``package-lock.json`` rather than ``package.json``.
 
 0.6.2
 =====
