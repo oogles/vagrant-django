@@ -71,9 +71,11 @@ certbot certonly --agree-tos --email "$email" --webroot -w "$APP_DIR/letsencrypt
 echo " "
 echo " --- Enable secure site ---"
 
-# Link the copied site config into sites-enabled, replacing the unsecured version
+# Link the copied site config into sites-enabled, replacing the unsecured
+# version. Use the same name for the link so that reprovisioning does not
+# re-enable the unsecured version.
 rm "/etc/nginx/sites-enabled/$PROJECT_NAME"
-ln -s "/etc/nginx/sites-available/secure-$PROJECT_NAME" "/etc/nginx/sites-enabled/secure-$PROJECT_NAME"
+ln -s "/etc/nginx/sites-available/secure-$PROJECT_NAME" "/etc/nginx/sites-enabled/$PROJECT_NAME"
 echo "Done"
 
 # Clean up before finishing
