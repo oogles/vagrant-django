@@ -4,16 +4,6 @@
 
 PROJECT_NAME=''
 
-# Associative array of template values to replace in nginx config files. The
-# default site configs use the "{{domain}}" variable. Custom config files can
-# make use of as many variables as necessary.
-# NOTE: ALL replacements will be attempted in ALL nginx config files (including
-# snippets).
-declare -A NGINX_CONF_VARS=(
-    ['domain']=''
-    #['others']='place here'
-)
-
 # The Python version to use for the project virtualenv. Leave blank to use the
 # system version.
 # Define an explicit version: BASE_PYTHON_VERSION='3.7.3'

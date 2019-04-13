@@ -5,6 +5,16 @@
 DEBUG='1'
 PUBLIC_KEY=''
 
+# Associative array of template values to replace in nginx config files. The
+# default site configs (for production) use the "{{domain}}" variable. Custom
+# config files can make use of as many variables as necessary.
+# NOTE: ALL replacements will be attempted in ALL nginx config files (including
+# snippets).
+declare -A NGINX_CONF_VARS=(
+    ['domain']='example.com'
+    #['others']='place here'
+)
+
 #
 # Options
 #
