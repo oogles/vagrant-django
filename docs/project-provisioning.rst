@@ -18,18 +18,20 @@ Some common uses for ``project.sh`` are:
 
 .. _project-access-settings:
 
-Accessing ``env.sh`` settings
-=============================
+Accessing provisioning settings
+===============================
 
-Any setting present in ``env.sh`` can be loaded into ``project.sh`` and can be used to control the provisioning done within. This includes any custom settings that may be added specifically for this process to use. Simply include the following at the top of the file:
+Any setting present in ``settings.sh`` or ``env.sh`` can be loaded into ``project.sh`` and be used to control the provisioning done within. This includes any custom settings that may be added specifically for this process to use. Simply include the following at the top of the file:
 
 .. code-block:: bash
 
-    source /tmp/env.sh
+    source /tmp/settings.sh
 
-.. note::
+``/tmp/settings.sh`` is a temporary file created by the provisioning process that contains a combination of the main ``settings.sh`` and ``env.sh`` files, as well as some shortcut settings added by the provisioning process itself. In addition to everything present in ``settings.sh`` and ``env.sh``, the following are also available as shortcuts to various important directories:
 
-    ``/tmp/env.sh`` is a temporary copy of ``env.sh`` written when provisioning starts, simplifying the provisioning scripts' references to it.
+* ``APP_DIR``: ``/opt/app/``
+* ``SRC_DIR``: ``/opt/app/src/``
+* ``PROVISION_DIR``: ``/opt/app/src/provision/``
 
 
 .. _project-rand-str:
@@ -43,7 +45,7 @@ E.g. Generating a 12 character string:
 
 .. code-block:: bash
 
-    MY_RAND_STR=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 12)
+    my_str=$("$PROVISION_DIR/scripts/utils/rand_str.sh" 12)
 
 .. note::
 
@@ -57,15 +59,19 @@ Writing settings back to env.sh
 
 Sometimes it is useful to write values back to ``env.sh`` so the same value can be read again in the event of re-provisioning. This is particularly important if :ref:`generating random strings <project-rand-str>`. A simple utility exists for doing exactly that. If the given variable name exists in ``env.sh``, it is replaced. If it does not already exist, it is added to the end of the file.
 
-E.g. To write a value stored in ``$MY_VAR`` to a variable called ``SOME_VALUE`` in ``env.sh``:
+E.g. To write a value stored in ``$my_var`` to a variable called ``SOME_VALUE`` in ``env.sh``:
 
 .. code-block:: bash
 
-    "$PROVISION_DIR/scripts/utils/write_var.sh" 'SOME_VALUE' "$MY_VAR" "$PROVISION_DIR/env.sh"
+    "$PROVISION_DIR/scripts/utils/write_var.sh" 'SOME_VALUE' "$my_var" "$PROVISION_DIR/env.sh"
 
 .. note::
 
     ``$PROVISION_DIR`` is a setting that can be loaded as per :ref:`project-access-settings` above.
+
+.. note::
+
+    This can technically also be used to write values back to ``settings.sh``, but the types of settings included in ``settings.sh`` should be static across all environments and deployments, and should not be modified by the provisioning process of any of them.
 
 
 .. _project-example:
@@ -75,11 +81,11 @@ Full example
 
 The following example demonstrates a custom ``project.sh`` file that:
 
-* loads settings from ``env.sh``
+* loads provisioning settings
 * installs and configures project-specific software - the `RabbitMQ <https://www.rabbitmq.com/>`_ message broker
 * generates a random password
 * writes the generated password back to ``env.sh``, to avoid generating a new one on re-provisioning
-* injects the generated password into ``env.py``, assuming a :ref:`custom template <conf-env-py>`
+* injects the generated password into ``env.py``, assuming a :ref:`custom config file <conf-env-py>`
 
 .. code-block:: bash
 
@@ -87,7 +93,7 @@ The following example demonstrates a custom ``project.sh`` file that:
     # project.sh
 
     # Source provisioning settings
-    source /tmp/env.sh
+    source /tmp/settings.sh
 
     #
     # Install and configure RabbitMQ
@@ -104,6 +110,6 @@ The following example demonstrates a custom ``project.sh`` file that:
     rabbitmqctl add_user "$PROJECT_NAME" "$RABBIT_PASSWORD"
 
     # Replace the env.py placeholder for the password
-    sed -i -r -e "s|\\\$RABBIT_PASSWORD|$RABBIT_PASSWORD|g" "$SRC_DIR/$PROJECT_NAME/env.py"
+    sed -i "s|{{rabbit_password}}|$RABBIT_PASSWORD|g" "$SRC_DIR/$PROJECT_NAME/env.py"
 
 

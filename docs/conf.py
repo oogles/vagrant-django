@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'vagrant-django'
-copyright = u'2018, Alex Church'
+copyright = u'2019, Alex Church'
 author = u'Alex Church'
 
 # The version info for the project you're documenting, acts as replacement for

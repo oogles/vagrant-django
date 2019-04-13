@@ -24,7 +24,9 @@ The provisioning scripts do NOT run ``apt-get upgrade``. They avoid this specifi
 
 The scripts *do* run ``apt-get update``, so the packages they do install are the latest repository versions at the time of installation.
 
-It is incumbent on the user to run ``apt-get upgrade``, especially for a newly provisioned system. **This is particularly important in production environments**.
+.. important::
+
+    It is incumbent on the user to run ``apt-get upgrade``, especially for a newly provisioned system. **This is particularly important in production environments**.
 
 
 .. _limitations-python:

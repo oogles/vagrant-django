@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Environment-specific settings used by the provisioning process
+# Environment-specific settings used by the provisioning process.
+# See: https://vagrant-django.readthedocs.io/en/latest/config.html#env-sh
 
 DEBUG='1'
 PUBLIC_KEY=''

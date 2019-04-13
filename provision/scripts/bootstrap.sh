@@ -115,10 +115,8 @@ echo "=================================================="
 if [[ "$DEBUG" -eq 0 ]]; then
     echo " "
     echo "IMPORTANT"
-    echo "The \"webmaster\" user account requires a password for sudo access."
-    echo "NOTE: It does NOT require one for SSH access (password-based SSH access is disabled)."
-    echo "Set a password using the following command:"
-    echo "passwd"
+    echo "Some manual post-provisioning steps may be required."
+    echo "See: https://vagrant-django.readthedocs.io/en/latest/production.html#provisioning"
     echo " "
     echo "=================================================="
 fi

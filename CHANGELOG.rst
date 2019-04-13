@@ -15,7 +15,7 @@ The default nginx site configs are significantly updated, not only to provide a 
 
 The ``provision/templates/env.py.txt`` file is moved to ``provision/conf/env.py``, and the syntax for replaceable variables is altered. In addition, the ``ENV_PY_TEMPLATE`` environment setting can no longer be used to specify a different template for the ``env.py`` file, the provisioning scripts assume the presence of ``provision/conf/env.py``. Projects customising this template will need to move the file to the new location and update the syntax used to specify replaceable variables. Projects using the setting to specify an alternate template will need to do the same to the custom file. Projects not customising either will still need to move the ``provision/templates/env.py.txt`` file to ``provision/conf/env.py``.
 
-This release also renames the ``provision/versions.sh`` file to ``provision/settings.sh``, and moves the project name from a provisioner argument in the ``Vagrantfile`` to the ``PROJECT_NAME`` setting in ``settings.sh``.
+This release also renames the ``provision/versions.sh`` file to ``provision/settings.sh``, and moves the project name from a provisioner argument in the ``Vagrantfile`` to the ``PROJECT_NAME`` setting in ``settings.sh``. If upgrading from a previous version, ``versions.sh`` will need to be renamed, and the ``PROJECT_NAME`` setting added to it.
 
 * Updated default Vagrant box to Ubuntu 18.04.
 * Separated installation of python from installation of the project's python dependencies.

@@ -38,9 +38,10 @@ The provisioning scripts can be re-run on existing environments to update them w
 * Config files in ``provision/conf`` will be re-copied.
 * Existing software will NOT be updated (the scripts do not run ``apt-get upgrade``). This step will need to be run manually if required. **Note: This is particularly important when provisioning a new environment.**
 * ``env.py`` will NOT be overwritten if it exists. This allows it to be modified as necessary (either changing existing settings or adding new ones) without those changes getting replaced. As such, if the file *needs* rewriting (e.g. provisioning has been updated to change what it writes to ``env.py``), it should be deleted first.
+* :ref:`Supervisor <feat-supervisor>` will be reloaded. This, in turn, will stop all processes it is currently running, and restart those configured to start automatically (not necessarily the ones that were running at the time of reprovisioning).
 
 
 Upgrading
 =========
 
-When upgrading to a new version of ``vagrant-django``, do not replace the entire ``provision/`` directory - that will wipe out any customised configuration files, templates, etc. The ``provision/scripts/`` subdirectory is not designed to be customised, so it can safely be replaced as a whole. Modifications/additions to files in other subdirectories will be specified in the release notes, and can be updated individually.
+When upgrading to a new version of ``vagrant-django``, do not replace the entire ``provision/`` directory - that will wipe out any customised configuration files. The ``provision/scripts/`` subdirectory is not designed to be customised, so it can safely be replaced as a whole. Modifications/additions to files in other subdirectories will be specified in the `change log <https://github.com/oogles/vagrant-django/blob/master/CHANGELOG.rst>`_, and can be updated individually.

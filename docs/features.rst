@@ -20,7 +20,6 @@ The most important subdirectory is ``/opt/app/src/``. This is the project root d
 
 Some of the other useful directories in this structure are:
 
-* ``/opt/app/conf/``: For storage of configuration files such as ``nginx.conf`` and gunicorn's ``conf.py``. Such files are copied here instead of being referenced directly from within ``provision/conf/`` so they may be modified without affecting the committed source files.
 * ``/opt/app/logs/``: For storage of log files output by supervisor, etc.
 * ``/opt/app/media/``: Target for Django's ``MEDIA_ROOT``.
 * ``/opt/app/static/``: Target for Django's ``STATIC_ROOT`` (in production environments).
@@ -148,15 +147,24 @@ Nginx
 
 `nginx <https://nginx.org/en/>`_ is installed.
 
-The ``nginx.conf`` file used can be modified. Also, the site config can - and in some cases must - be modified, as elaborated on below. See :ref:`conf-nginx` for details.
+The ``nginx.conf`` and site config files can be modified. Support for replacing placeholder variables within these config files is also available. See :ref:`conf-nginx` for details.
 
 Nginx is controlled and monitored by :ref:`feat-supervisor`. A default supervisor program is provided, but can be modified. See :ref:`conf-supervisor-programs` for details.
 
 Nginx is provisioned even in development environments, for situations where it is useful to have a production-level web server available. Its usage is optional, but it is available if necessary. The default site configuration of nginx differs between production and development, as detailed below. Further details on configuring nginx can be found in the :ref:`configuration documentation <conf-nginx>`.
 
-In production, nginx is configured to serve static and media files, and to proxy all remaining requests through to :ref:`gunicorn <feat-gunicorn>`. The production site config **must be modified**, at least to provide the ``server_name`` directive. See :ref:`conf-nginx-site` for details.
+In production, nginx is configured to serve static and media files, and to proxy all remaining requests through to :ref:`gunicorn <feat-gunicorn>`. It is also expected to be used with the built-in support for :ref:`provisioning Let's Encrypt <feat-letsencrypt>`. As such, an HTTPS-ready configuration is provided by default for production environments.
 
-In development, nginx is configured to serve media files only and proxy all remaining requests through to a Django runserver on port 8460. The development site config can be modified but, unlike the production config, it is not required. Static files are not configured to be served by nginx in development, because Django handles automatically finding and serving them in order to avoid the need to run the ``collectstatic`` command after every modification.
+In development, nginx is configured to serve media files only and proxy all remaining requests through to a Django runserver on port 8460. Static files are not configured to be served by nginx in development, because Django handles automatically finding and serving them in order to avoid the need to run the ``collectstatic`` command after every modification.
+
+.. _feat-letsencrypt:
+
+Let's Encrypt
+-------------
+
+By default, the nginx site config for production assumes HTTPS-only communication, redirecting non-HTTPS traffic *to* HTTPS. This requires that a TLS certificate be installed on the server. The `Let's Encrypt <https://letsencrypt.org/>`_ service is used to do this. Let's Encrypt provides an automated service for obtaining and maintaining domain-validation TLS certificates for free.
+
+Configuring Let's Encrypt requires a secondary process run *after* the main provisioning process. See the :ref:`configuration documentation <conf-letsencrypt>` for more information.
 
 
 .. _feat-gunicorn:
@@ -190,7 +198,7 @@ Virtualenv
 
 A virtualenv is created using `pyenv <https://github.com/pyenv/pyenv>`_ and its `pyenv-virtualenv <https://github.com/pyenv/pyenv-virtualenv>`_ plugin.
 
-The version of Python used to build the virtualenv can be specified in :ref:`conf-versions-sh` using the :ref:`conf-var-base-python` setting. If not specified, the system version will be used.
+The version of Python used to build the virtualenv can be specified in :ref:`conf-settings-sh` using the :ref:`conf-var-base-python` setting. If not specified, the system version will be used.
 
 The virtualenv is automatically activated when the ``webmaster`` user logs in via SSH.
 
@@ -209,7 +217,7 @@ In development environments, a ``dev_requirements.txt`` file can also be specifi
 Node.js/npm and nps
 ===================
 
-If a ``package.json`` file is found in the project root directory (``/opt/app/src/``), `node.js <https://nodejs.org/en/>`_ and `npm <https://www.npmjs.com/>`_ are installed. The version of node.js installed is dictated by the :ref:`conf-var-node-version` setting in ``versions.sh``.
+If a ``package.json`` file is found in the project root directory (``/opt/app/src/``), `node.js <https://nodejs.org/en/>`_ and `npm <https://www.npmjs.com/>`_ are installed. The version of node.js installed is dictated by the :ref:`conf-var-node-version` setting in :ref:`conf-settings-sh`.
 
 A ``node_modules`` directory is created at ``/opt/app/node_modules/`` and a symlink to this directory is created in the project root directory (``/opt/app/src/node_modules``). Keeping the ``node_modules`` directory out of the synced folder helps avoid potential issues with Windows host machines - path names generated by installing certain npm packages can exceed the maximum Windows allows.
 
@@ -224,9 +232,12 @@ A ``node_modules`` directory is created at ``/opt/app/node_modules/`` and a syml
 Node.js dependency installation
 -------------------------------
 
-``npm install`` will be run in the project root directory.
+If a ``package-lock.json`` file is found in the project root directory (``/opt/app/src/``), ``npm ci`` will be run to install npm dependencies.
 
-In production environments, ``npm install --production`` will be used, limiting the installed dependencies to those listed in the ``dependencies`` section of ``package.json``. Otherwise, dependencies listed in ``dependencies`` and ``devDependencies`` will be installed. See the `documentation on npm install <https://docs.npmjs.com/cli/install>`_.
+In production environments, ``npm ci --production`` will be used, limiting the installed dependencies to those listed in the ``dependencies`` section of ``package.json``. Otherwise, dependencies listed in ``dependencies`` and ``devDependencies`` will be installed. See the `documentation on npm install <https://docs.npmjs.com/cli/install>`_.
+
+.. note::
+    ``npm ci`` is used in place of ``npm install`` so that the provisioning process cannot cause any modification to ``package-lock.json``, which is possible depending on the configuration of ``package.json``. This requires a ``package-lock.json`` file, in addition to ``package.json``, be present and correct in order to install the appropriate dependencies.
 
 nps
 ---
@@ -242,7 +253,7 @@ If node and npm were installed, and a ``package-scripts.js`` file is also found 
 Multiple Python versions and tox support
 ========================================
 
-The base Python version (used to create the virtualenv under which all relevant Python processes for the project will be run) and additional versions of Python can be specified in ``versions.sh``, via the :ref:`conf-var-base-python` and :ref:`conf-var-python-versions`, respectively.
+The base Python version (used to create the virtualenv under which all relevant Python processes for the project will be run) and additional versions of Python can be specified in :ref:`conf-settings-sh`, via the :ref:`conf-var-base-python` and :ref:`conf-var-python-versions`, respectively.
 
 All specified Python versions are installed with `pyenv <https://github.com/pyenv/pyenv>`_. The pyenv `global command <https://github.com/pyenv/pyenv/blob/master/COMMANDS.md#pyenv-global>`_ is used to provide system-wide access to all installed versions, with the following priority:
 
@@ -303,11 +314,11 @@ The ``environ`` dictionary is used rather than simply providing a set of module-
 
 The default ``environ`` dictionary will contain the following key/values:
 
-* DEBUG: Will be True if :ref:`conf-var-debug` is set to ``1``, False if it is set to ``0``.
-* DB_USER: Set to the value of the :ref:`project name <conf-var-project-name>`.
-* DB_PASSWORD: Set to the value of :ref:`conf-var-db-pass`. Automatically generated by default.
-* TIME_ZONE: Set to the value of :ref:`conf-var-time-zone`.
-* SECRET_KEY: Set to the value of :ref:`conf-var-secret-key`. Automatically generated by default.
+* ``DEBUG``: Will be True if :ref:`conf-var-debug` is set to ``1``, False if it is set to ``0``.
+* ``DB_USER``: Set to the value of the :ref:`project name <conf-var-project-name>`.
+* ``DB_PASSWORD``: Set to the value of :ref:`conf-var-db-pass`. Automatically generated by default.
+* ``TIME_ZONE``: Set to the value of :ref:`conf-var-time-zone`.
+* ``SECRET_KEY``: Set to the value of :ref:`conf-var-secret-key`. Automatically generated by default.
 
 If a specific project has additional sensitive or environment-specific settings that are better not committed to source control, it is possible to modify the way ``env.py`` is written such that it can contain those settings as well, or at least placeholders for them. See :ref:`conf-env-py` for more details.
 
